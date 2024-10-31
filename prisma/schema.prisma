@@ -14,43 +14,39 @@ datasource db {
 }
 
 model Template {
-    id          String @id @default(uuid())
-    name        String @unique @db.VarChar(255)
-    description String @db.Text
+    id          String  @id @default(uuid())
+    name        String  @unique @db.VarChar(255)
+    description String? @db.Text
 
     variables TemplateVariable[]
     page      Page[]
 }
 
 model TemplateVariable {
-    id              String           @id @default(uuid())
-    name            String           @db.VarChar(255)
-    type            VariableType
-    templateId      String           @db.VarChar(255)
-    template        Template         @relation(fields: [templateId], references: [id])
-    textVariables   TextVariable[]
-    bannerVariables BannerVariable[]
+    id         String       @id @default(uuid())
+    name       String       @db.VarChar(255)
+    type       VariableType
+    templateId String       @db.VarChar(255)
+    template   Template     @relation(fields: [templateId], references: [id])
+
+    pageVariables PageVariable[]
 }
 
 model TextVariable {
-    id                 String           @id @default(uuid())
-    value              String           @db.Text
-    templateVariable   TemplateVariable @relation(fields: [templateVariableId], references: [id])
-    templateVariableId String           @db.VarChar(255)
-    pageVariableId     String           @unique @db.VarChar(255)
-    pageVariable       PageVariable     @relation(fields: [pageVariableId], references: [id])
-    createdAt          DateTime         @default(now())
-    updatedAt          DateTime         @updatedAt
+    id             String       @id @default(uuid())
+    value          String?      @db.Text
+    pageVariableId String       @unique @db.VarChar(255)
+    pageVariable   PageVariable @relation(fields: [pageVariableId], references: [id])
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
 }
 
 model BannerVariable {
-    id                 String           @id @default(uuid())
-    templateVariable   TemplateVariable @relation(fields: [templateVariableId], references: [id])
-    templateVariableId String           @db.VarChar(255)
-    pageVariableId     String           @unique @db.VarChar(255)
-    pageVariable       PageVariable     @relation(fields: [pageVariableId], references: [id])
-    createdAt          DateTime         @default(now())
-    updatedAt          DateTime         @updatedAt
+    id             String       @id @default(uuid())
+    pageVariableId String       @unique @db.VarChar(255)
+    pageVariable   PageVariable @relation(fields: [pageVariableId], references: [id])
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
 
     images BannerImage[]
 }
@@ -80,15 +76,15 @@ model Page {
 }
 
 model PageVariable {
-    id     String       @id @default(uuid())
-    name   String       @db.VarChar(255)
-    pageId String
-    type   VariableType
-    order  Int
+    id                 String @id @default(uuid())
+    pageId             String
+    order              Int
+    templateVariableId String
 
-    page           Page            @relation(fields: [pageId], references: [id])
-    textVariable   TextVariable?
-    bannerVariable BannerVariable?
+    page             Page              @relation(fields: [pageId], references: [id])
+    templateVariable TemplateVariable? @relation(fields: [templateVariableId], references: [id])
+    textVariable     TextVariable?
+    bannerVariable   BannerVariable?
 }
 
 enum VariableType {
