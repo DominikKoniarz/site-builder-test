@@ -34,7 +34,6 @@ type BannerImage = {
     updatedAt: Date;
 };
 
-// Definicje przeciążeń funkcji
 export function getPageVariable(
     variables: Variables[],
     name: string,
@@ -47,7 +46,6 @@ export function getPageVariable(
     type: "BANNER",
 ): BannerVariable | null;
 
-// Implementacja funkcji
 export function getPageVariable(
     variables: Variables[],
     name: string,
@@ -71,5 +69,5 @@ export function getPageVariable(
         return variable.bannerVariable as BannerVariable | null;
     }
 
-    return null; // To nigdy nie powinno się zdarzyć z uwagi na sprawdzenie typu
+    return null;
 }
