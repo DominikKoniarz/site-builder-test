@@ -63,11 +63,11 @@ export function getPageVariable(
     if (!variable) return null;
 
     if (type === "TEXT") {
-        return variable.textVariable as TextVariable | null;
+        return variable.textVariable;
     }
 
     if (type === "BANNER") {
-        return variable.bannerVariable as BannerVariable | null;
+        return variable.bannerVariable;
     }
 
     return null;
