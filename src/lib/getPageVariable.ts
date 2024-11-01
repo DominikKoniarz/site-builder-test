@@ -7,6 +7,7 @@ type Variables = {
     templateVariable: {
         id: string;
         name: string;
+        tag: string;
         type: VariableType;
     } | null;
     bannerVariable: BannerVariable | null;
@@ -36,25 +37,25 @@ type BannerImage = {
 
 export function getPageVariable(
     variables: Variables[],
-    name: string,
+    tag: string,
     type: "TEXT",
 ): TextVariable | null;
 
 export function getPageVariable(
     variables: Variables[],
-    name: string,
+    tag: string,
     type: "BANNER",
 ): BannerVariable | null;
 
 export function getPageVariable(
     variables: Variables[],
-    name: string,
+    tag: string,
     type: VariableType,
 ): TextVariable | BannerVariable | null {
     const variable = variables.find((v) => {
         return (
             v.templateVariable &&
-            v.templateVariable.name === name &&
+            v.templateVariable.tag === tag &&
             v.templateVariable.type === type
         );
     });

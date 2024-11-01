@@ -1,6 +1,8 @@
 import { getPageVariable } from "@/lib/getPageVariable";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
     const page = await prisma.page.findFirst({
         where: {
@@ -17,6 +19,7 @@ export default async function Home() {
                         select: {
                             id: true,
                             name: true,
+                            tag: true,
                             type: true,
                         },
                     },
@@ -38,17 +41,11 @@ export default async function Home() {
         },
     });
 
-    // console.log(page);
     if (!page) return null;
 
-    const heading = getPageVariable(
-        page.variables,
-        // TODO: Add extracting by 'code-name' - something wihtout spaces
-        "Heading w sekcji hero",
-        "TEXT",
-    );
+    const heading = getPageVariable(page.variables, "hero-heading", "TEXT");
 
-    const banner = getPageVariable(page.variables, "Hero banner", "BANNER");
+    const banner = getPageVariable(page.variables, "hero-banner", "BANNER");
 
     console.log(heading);
     console.log(banner);
