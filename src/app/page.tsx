@@ -1,5 +1,6 @@
 import { getPageVariable } from "@/lib/getPageVariable";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,7 @@ export default async function Home() {
             <div className="h-fit">
                 <pre className="h-fit">{JSON.stringify(heading, null, 2)}</pre>
             </div>
+            <Link href="/templates">Templates</Link>
         </main>
     );
 }
