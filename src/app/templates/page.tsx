@@ -1,45 +1,12 @@
-import prisma from "@/lib/prisma";
-import Link from "next/link";
+import { Suspense } from "react";
+import TemplatesContent from "./templates-content";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export default async function Templates() {
-    const templates = await prisma.template.findMany({
-        select: {
-            id: true,
-            name: true,
-            description: true,
-            _count: {
-                select: {
-                    variables: true,
-                },
-            },
-        },
-    });
-
     return (
-        <main className="h-fit w-full bg-slate-800 text-white">
-            <div className="flex flex-col gap-4">
-                {templates.map((template) => (
-                    <div
-                        key={template.id}
-                        className="flex flex-col gap-2 border border-white p-2"
-                    >
-                        <h1 className="text-xl font-bold">
-                            Name: {template.name}
-                        </h1>
-                        {template.description && (
-                            <p className="text-sm">{template.description}</p>
-                        )}
-                        <p className="text-sm">
-                            Variables: {template._count.variables}
-                        </p>
-                        <Link href={`/templates/${template.id}`}>Edit</Link>
-                    </div>
-                ))}
-            </div>
-            <br />
-            <Link href="/">Home</Link>
-        </main>
+        <Suspense fallback={<div>Loading...</div>}>
+            <TemplatesContent />
+        </Suspense>
     );
 }
