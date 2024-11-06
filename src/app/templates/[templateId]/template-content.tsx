@@ -34,10 +34,15 @@ export default async function TemplateContent({
         templateId: string;
     }>;
 }) {
+    const start = performance.now();
+
     const template = await getTemplate((await params).templateId);
+
+    const end = performance.now();
 
     return (
         <main className="h-fit w-full bg-slate-800 text-white">
+            <div className="">Took {end - start}ms to load</div>
             {template && (
                 <div className="flex flex-col gap-2 border border-white p-2">
                     <h1 className="text-xl font-bold">Name: {template.name}</h1>
