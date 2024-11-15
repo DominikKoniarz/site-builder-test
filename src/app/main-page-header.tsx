@@ -8,9 +8,12 @@ export default async function MainPageHeader() {
         revalidate: 5,
     });
 
+    const date = new Date();
+    const lastRenderedAt: string = date.toISOString().slice(11, 23);
+
     return (
         <div className="">
-            Main page header cache test: {new Date().toISOString()}
+            Main page header last rendered at: {lastRenderedAt}
         </div>
     );
 }

@@ -68,29 +68,30 @@ export default async function TemplateContent({
                                     <p className="text-sm">
                                         Order: {variable.order}
                                     </p>
-                                    {variable.bannerTemplateVariableConfig && (
-                                        <div className="text-sm">
-                                            Config:
-                                            <div className="ml-14 flex flex-col gap-2">
-                                                <p className="text-sm">
-                                                    Width:{" "}
-                                                    {
-                                                        variable
-                                                            .bannerTemplateVariableConfig
-                                                            .imageWidth
-                                                    }
-                                                </p>
-                                                <p className="text-sm">
-                                                    Height:{" "}
-                                                    {
-                                                        variable
-                                                            .bannerTemplateVariableConfig
-                                                            .imageHeight
-                                                    }
-                                                </p>
+                                    {variable.type === "BANNER" &&
+                                        variable.bannerTemplateVariableConfig && (
+                                            <div className="text-sm">
+                                                Config:
+                                                <div className="ml-14 flex flex-col gap-2">
+                                                    <p className="text-sm">
+                                                        Width:{" "}
+                                                        {
+                                                            variable
+                                                                .bannerTemplateVariableConfig
+                                                                .imageWidth
+                                                        }
+                                                    </p>
+                                                    <p className="text-sm">
+                                                        Height:{" "}
+                                                        {
+                                                            variable
+                                                                .bannerTemplateVariableConfig
+                                                                .imageHeight
+                                                        }
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
+                                        )}
                                 </div>
                             ))}
                         </div>
