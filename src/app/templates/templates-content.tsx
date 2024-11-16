@@ -36,7 +36,7 @@ export default async function TemplatesContent() {
                         <p className="text-sm">
                             Variables: {template._count.variables}
                         </p>
-                        <Link href={`/templates/${template.id}`}>Edit</Link>
+                        <Link href={`/templates/${template.id}`}>View</Link>
                     </div>
                 ))}
             </div>
