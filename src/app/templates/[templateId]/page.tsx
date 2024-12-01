@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import TemplateContent from "./template-content";
 
 type Props = {
@@ -7,12 +6,7 @@ type Props = {
     }>;
 };
 
-// export const dynamic = "force-dynamic";
-
+// always dynamic bc of the params
 export default function Templates({ params }: Props) {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <TemplateContent params={params} />
-        </Suspense>
-    );
+    return <TemplateContent params={params} />;
 }
