@@ -38,7 +38,14 @@ export const getTemplate = async (id: string): Promise<TemplateDTO | null> => {
         where: {
             id,
         },
+        select: {
+            id: true,
+            name: true,
+            description: true,
+        },
     });
 
-    return template ? createTemplateDTO(template) : null;
+    // return template ? createTemplateDTO(template) : null;
+
+    return template;
 };
