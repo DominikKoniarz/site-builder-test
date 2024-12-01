@@ -13,7 +13,7 @@ import prisma from "@/lib/prisma";
 //     }
 // }
 
-type TemplateDTO = {
+export type TemplateDTO = {
     id: string;
     name: string;
     description: string | null;
