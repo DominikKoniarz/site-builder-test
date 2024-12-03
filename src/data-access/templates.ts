@@ -1,31 +1,9 @@
-import type { Template } from "@prisma/client";
+import { TemplateDTO } from "@/dto/templates.dto";
+import {
+    createTemplateDTO,
+    createTemplateWithVariablesDTO,
+} from "@/dto/templates.mappers";
 import prisma from "@/lib/prisma";
-
-// class TemplateDTO {
-//     constructor(
-//         public id: string,
-//         public name: string,
-//         public description: string | null
-//     ) {}
-
-//     public isDescriptionEmpty(): boolean {
-//         return this.description === null;
-//     }
-// }
-
-export type TemplateDTO = {
-    id: string;
-    name: string;
-    description: string | null;
-};
-
-const createTemplateDTO = (template: Template): TemplateDTO => {
-    return {
-        id: template.id,
-        name: template.name,
-        description: template.description,
-    };
-};
 
 export const getAllTemplates = async (): Promise<TemplateDTO[]> => {
     const templates = await prisma.template.findMany();
@@ -33,7 +11,7 @@ export const getAllTemplates = async (): Promise<TemplateDTO[]> => {
     return templates.map((template) => createTemplateDTO(template));
 };
 
-export const getTemplate = async (id: string): Promise<TemplateDTO | null> => {
+export const getTemplate = async (id: string) => {
     const template = await prisma.template.findUnique({
         where: {
             id,
@@ -42,10 +20,28 @@ export const getTemplate = async (id: string): Promise<TemplateDTO | null> => {
             id: true,
             name: true,
             description: true,
+            variables: {
+                select: {
+                    id: true,
+                    name: true,
+                    type: true,
+                    tag: true,
+                    order: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    bannerTemplateVariableConfig: {
+                        select: {
+                            id: true,
+                            imageHeight: true,
+                            imageWidth: true,
+                            createdAt: true,
+                            updatedAt: true,
+                        },
+                    },
+                },
+            },
         },
     });
 
-    // return template ? createTemplateDTO(template) : null;
-
-    return template;
+    return template ? createTemplateWithVariablesDTO(template) : null;
 };

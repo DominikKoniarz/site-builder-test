@@ -1,9 +1,6 @@
-import {
-    BannerVariable,
-    DbFetchedVariable,
-    TextVariable,
-} from "@/types/variables";
+import { DbFetchedVariable } from "@/types/variables";
 import { VariableType } from "@prisma/client";
+import { BannerVariableDTO, TextVariableDTO } from "./variables.dto";
 
 type VarTypeToSign = {
     [VariableType.TEXT]: "t";
@@ -22,18 +19,18 @@ type BannerVariableTagWithType = `${VarTypeToSign["BANNER"]}.${string}`;
 export function getPageVariable(
     variables: DbFetchedVariable[],
     tagWithType: TextVariableTagWithType,
-): TextVariable | null;
+): TextVariableDTO | null;
 
 export function getPageVariable(
     variables: DbFetchedVariable[],
     tagWithType: BannerVariableTagWithType,
-): BannerVariable | null;
+): BannerVariableDTO | null;
 // functions overloads end
 
 export function getPageVariable(
     variables: DbFetchedVariable[],
     tagWithType: TextVariableTagWithType | BannerVariableTagWithType,
-): TextVariable | BannerVariable | null {
+): TextVariableDTO | BannerVariableDTO | null {
     const [type, tag] = tagWithType.split(".");
     const variableByTag = variables.find(
         (v) => v.templateVariable && v.templateVariable.tag === tag,

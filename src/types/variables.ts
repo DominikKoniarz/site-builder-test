@@ -37,26 +37,3 @@ export type DbFetchedVariable = Prisma.PageVariableGetPayload<{
         };
     };
 }>;
-
-// Types of vars accesed in app after extracting from page variables
-export type TextVariable = {
-    id: string;
-    value: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-};
-
-export type BannerImage = {
-    id: string;
-    imageName: string;
-    order: number;
-    createdAt: Date;
-    updatedAt: Date;
-};
-
-export type BannerVariable = {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    images: BannerImage[];
-};
