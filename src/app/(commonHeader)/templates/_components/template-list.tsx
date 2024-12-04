@@ -1,4 +1,4 @@
-import { TemplateDTO } from "@/data-access/templates";
+import { TemplateDTO } from "@/dto/templates.dto";
 import TemplateListItem from "./template-list-item";
 
 type Props = {

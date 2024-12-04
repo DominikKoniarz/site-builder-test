@@ -1,7 +1,10 @@
+import type { PageWithVariablesDTO } from "@/dto/pages.dto";
+import { createPageWithVariablesDTO } from "@/dto/pages.mappers";
 import prisma from "@/lib/prisma";
 
-// NOT FINISHED YET
-export const getPage = async (id: string) => {
+export const getPageWithVariables = async (
+    id: string,
+): Promise<PageWithVariablesDTO | null> => {
     const page = await prisma.page.findUnique({
         where: {
             id,
@@ -55,5 +58,5 @@ export const getPage = async (id: string) => {
         },
     });
 
-    return page;
+    return page ? createPageWithVariablesDTO(page) : null;
 };

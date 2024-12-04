@@ -24,11 +24,13 @@ export type TemplateBannerVariableDTO = TemplateVariableBaseDTO & {
     config: TemplateBannerVariableConfigDTO | null;
 };
 
-export type TemplateDTO = {
+export type TemplateBaseDTO = {
     id: string;
     name: string;
     description: string | null;
 };
+
+export type TemplateDTO = TemplateBaseDTO;
 
 export type TemplateWithVariablesDTO = {
     id: string;

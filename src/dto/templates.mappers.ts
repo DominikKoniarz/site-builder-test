@@ -5,7 +5,7 @@ import type {
     TemplateTextVariableDTO,
     TemplateWithVariablesDTO,
 } from "./templates.dto";
-import { Template } from "@prisma/client";
+import type { Template } from "@prisma/client";
 
 export const createTemplateDTO = (template: Template): TemplateDTO => {
     return {

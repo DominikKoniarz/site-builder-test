@@ -1,4 +1,4 @@
-import { TemplateDTO } from "@/data-access/templates";
+import type { TemplateDTO } from "@/dto/templates.dto";
 import { Edit } from "lucide-react";
 import Link from "next/link";
 

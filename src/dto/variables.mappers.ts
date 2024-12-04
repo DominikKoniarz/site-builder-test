@@ -1,50 +1,36 @@
-import { DbFetchedVariable } from "@/types/variables";
-import { VariableType } from "@prisma/client";
-import { BannerVariableDTO, TextVariableDTO } from "./variables.dto";
+import type { DbFetchedVariable } from "@/types/variables";
+import type { BannerVariableDTO, TextVariableDTO } from "./variables.dto";
 
-type VarTypeToSign = {
-    [VariableType.TEXT]: "t";
-    [VariableType.BANNER]: "b";
-};
-
-const VAR_TYPE_TO_SIGN: VarTypeToSign = {
-    [VariableType.TEXT]: "t",
-    [VariableType.BANNER]: "b",
-};
-
-type TextVariableTagWithType = `${VarTypeToSign["TEXT"]}.${string}`;
-type BannerVariableTagWithType = `${VarTypeToSign["BANNER"]}.${string}`;
-
-// functions overloads start
-export function getPageVariable(
-    variables: DbFetchedVariable[],
-    tagWithType: TextVariableTagWithType,
-): TextVariableDTO | null;
-
-export function getPageVariable(
-    variables: DbFetchedVariable[],
-    tagWithType: BannerVariableTagWithType,
-): BannerVariableDTO | null;
-// functions overloads end
-
-export function getPageVariable(
-    variables: DbFetchedVariable[],
-    tagWithType: TextVariableTagWithType | BannerVariableTagWithType,
-): TextVariableDTO | BannerVariableDTO | null {
-    const [type, tag] = tagWithType.split(".");
-    const variableByTag = variables.find(
-        (v) => v.templateVariable && v.templateVariable.tag === tag,
-    );
-
-    if (!variableByTag) return null;
-
-    if (type === VAR_TYPE_TO_SIGN.TEXT) {
-        return variableByTag.textVariable;
+export const createPageVariableDTO = (
+    variable: DbFetchedVariable,
+): TextVariableDTO | BannerVariableDTO => {
+    if (variable.textVariable) {
+        return {
+            id: variable.textVariable.id,
+            name: variable.templateVariable.name,
+            tag: variable.templateVariable.tag,
+            type: variable.templateVariable.type,
+            value: variable.textVariable.value,
+            createdAt: variable.textVariable.createdAt,
+            updatedAt: variable.textVariable.updatedAt,
+        } satisfies TextVariableDTO;
+    } else if (variable.bannerVariable) {
+        return {
+            id: variable.bannerVariable.id,
+            name: variable.templateVariable.name,
+            tag: variable.templateVariable.tag,
+            type: variable.templateVariable.type,
+            images: variable.bannerVariable.images.map((image) => ({
+                id: image.id,
+                imageName: image.imageName,
+                order: image.order,
+                createdAt: image.createdAt,
+                updatedAt: image.updatedAt,
+            })),
+            createdAt: variable.bannerVariable.createdAt,
+            updatedAt: variable.bannerVariable.updatedAt,
+        } satisfies BannerVariableDTO;
+    } else {
+        throw new Error("No variable matched");
     }
-
-    if (type === VAR_TYPE_TO_SIGN.BANNER) {
-        return variableByTag.bannerVariable;
-    }
-
-    return null;
-}
+};

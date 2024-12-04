@@ -1,4 +1,4 @@
-import { TemplateDTO } from "@/dto/templates.dto";
+import { TemplateDTO, TemplateWithVariablesDTO } from "@/dto/templates.dto";
 import {
     createTemplateDTO,
     createTemplateWithVariablesDTO,
@@ -11,7 +11,9 @@ export const getAllTemplates = async (): Promise<TemplateDTO[]> => {
     return templates.map((template) => createTemplateDTO(template));
 };
 
-export const getTemplate = async (id: string) => {
+export const getTemplate = async (
+    id: string,
+): Promise<TemplateWithVariablesDTO | null> => {
     const template = await prisma.template.findUnique({
         where: {
             id,
