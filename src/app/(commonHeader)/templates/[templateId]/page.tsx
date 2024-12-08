@@ -1,5 +1,6 @@
 import { getTemplate } from "@/data-access/templates";
 import { redirect } from "next/navigation";
+import TemplateEditForm from "./_components/template-edit-form";
 // import { getTemplates } from "../templates-content";
 
 type Props = {
@@ -29,6 +30,7 @@ export default async function Templates({ params }: Props) {
         <main className="grid h-full w-full place-items-center">
             <div className="flex flex-col items-center gap-8">
                 <h1 className="text-xl font-bold">Template: {template.name}</h1>
+                <TemplateEditForm template={template} />
             </div>
         </main>
     );
