@@ -2,11 +2,11 @@
 
 import type { TemplateWithVariablesDTO } from "@/dto/templates.dto";
 import {
-    type TemplateBannerVariableSchema,
+    type TemplateEditBannerVariableSchema,
     type TemplateEditSchema,
+    type TemplateEditTextVariableSchema,
     templateEditSchema,
-    type TemplateTextVariableSchema,
-} from "@/schema/template-edit-schema";
+} from "@/schema/templates/template-edit-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import VarDecider from "./var-decider";
@@ -30,7 +30,7 @@ export default function TemplateEditForm({ template }: Props) {
                         tag: variable.tag,
                         type: variable.type,
                         order: variable.order,
-                    } satisfies TemplateTextVariableSchema;
+                    } satisfies TemplateEditTextVariableSchema;
                 else if (variable.type === "BANNER") {
                     return {
                         id: variable.id,
@@ -40,7 +40,7 @@ export default function TemplateEditForm({ template }: Props) {
                         order: variable.order,
                         imageHeight: variable?.config?.imageHeight ?? 0,
                         imageWidth: variable?.config?.imageWidth ?? 0,
-                    } satisfies TemplateBannerVariableSchema;
+                    } satisfies TemplateEditBannerVariableSchema;
                 }
             }),
         },
@@ -65,7 +65,7 @@ export default function TemplateEditForm({ template }: Props) {
                     <VarDecider
                         key={field.id}
                         index={index}
-                        templateVariable={field}
+                        templateVariableType={field.type}
                     />
                 ))}
                 <button>xd</button>

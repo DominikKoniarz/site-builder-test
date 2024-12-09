@@ -1,3 +1,4 @@
+import type { TemplateEditSchema } from "@/schema/templates/template-edit-schema";
 import {
     FormControl,
     FormField,
@@ -6,7 +7,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { TemplateEditSchema } from "@/schema/template-edit-schema";
 import { useFormContext } from "react-hook-form";
 
 type Props = {

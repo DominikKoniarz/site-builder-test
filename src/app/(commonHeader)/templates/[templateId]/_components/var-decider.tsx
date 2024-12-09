@@ -1,21 +1,18 @@
-import {
-    TemplateBannerVariableSchema,
-    TemplateTextVariableSchema,
-} from "@/schema/template-edit-schema";
+import type { VariableType } from "@prisma/client";
 import TemplateTextVariable from "./template-text-variable";
 import TemplateBannerVariable from "./template-banner-variable";
 
 type Props = {
     index: number;
-    templateVariable: TemplateTextVariableSchema | TemplateBannerVariableSchema;
+    templateVariableType: VariableType;
 };
 
-export default function VarDecider({ index, templateVariable }: Props) {
-    if (templateVariable.type === "TEXT") {
+export default function VarDecider({ index, templateVariableType }: Props) {
+    if (templateVariableType === "TEXT") {
         return <TemplateTextVariable index={index} />;
     }
 
-    if (templateVariable.type === "BANNER") {
+    if (templateVariableType === "BANNER") {
         return <TemplateBannerVariable index={index} />;
     }
 
