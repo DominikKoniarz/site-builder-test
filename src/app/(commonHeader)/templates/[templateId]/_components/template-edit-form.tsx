@@ -2,8 +2,10 @@
 
 import type { TemplateWithVariablesDTO } from "@/dto/templates.dto";
 import {
+    type TemplateBannerVariableSchema,
     type TemplateEditSchema,
     templateEditSchema,
+    type TemplateTextVariableSchema,
 } from "@/schema/template-edit-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -20,13 +22,27 @@ export default function TemplateEditForm({ template }: Props) {
             id: template.id,
             name: template.name,
             description: template.description,
-            variables: template.variables.map((variable) => ({
-                ...variable,
-                type: variable.type,
-                order: variable.order,
-                imageWidth: 0,
-                imageHeight: 0,
-            })),
+            variables: template.variables.map((variable) => {
+                if (variable.type === "TEXT")
+                    return {
+                        id: variable.id,
+                        name: variable.name,
+                        tag: variable.tag,
+                        type: variable.type,
+                        order: variable.order,
+                    } satisfies TemplateTextVariableSchema;
+                else if (variable.type === "BANNER") {
+                    return {
+                        id: variable.id,
+                        name: variable.name,
+                        tag: variable.tag,
+                        type: variable.type,
+                        order: variable.order,
+                        imageHeight: variable?.config?.imageHeight ?? 0,
+                        imageWidth: variable?.config?.imageWidth ?? 0,
+                    } satisfies TemplateBannerVariableSchema;
+                }
+            }),
         },
         resolver: zodResolver(templateEditSchema),
         mode: "onChange",
@@ -37,14 +53,13 @@ export default function TemplateEditForm({ template }: Props) {
         name: "variables", // This corresponds to the key in the schema
     });
 
-    console.log(form.formState.errors);
-
     return (
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit((data) => {
                     console.log(data);
                 })}
+                className="flex flex-col gap-4"
             >
                 {fields.map((field, index) => (
                     <VarDecider

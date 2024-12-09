@@ -1,17 +1,16 @@
-import type { VariableType } from "@prisma/client";
+import { VariableType } from "@prisma/client";
 
+// Template variable base
 export type TemplateVariableBaseDTO = {
     id: string;
     name: string;
     tag: string;
-    type: VariableType;
     order: number;
     updatedAt: Date;
     createdAt: Date;
 };
 
-export type TemplateTextVariableDTO = TemplateVariableBaseDTO & {};
-
+// Additional types nested in vars dto's
 export type TemplateBannerVariableConfigDTO = {
     id: string;
     imageWidth: number;
@@ -20,6 +19,17 @@ export type TemplateBannerVariableConfigDTO = {
     updatedAt: Date;
 };
 
+// Final vars definitions
+export type TemplateTextVariableDTO = TemplateVariableBaseDTO & {
+    type: (typeof VariableType)["TEXT"];
+};
+
 export type TemplateBannerVariableDTO = TemplateVariableBaseDTO & {
+    type: (typeof VariableType)["BANNER"];
     config: TemplateBannerVariableConfigDTO | null;
 };
+
+// Template variable union
+export type TemplateVariableDTO =
+    | TemplateTextVariableDTO
+    | TemplateBannerVariableDTO;

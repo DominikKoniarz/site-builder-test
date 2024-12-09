@@ -9,7 +9,7 @@ type Props = {
     }>;
 };
 
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 // export const generateStaticParams = async (): Promise<
 //     { templateId: string }[]

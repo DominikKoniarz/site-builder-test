@@ -3,6 +3,7 @@ import {
     TemplateTextVariableSchema,
 } from "@/schema/template-edit-schema";
 import TemplateTextVariable from "./template-text-variable";
+import TemplateBannerVariable from "./template-banner-variable";
 
 type Props = {
     index: number;
@@ -15,11 +16,7 @@ export default function VarDecider({ index, templateVariable }: Props) {
     }
 
     if (templateVariable.type === "BANNER") {
-        return (
-            <p key={templateVariable.id}>
-                {templateVariable.type} {templateVariable.name}
-            </p>
-        );
+        return <TemplateBannerVariable index={index} />;
     }
 
     return null;

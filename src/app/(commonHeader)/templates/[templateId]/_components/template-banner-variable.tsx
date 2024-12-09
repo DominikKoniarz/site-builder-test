@@ -13,7 +13,7 @@ type Props = {
     index: number;
 };
 
-export default function TemplateTextVariable({ index }: Props) {
+export default function TemplateBannerVariable({ index }: Props) {
     const { control } = useFormContext<TemplateEditSchema>();
 
     return (
@@ -44,6 +44,7 @@ export default function TemplateTextVariable({ index }: Props) {
                     </FormItem>
                 )}
             />
+            <div className="">some more banner things</div>
         </div>
     );
 }
