@@ -9,8 +9,10 @@ import {
 } from "@/schema/templates/template-edit-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import VarDecider from "./var-decider";
 import { Form } from "@/components/ui/form";
+import TemplateVarDecider from "@/components/templates/template-var-decider";
+import TemplateNameInput from "@/components/templates/template-name-input";
+import TemplateDescTextarea from "@/components/templates/template-desc-textarea";
 
 type Props = {
     template: TemplateWithVariablesDTO;
@@ -61,8 +63,10 @@ export default function TemplateEditForm({ template }: Props) {
                 })}
                 className="flex flex-col gap-4"
             >
+                <TemplateNameInput />
+                <TemplateDescTextarea />
                 {fields.map((field, index) => (
-                    <VarDecider
+                    <TemplateVarDecider
                         key={field.id}
                         index={index}
                         templateVariableType={field.type}

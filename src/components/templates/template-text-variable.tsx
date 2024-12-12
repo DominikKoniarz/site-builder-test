@@ -1,4 +1,3 @@
-import type { TemplateEditSchema } from "@/schema/templates/template-edit-schema";
 import {
     FormControl,
     FormField,
@@ -7,14 +6,14 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useFormContext } from "react-hook-form";
+import useTemplateForm from "@/hooks/useTemplateForm";
 
 type Props = {
     index: number;
 };
 
-export default function TemplateBannerVariable({ index }: Props) {
-    const { control } = useFormContext<TemplateEditSchema>();
+export default function TemplateTextVariable({ index }: Props) {
+    const { control } = useTemplateForm();
 
     return (
         <div className="flex flex-row items-center gap-4 rounded-xl border p-4 pt-3">
@@ -44,7 +43,6 @@ export default function TemplateBannerVariable({ index }: Props) {
                     </FormItem>
                 )}
             />
-            <div className="">some more banner things</div>
         </div>
     );
 }

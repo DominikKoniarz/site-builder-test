@@ -7,7 +7,10 @@ type Props = {
     templateVariableType: VariableType;
 };
 
-export default function VarDecider({ index, templateVariableType }: Props) {
+export default function TemplateVarDecider({
+    index,
+    templateVariableType,
+}: Props) {
     if (templateVariableType === "TEXT") {
         return <TemplateTextVariable index={index} />;
     }
