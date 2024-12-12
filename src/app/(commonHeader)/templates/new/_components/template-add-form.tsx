@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import {
+    type TemplateAddSchema,
     templateAddSchema,
-    TemplateAddSchema,
 } from "@/schema/templates/template-add-schema";
 import TemplateVarDecider from "@/components/templates/template-var-decider";
 import TemplateNameInput from "@/components/templates/template-name-input";
