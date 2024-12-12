@@ -6,6 +6,13 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import useTemplateForm from "@/hooks/useTemplateForm";
 
 export default function CommonInputs({ index }: { index: number }) {
@@ -35,6 +42,32 @@ export default function CommonInputs({ index }: { index: number }) {
                         <FormControl>
                             <Input placeholder="Tag" {...field} />
                         </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={control}
+                name={`variables.${index}.type`}
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Typ</FormLabel>
+                        <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                        >
+                            <FormControl>
+                                <SelectTrigger className="w-56">
+                                    <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                <SelectItem value="TEXT">
+                                    Zmienna tekstowa
+                                </SelectItem>
+                                <SelectItem value="BANNER">Banner</SelectItem>
+                            </SelectContent>
+                        </Select>
                         <FormMessage />
                     </FormItem>
                 )}

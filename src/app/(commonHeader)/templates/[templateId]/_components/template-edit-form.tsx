@@ -8,7 +8,7 @@ import {
     templateEditSchema,
 } from "@/schema/templates/template-edit-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import TemplateVarDecider from "@/components/templates/template-var-decider";
 import TemplateNameInput from "@/components/templates/template-name-input";
@@ -50,10 +50,7 @@ export default function TemplateEditForm({ template }: Props) {
         mode: "onChange",
     });
 
-    const { fields } = useFieldArray({
-        control: form.control,
-        name: "variables", // This corresponds to the key in the schema
-    });
+    const fields = form.watch("variables");
 
     return (
         <Form {...form}>

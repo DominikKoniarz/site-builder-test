@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import {
     type TemplateAddSchema,
@@ -22,10 +22,7 @@ export default function TemplateAddForm() {
         mode: "onChange",
     });
 
-    const { fields } = useFieldArray({
-        control: form.control,
-        name: "variables", // This corresponds to the key in the schema
-    });
+    const fields = form.watch("variables");
 
     return (
         <Form {...form}>
@@ -39,7 +36,8 @@ export default function TemplateAddForm() {
                 <TemplateDescTextarea />
                 {fields.map((field, index) => (
                     <TemplateVarDecider
-                        key={field.id}
+                        // CHYBA FOR NOW ONLY
+                        key={`${field.name}-${index}`}
                         index={index}
                         templateVariableType={field.type}
                     />
