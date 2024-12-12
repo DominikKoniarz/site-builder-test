@@ -8,15 +8,11 @@ import {
 import { Input } from "@/components/ui/input";
 import useTemplateForm from "@/hooks/useTemplateForm";
 
-type Props = {
-    index: number;
-};
-
-export default function TemplateBannerVariable({ index }: Props) {
+export default function CommonInputs({ index }: { index: number }) {
     const { control } = useTemplateForm();
 
     return (
-        <div className="flex flex-row items-center gap-4 rounded-xl border p-4 pt-3">
+        <>
             <FormField
                 control={control}
                 name={`variables.${index}.name`}
@@ -43,7 +39,6 @@ export default function TemplateBannerVariable({ index }: Props) {
                     </FormItem>
                 )}
             />
-            <div className="">some more banner things</div>
-        </div>
+        </>
     );
 }

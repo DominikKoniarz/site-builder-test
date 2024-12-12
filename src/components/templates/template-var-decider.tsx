@@ -1,6 +1,6 @@
 import type { VariableType } from "@prisma/client";
-import TemplateTextVariable from "./template-text-variable";
-import TemplateBannerVariable from "./template-banner-variable";
+import TemplateTextVariable from "./variables/text/template-text-variable";
+import TemplateBannerVariable from "./variables/banner/template-banner-variable";
 
 type Props = {
     index: number;

@@ -13,18 +13,22 @@ export const templateBaseSchema = z.object({
         .max(255, {
             message: "Template name must be at most 255 characters long",
         }),
-    description: z
-        .string()
-        .min(1, {
-            message: "Template description must be at least 1 character long",
-        })
-        // size of TEXT in POSTGRES
-        .max(65535, {
-            message:
-                "Template description must be at most 65535 characters long",
-        })
-        .nullable()
-        .transform((val) => val || null),
+    description: z.preprocess(
+        (arg) =>
+            typeof arg === "string" ? (arg.length > 0 ? arg : null) : arg,
+        z
+            .string()
+            .min(1, {
+                message:
+                    "Template description must be at least 1 character long",
+            })
+            // size of TEXT in POSTGRES
+            .max(65535, {
+                message:
+                    "Template description must be at most 65535 characters long",
+            })
+            .nullable(),
+    ),
 });
 
 export const templateAddSchema = templateBaseSchema.extend({

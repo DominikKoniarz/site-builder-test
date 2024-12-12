@@ -55,8 +55,6 @@ export default function TemplateEditForm({ template }: Props) {
         name: "variables", // This corresponds to the key in the schema
     });
 
-    console.log(form.formState.errors);
-
     return (
         <Form {...form}>
             <form
