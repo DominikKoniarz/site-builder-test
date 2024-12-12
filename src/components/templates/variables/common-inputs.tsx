@@ -14,6 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import useTemplateForm from "@/hooks/useTemplateForm";
+import { VariableType } from "@prisma/client";
 
 export default function CommonInputs({ index }: { index: number }) {
     const { control } = useTemplateForm();
@@ -62,10 +63,12 @@ export default function CommonInputs({ index }: { index: number }) {
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                                <SelectItem value="TEXT">
+                                <SelectItem value={VariableType.TEXT}>
                                     Zmienna tekstowa
                                 </SelectItem>
-                                <SelectItem value="BANNER">Banner</SelectItem>
+                                <SelectItem value={VariableType.BANNER}>
+                                    Banner
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <FormMessage />
