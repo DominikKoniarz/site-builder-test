@@ -5,22 +5,15 @@ import {
 } from "./template-variables-schemas";
 import { templateBaseSchema } from "./template-add-schema";
 
-export const templateEditSchema = templateBaseSchema
-    .merge(
-        z.object({
-            id: z.string().uuid({ message: "Invalid template id" }),
-        }),
-    )
-    .merge(
-        z.object({
-            variables: z.array(
-                z.discriminatedUnion("type", [
-                    templateEditTextVariableSchema,
-                    templateEditBannerVariableSchema,
-                ]),
-            ),
-        }),
-    );
+export const templateEditSchema = templateBaseSchema.extend({
+    id: z.string().uuid({ message: "Invalid template id" }),
+    variables: z.array(
+        z.discriminatedUnion("type", [
+            templateEditTextVariableSchema,
+            templateEditBannerVariableSchema,
+        ]),
+    ),
+});
 
 export type TemplateEditTextVariableSchema = z.infer<
     typeof templateEditTextVariableSchema

@@ -1,41 +1,64 @@
 import { VariableType } from "@prisma/client";
 import { z } from "zod";
 
-// More validation here
-export const templateNewTextVariableSchema = z.object({
+const templateNewVariableBaseSchema = z.object({
     name: z
         .string()
-        .min(1, { message: "Variable name must be at least 1 character long" }),
+        .min(1, { message: "Variable name must be at least 1 character long" })
+        .max(255, {
+            message: "Variable name must be at most 255 characters long",
+        }),
     tag: z
         .string()
-        .min(1, { message: "Variable tag must be at least 1 character long" }),
-    type: z.literal(VariableType.TEXT),
-    order: z.number().int(),
+        .min(1, { message: "Variable tag must be at least 1 character long" })
+        .max(255, {
+            message: "Variable tag must be at most 255 characters long",
+        }),
+    order: z
+        .number({ message: "Variable order must be a number" })
+        .int({ message: "Variable order must be an integer" }),
 });
 
-export const templateNewBannerVariableSchema = z.object({
-    name: z
-        .string()
-        .min(1, { message: "Variable name must be at least 1 character long" }),
-    tag: z
-        .string()
-        .min(1, { message: "Variable tag must be at least 1 character long" }),
-    type: z.literal(VariableType.BANNER),
-    order: z.number().int(),
-    imageWidth: z.number().int(),
-    imageHeight: z.number().int(),
-});
+export const templateNewTextVariableSchema =
+    templateNewVariableBaseSchema.extend({
+        type: z.literal(VariableType.TEXT, {
+            message: "Invalid variable type",
+        }),
+    });
+
+export const templateNewBannerVariableSchema =
+    templateNewVariableBaseSchema.extend({
+        type: z.literal(VariableType.BANNER, {
+            message: "Invalid variable type",
+        }),
+        imageWidth: z
+            .number({
+                message: "Image width must be a number",
+            })
+            .int({
+                message: "Image width must be an integer",
+            })
+            .positive({
+                message: "Image width must be a positive number",
+            }),
+        imageHeight: z
+            .number({
+                message: "Image height must be a number",
+            })
+            .int({
+                message: "Image height must be an integer",
+            })
+            .positive({
+                message: "Image height must be a positive number",
+            }),
+    });
 
 export const templateEditTextVariableSchema =
-    templateNewTextVariableSchema.merge(
-        z.object({
-            id: z.string().uuid({ message: "Invalid variable id" }),
-        }),
-    );
+    templateNewTextVariableSchema.extend({
+        id: z.string().uuid({ message: "Invalid variable id" }),
+    });
 
 export const templateEditBannerVariableSchema =
-    templateNewBannerVariableSchema.merge(
-        z.object({
-            id: z.string().uuid({ message: "Invalid variable id" }),
-        }),
-    );
+    templateNewBannerVariableSchema.extend({
+        id: z.string().uuid({ message: "Invalid variable id" }),
+    });

@@ -27,7 +27,7 @@ export default async function Templates({ params }: Props) {
     if (!template) redirect("/templates");
 
     return (
-        <main className="grid h-full w-full place-items-center">
+        <main className="flex h-full w-full flex-row justify-center p-5">
             <div className="flex flex-col items-center gap-8">
                 <h1 className="text-xl font-bold">Edit template</h1>
                 <TemplateEditForm template={template} />
