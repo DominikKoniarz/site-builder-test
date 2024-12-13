@@ -25,7 +25,7 @@ export default function CommonInputs({ index }: { index: number }) {
                 control={control}
                 name={`variables.${index}.name`}
                 render={({ field }) => (
-                    <FormItem className="space-y-1">
+                    <FormItem className="w-56 space-y-1">
                         <FormLabel>Name</FormLabel>
                         <FormControl>
                             <Input placeholder="Name" {...field} />
@@ -38,7 +38,7 @@ export default function CommonInputs({ index }: { index: number }) {
                 control={control}
                 name={`variables.${index}.tag`}
                 render={({ field }) => (
-                    <FormItem className="space-y-1">
+                    <FormItem className="w-56 space-y-1">
                         <FormLabel>Tag</FormLabel>
                         <FormControl>
                             <Input placeholder="Tag" {...field} />
@@ -51,7 +51,7 @@ export default function CommonInputs({ index }: { index: number }) {
                 control={control}
                 name={`variables.${index}.type`}
                 render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="w-56 space-y-1">
                         <FormLabel>Typ</FormLabel>
                         <Select
                             onValueChange={field.onChange}

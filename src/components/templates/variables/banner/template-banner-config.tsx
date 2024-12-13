@@ -18,12 +18,13 @@ export default function TemplateBannerConfig({ index }: { index: number }) {
                 control={control}
                 name={`variables.${index}.imageWidth`}
                 render={({ field }) => (
-                    <FormItem className="space-y-1">
+                    <FormItem className="w-56 space-y-1">
                         <FormLabel>Image width</FormLabel>
                         <FormControl>
                             <Input
                                 placeholder="Image width"
                                 {...field}
+                                value={field.value ?? 0}
                                 onChange={(e) =>
                                     field.onChange(textToNumVal(e))
                                 }
@@ -37,12 +38,13 @@ export default function TemplateBannerConfig({ index }: { index: number }) {
                 control={control}
                 name={`variables.${index}.imageHeight`}
                 render={({ field }) => (
-                    <FormItem className="space-y-1">
+                    <FormItem className="w-56 space-y-1">
                         <FormLabel>Image height</FormLabel>
                         <FormControl>
                             <Input
                                 placeholder="Image height"
                                 {...field}
+                                value={field.value ?? 0}
                                 onChange={(e) =>
                                     field.onChange(textToNumVal(e))
                                 }

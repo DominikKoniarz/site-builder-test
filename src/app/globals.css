@@ -5,7 +5,7 @@
 @layer components {
     html,
     body {
-        @apply h-full;
+        @apply flex min-h-screen flex-col;
     }
 }
 

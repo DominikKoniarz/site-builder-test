@@ -14,7 +14,7 @@ export default function TemplateNameInput() {
     return (
         <FormField
             control={control}
-            name={`name`}
+            name="name"
             render={({ field }) => (
                 <FormItem className="space-y-1">
                     <FormLabel>Name</FormLabel>

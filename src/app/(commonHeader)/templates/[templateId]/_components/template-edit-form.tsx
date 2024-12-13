@@ -58,7 +58,7 @@ export default function TemplateEditForm({ template }: Props) {
                 onSubmit={form.handleSubmit((data) => {
                     console.log(data);
                 })}
-                className="flex flex-col gap-4"
+                className="flex w-full flex-col gap-4"
             >
                 <TemplateNameInput />
                 <TemplateDescTextarea />

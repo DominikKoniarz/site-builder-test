@@ -6,7 +6,7 @@ export default function CommonHeaderLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="flex h-full flex-col bg-slate-800 text-white">
+        <div className="flex h-full flex-1 flex-col bg-slate-800 text-white">
             <Header />
             {children}
         </div>

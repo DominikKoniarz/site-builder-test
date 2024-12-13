@@ -10,6 +10,7 @@ import {
 import TemplateVarDecider from "@/components/templates/template-var-decider";
 import TemplateNameInput from "@/components/templates/template-name-input";
 import TemplateDescTextarea from "@/components/templates/template-desc-textarea";
+import AddVariableButton from "@/components/templates/variables/add-variable-button";
 
 export default function TemplateAddForm() {
     const form = useForm<TemplateAddSchema>({
@@ -30,18 +31,19 @@ export default function TemplateAddForm() {
                 onSubmit={form.handleSubmit((data) => {
                     console.log(data);
                 })}
-                className="flex flex-col gap-4"
+                className="flex h-full w-full flex-col gap-4"
             >
                 <TemplateNameInput />
                 <TemplateDescTextarea />
                 {variables.map((field, index) => (
                     <TemplateVarDecider
-                        // CHYBA FOR NOW ONLY - probably should be change when sorting will be implemented
-                        key={`${field.name}-${index}`}
+                        // key={nanoid()}
+                        key={index}
                         index={index}
                         templateVariableType={field.type}
                     />
                 ))}
+                <AddVariableButton />
                 <button>xd</button>
             </form>
         </Form>

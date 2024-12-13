@@ -6,7 +6,7 @@ type Props = {
 
 export default function TemplateTextVariable({ index }: Props) {
     return (
-        <div className="flex flex-row items-center gap-4 rounded-xl border p-4 pt-3">
+        <div className="flex flex-row gap-4 rounded-xl border p-4 pt-3">
             <CommonInputs index={index} />
         </div>
     );
