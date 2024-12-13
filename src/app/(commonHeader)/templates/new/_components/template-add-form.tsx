@@ -1,27 +1,14 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
-import {
-    type TemplateAddSchema,
-    templateAddSchema,
-} from "@/schema/templates/template-add-schema";
 import TemplateVarDecider from "@/components/templates/template-var-decider";
 import TemplateNameInput from "@/components/templates/template-name-input";
 import TemplateDescTextarea from "@/components/templates/template-desc-textarea";
 import AddVariableButton from "@/components/templates/variables/add-variable-button";
+import useAddTemplateForm from "../_hooks/use-add-template-from";
 
 export default function TemplateAddForm() {
-    const form = useForm<TemplateAddSchema>({
-        defaultValues: {
-            name: "",
-            description: null,
-            variables: [],
-        },
-        resolver: zodResolver(templateAddSchema),
-        mode: "onChange",
-    });
+    const { form } = useAddTemplateForm();
 
     const variables = form.watch("variables");
 
