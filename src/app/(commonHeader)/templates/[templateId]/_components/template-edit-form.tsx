@@ -50,7 +50,7 @@ export default function TemplateEditForm({ template }: Props) {
         mode: "onChange",
     });
 
-    const fields = form.watch("variables");
+    const variables = form.watch("variables");
 
     return (
         <Form {...form}>
@@ -62,7 +62,7 @@ export default function TemplateEditForm({ template }: Props) {
             >
                 <TemplateNameInput />
                 <TemplateDescTextarea />
-                {fields.map((field, index) => (
+                {variables.map((field, index) => (
                     <TemplateVarDecider
                         key={field.id}
                         index={index}

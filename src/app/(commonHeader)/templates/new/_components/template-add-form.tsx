@@ -22,7 +22,7 @@ export default function TemplateAddForm() {
         mode: "onChange",
     });
 
-    const fields = form.watch("variables");
+    const variables = form.watch("variables");
 
     return (
         <Form {...form}>
@@ -34,9 +34,9 @@ export default function TemplateAddForm() {
             >
                 <TemplateNameInput />
                 <TemplateDescTextarea />
-                {fields.map((field, index) => (
+                {variables.map((field, index) => (
                     <TemplateVarDecider
-                        // CHYBA FOR NOW ONLY
+                        // CHYBA FOR NOW ONLY - probably should be change when sorting will be implemented
                         key={`${field.name}-${index}`}
                         index={index}
                         templateVariableType={field.type}

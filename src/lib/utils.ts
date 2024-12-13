@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export const wait = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
+// transforms input number string to number
 export const textToNumVal = (
     textOrEvent: string | React.ChangeEvent<HTMLInputElement>,
 ) => {
