@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import useTemplateForm from "@/hooks/useTemplateForm";
+import useTemplateForm from "@/hooks/use-template-form";
 import { cn } from "@/lib/utils";
+import { nanoid } from "nanoid";
 
 type Props = {
     className?: string;
@@ -15,6 +16,7 @@ export default function AddVariableButton({ className }: Props) {
         form.setValue("variables", [
             ...variables,
             {
+                frontendId: nanoid(),
                 name: "",
                 tag: "",
                 order: variables.length,
@@ -30,7 +32,7 @@ export default function AddVariableButton({ className }: Props) {
             variant="secondary"
             className={cn("mx-auto w-fit", className)}
         >
-            Dodaj zmienną
+            Add variable
         </Button>
     );
 }

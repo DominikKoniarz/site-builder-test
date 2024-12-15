@@ -17,6 +17,9 @@ const templateNewVariableBaseSchema = z.object({
     order: z
         .number({ message: "Variable order must be a number" })
         .int({ message: "Variable order must be an integer" }),
+    // for the sake of frontend (not used in backend)
+    // it's used to identify variables (and for sorting)
+    frontendId: z.string(),
 });
 
 export const templateNewTextVariableSchema =

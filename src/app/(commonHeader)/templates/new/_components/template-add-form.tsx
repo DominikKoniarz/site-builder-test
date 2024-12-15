@@ -6,6 +6,7 @@ import TemplateNameInput from "@/components/templates/template-name-input";
 import TemplateDescTextarea from "@/components/templates/template-desc-textarea";
 import AddVariableButton from "@/components/templates/variables/add-variable-button";
 import useAddTemplateForm from "../_hooks/use-add-template-from";
+import SubmitButton from "@/components/submit-button";
 
 export default function TemplateAddForm() {
     const { form } = useAddTemplateForm();
@@ -24,14 +25,13 @@ export default function TemplateAddForm() {
                 <TemplateDescTextarea />
                 {variables.map((field, index) => (
                     <TemplateVarDecider
-                        // key={nanoid()}
-                        key={index}
+                        key={field.frontendId}
                         index={index}
                         templateVariableType={field.type}
                     />
                 ))}
                 <AddVariableButton />
-                <button>xd</button>
+                <SubmitButton className="mx-auto mt-8" />
             </form>
         </Form>
     );

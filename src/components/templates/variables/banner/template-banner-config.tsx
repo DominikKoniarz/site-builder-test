@@ -6,7 +6,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import useTemplateForm from "@/hooks/useTemplateForm";
+import useTemplateForm from "@/hooks/use-template-form";
 import { textToNumVal } from "@/lib/utils";
 
 export default function TemplateBannerConfig({ index }: { index: number }) {

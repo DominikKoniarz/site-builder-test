@@ -5,7 +5,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import useTemplateForm from "@/hooks/useTemplateForm";
+import useTemplateForm from "@/hooks/use-template-form";
 import { Textarea } from "../ui/textarea";
 
 export default function TemplateDescTextarea() {

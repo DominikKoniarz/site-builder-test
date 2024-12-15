@@ -1,16 +1,31 @@
-import { Button } from "@/components/ui/button";
-import useTemplateForm from "@/hooks/useTemplateForm";
+import { Button, buttonVariants } from "@/components/ui/button";
+import useTemplateForm from "@/hooks/use-template-form";
 import { CircleX } from "lucide-react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type DeleteVariableButtonProps = {
     index: number;
 };
 
-type OnlyButtonProps = {
+type DeleteButtonProps = {
+    onClick?: () => void;
+};
+
+type DeleteAlertProps = {
     onClick: () => void;
 };
 
-const DeleteVariableButton = ({ index }: DeleteVariableButtonProps) => {
+const useDeleteVariableButton = (index: number) => {
     const form = useTemplateForm();
 
     const onClick = () => {
@@ -22,10 +37,14 @@ const DeleteVariableButton = ({ index }: DeleteVariableButtonProps) => {
         );
     };
 
-    return <OnlyButton onClick={onClick} />;
+    const currentVariable = form.getValues("variables")[index];
+
+    const isLegacy = "id" in currentVariable;
+
+    return { onClick, isLegacy };
 };
 
-const OnlyButton = ({ onClick }: OnlyButtonProps) => {
+const DeleteButton = ({ onClick }: DeleteButtonProps) => {
     return (
         <Button
             type="button"
@@ -38,6 +57,44 @@ const OnlyButton = ({ onClick }: OnlyButtonProps) => {
     );
 };
 
-DeleteVariableButton.OnlyButton = OnlyButton;
+const DeleteAlert = ({ onClick }: DeleteAlertProps) => {
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <DeleteButton />
+            </AlertDialogTrigger>
+            <AlertDialogContent className="border-slate-700 bg-slate-700">
+                <AlertDialogHeader>
+                    <AlertDialogTitle className="text-white">
+                        Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="font-medium text-white/80">
+                        This is legacy variable and it will be removed from
+                        database. This action cannot be undone.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                        onClick={onClick}
+                        className={buttonVariants({ variant: "destructive" })}
+                    >
+                        Delete
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+};
+
+const DeleteVariableButton = ({ index }: DeleteVariableButtonProps) => {
+    const { isLegacy, onClick } = useDeleteVariableButton(index);
+
+    return isLegacy ? (
+        <DeleteAlert onClick={onClick} />
+    ) : (
+        <DeleteButton onClick={onClick} />
+    );
+};
 
 export default DeleteVariableButton;

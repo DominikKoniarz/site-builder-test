@@ -7,6 +7,7 @@ import TemplateNameInput from "@/components/templates/template-name-input";
 import TemplateDescTextarea from "@/components/templates/template-desc-textarea";
 import useEditTemplateForm from "../_hooks/use-edit-template-form";
 import AddVariableButton from "@/components/templates/variables/add-variable-button";
+import SubmitButton from "@/components/submit-button";
 
 type Props = {
     template: TemplateWithVariablesDTO;
@@ -29,13 +30,13 @@ export default function TemplateEditForm({ template }: Props) {
                 <TemplateDescTextarea />
                 {variables.map((field, index) => (
                     <TemplateVarDecider
-                        key={field.id}
+                        key={field.frontendId}
                         index={index}
                         templateVariableType={field.type}
                     />
                 ))}
                 <AddVariableButton />
-                <button>xd</button>
+                <SubmitButton className="mx-auto mt-8" />
             </form>
         </Form>
     );

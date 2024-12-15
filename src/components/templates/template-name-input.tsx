@@ -6,7 +6,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import useTemplateForm from "@/hooks/useTemplateForm";
+import useTemplateForm from "@/hooks/use-template-form";
 
 export default function TemplateNameInput() {
     const { control } = useTemplateForm();

@@ -6,6 +6,7 @@ import {
     templateEditSchema,
 } from "@/schema/templates/template-edit-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
 
 const useEditTemplateForm = (template: TemplateWithVariablesDTO) => {
@@ -18,6 +19,7 @@ const useEditTemplateForm = (template: TemplateWithVariablesDTO) => {
                 if (variable.type === "TEXT")
                     return {
                         id: variable.id,
+                        frontendId: nanoid(),
                         name: variable.name,
                         tag: variable.tag,
                         type: variable.type,
@@ -26,6 +28,7 @@ const useEditTemplateForm = (template: TemplateWithVariablesDTO) => {
                 else if (variable.type === "BANNER") {
                     return {
                         id: variable.id,
+                        frontendId: nanoid(),
                         name: variable.name,
                         tag: variable.tag,
                         type: variable.type,

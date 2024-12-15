@@ -13,7 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import useTemplateForm from "@/hooks/useTemplateForm";
+import useTemplateForm from "@/hooks/use-template-form";
 import { VariableType } from "@prisma/client";
 
 export default function CommonInputs({ index }: { index: number }) {
