@@ -1,10 +1,12 @@
 import type { TemplateWithVariablesDTO } from "@/dto/templates.dto";
 import {
-    type TemplateEditBannerVariableSchema,
     type TemplateEditSchema,
-    type TemplateEditTextVariableSchema,
     templateEditSchema,
 } from "@/schema/templates/template-edit-schema";
+import type {
+    TemplateEditBannerVariableSchema,
+    TemplateEditTextVariableSchema,
+} from "@/schema/templates/template-variables-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";

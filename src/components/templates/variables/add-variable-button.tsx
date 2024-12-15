@@ -16,6 +16,7 @@ export default function AddVariableButton({ className }: Props) {
         form.setValue("variables", [
             ...variables,
             {
+                id: null, // null if it's a new variable at template edit
                 frontendId: nanoid(),
                 name: "",
                 tag: "",

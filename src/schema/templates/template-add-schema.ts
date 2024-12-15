@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-    templateNewBannerVariableSchema,
-    templateNewTextVariableSchema,
-} from "./template-variables-schemas";
+import { newTemplateVariablesSchema } from "./template-variables-schemas";
 
 export const templateBaseSchema = z.object({
     name: z
@@ -32,12 +29,7 @@ export const templateBaseSchema = z.object({
 });
 
 export const templateAddSchema = templateBaseSchema.extend({
-    variables: z.array(
-        z.discriminatedUnion("type", [
-            templateNewTextVariableSchema,
-            templateNewBannerVariableSchema,
-        ]),
-    ),
+    variables: newTemplateVariablesSchema,
 });
 
 export type TemplateAddSchema = z.infer<typeof templateAddSchema>;

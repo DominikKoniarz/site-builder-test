@@ -58,10 +58,61 @@ export const templateNewBannerVariableSchema =
 
 export const templateEditTextVariableSchema =
     templateNewTextVariableSchema.extend({
-        id: z.string().uuid({ message: "Invalid variable id" }),
+        id: z.string().uuid({ message: "Invalid variable id" }).nullable(), // null if new variable
     });
 
 export const templateEditBannerVariableSchema =
     templateNewBannerVariableSchema.extend({
-        id: z.string().uuid({ message: "Invalid variable id" }),
+        id: z.string().uuid({ message: "Invalid variable id" }).nullable(), // null if new variable
     });
+
+export const newTemplateVariablesSchema = z
+    .array(
+        z.discriminatedUnion("type", [
+            templateNewTextVariableSchema,
+            templateNewBannerVariableSchema,
+        ]),
+    )
+    .superRefine((variables, ctx) => {
+        const tagMap = new Map<string, number>();
+        variables.forEach((variable, index) => {
+            if (tagMap.has(variable.tag)) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Variables must have unique tags",
+                    path: [index, "tag"],
+                });
+            } else {
+                tagMap.set(variable.tag, index);
+            }
+        });
+    });
+
+export const editTemplateVariablesSchema = z
+    .array(
+        z.discriminatedUnion("type", [
+            templateEditTextVariableSchema,
+            templateEditBannerVariableSchema,
+        ]),
+    )
+    .superRefine((variables, ctx) => {
+        const tagMap = new Map<string, number>();
+        variables.forEach((variable, index) => {
+            if (tagMap.has(variable.tag)) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Variables must have unique tags",
+                    path: [index, "tag"],
+                });
+            } else {
+                tagMap.set(variable.tag, index);
+            }
+        });
+    });
+
+export type TemplateEditTextVariableSchema = z.infer<
+    typeof templateEditTextVariableSchema
+>;
+export type TemplateEditBannerVariableSchema = z.infer<
+    typeof templateEditBannerVariableSchema
+>;
