@@ -1,4 +1,5 @@
 import CommonInputs from "../common-inputs";
+import DeleteVariableButton from "../delete-variable-button";
 
 type Props = {
     index: number;
@@ -7,7 +8,10 @@ type Props = {
 export default function TemplateTextVariable({ index }: Props) {
     return (
         <div className="flex flex-row gap-4 rounded-xl border p-4 pt-3">
-            <CommonInputs index={index} />
+            <div className="flex flex-row gap-4">
+                <CommonInputs index={index} />
+            </div>
+            <DeleteVariableButton index={index} />
         </div>
     );
 }

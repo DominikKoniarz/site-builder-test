@@ -16,7 +16,7 @@ export default function TemplateDescTextarea() {
             control={control}
             name="description"
             render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-1">
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                         <Textarea

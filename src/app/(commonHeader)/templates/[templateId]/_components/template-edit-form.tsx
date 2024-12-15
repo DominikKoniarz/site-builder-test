@@ -6,6 +6,7 @@ import TemplateVarDecider from "@/components/templates/template-var-decider";
 import TemplateNameInput from "@/components/templates/template-name-input";
 import TemplateDescTextarea from "@/components/templates/template-desc-textarea";
 import useEditTemplateForm from "../_hooks/use-edit-template-form";
+import AddVariableButton from "@/components/templates/variables/add-variable-button";
 
 type Props = {
     template: TemplateWithVariablesDTO;
@@ -33,6 +34,7 @@ export default function TemplateEditForm({ template }: Props) {
                         templateVariableType={field.type}
                     />
                 ))}
+                <AddVariableButton />
                 <button>xd</button>
             </form>
         </Form>
