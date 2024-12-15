@@ -9,16 +9,14 @@ import useAddTemplateForm from "../_hooks/use-add-template-from";
 import SubmitButton from "@/components/submit-button";
 
 export default function TemplateAddForm() {
-    const { form } = useAddTemplateForm();
+    const { form, submit, isPending } = useAddTemplateForm();
 
     const variables = form.watch("variables");
 
     return (
         <Form {...form}>
             <form
-                onSubmit={form.handleSubmit((data) => {
-                    console.log(data);
-                })}
+                onSubmit={form.handleSubmit((data) => submit(data))}
                 className="flex h-full w-full flex-col gap-4"
             >
                 <TemplateNameInput />
@@ -31,7 +29,7 @@ export default function TemplateAddForm() {
                     />
                 ))}
                 <AddVariableButton />
-                <SubmitButton className="mx-auto mt-8" />
+                <SubmitButton className="mx-auto mt-8" isPending={isPending} />
             </form>
         </Form>
     );

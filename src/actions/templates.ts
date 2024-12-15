@@ -1,12 +1,14 @@
 "use server";
 
 import { actionClient } from "@/lib/safe-action";
+import { createTemplate } from "@/lib/templates/create-template";
 import { templateAddSchema } from "@/schema/templates/template-add-schema";
+import { redirect } from "next/navigation";
 
-export const createTemplate = actionClient
+export const addTemplateAction = actionClient
     .schema(templateAddSchema)
     .action(async ({ parsedInput }) => {
-        // do something
-        console.log(parsedInput);
-        return { success: true };
+        const template = await createTemplate(parsedInput);
+
+        redirect(`/templates/${template.id}`);
     });

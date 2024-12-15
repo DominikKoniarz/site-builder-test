@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { TemplateAddSchema } from "@/schema/templates/template-add-schema";
 import type {
     TemplateDTO,
     TemplateWithVariablesDTO,
@@ -51,4 +52,32 @@ export const getTemplate = async (
     });
 
     return template ? createTemplateWithVariablesDTO(template) : null;
+};
+
+export const addNewTemplate = async (data: TemplateAddSchema) => {
+    const template = await prisma.template.create({
+        data: {
+            name: data.name,
+            description: data.description,
+            variables: {
+                create: data.variables.map((variable) => ({
+                    name: variable.name,
+                    type: variable.type,
+                    tag: variable.tag,
+                    order: variable.order,
+                    bannerTemplateVariableConfig:
+                        variable.type === "BANNER"
+                            ? {
+                                  create: {
+                                      imageHeight: variable.imageHeight,
+                                      imageWidth: variable.imageWidth,
+                                  },
+                              }
+                            : undefined,
+                })),
+            },
+        },
+    });
+
+    return createTemplateDTO(template);
 };
