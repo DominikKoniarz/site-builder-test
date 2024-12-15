@@ -1,4 +1,9 @@
-import { TemplateDTO, TemplateWithVariablesDTO } from "@/dto/templates.dto";
+import "server-only";
+
+import type {
+    TemplateDTO,
+    TemplateWithVariablesDTO,
+} from "@/dto/templates.dto";
 import {
     createTemplateDTO,
     createTemplateWithVariablesDTO,

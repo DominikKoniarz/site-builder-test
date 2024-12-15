@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { PageWithVariablesDTO } from "@/dto/pages.dto";
 import { createPageWithVariablesDTO } from "@/dto/pages.mappers";
 import prisma from "@/lib/prisma";
