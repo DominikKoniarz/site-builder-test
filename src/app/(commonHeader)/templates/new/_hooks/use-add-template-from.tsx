@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAction } from "next-safe-action/hooks";
 import { addTemplateAction } from "@/actions/templates";
+import toast from "react-hot-toast";
 
 const useAddTemplateForm = () => {
     const form = useForm<TemplateAddSchema>({
@@ -18,7 +19,11 @@ const useAddTemplateForm = () => {
         mode: "onChange",
     });
 
-    const { execute: submit, isPending } = useAction(addTemplateAction, {});
+    const { execute: submit, isPending } = useAction(addTemplateAction, {
+        onSuccess: () => {
+            toast.success("Template added successfully");
+        },
+    });
 
     return {
         form,

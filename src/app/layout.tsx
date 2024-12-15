@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -29,6 +30,12 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 {children}
+                <Toaster
+                    position="bottom-right"
+                    toastOptions={{
+                        duration: 3000,
+                    }}
+                />
             </body>
         </html>
     );
