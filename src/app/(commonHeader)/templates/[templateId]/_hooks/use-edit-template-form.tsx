@@ -12,6 +12,7 @@ import type {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "nanoid";
 import { useAction } from "next-safe-action/hooks";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -48,6 +49,37 @@ const useEditTemplateForm = (template: TemplateWithVariablesDTO) => {
         resolver: zodResolver(templateEditSchema),
         mode: "onChange",
     });
+
+    useEffect(() => {
+        form.reset({
+            id: template.id,
+            name: template.name,
+            description: template.description,
+            variables: template.variables.map((variable) => {
+                if (variable.type === "TEXT")
+                    return {
+                        id: variable.id,
+                        frontendId: nanoid(),
+                        name: variable.name,
+                        tag: variable.tag,
+                        type: variable.type,
+                        order: variable.order,
+                    } satisfies TemplateEditTextVariableSchema;
+                else if (variable.type === "BANNER") {
+                    return {
+                        id: variable.id,
+                        frontendId: nanoid(),
+                        name: variable.name,
+                        tag: variable.tag,
+                        type: variable.type,
+                        order: variable.order,
+                        imageHeight: variable?.config?.imageHeight ?? 0,
+                        imageWidth: variable?.config?.imageWidth ?? 0,
+                    } satisfies TemplateEditBannerVariableSchema;
+                }
+            }),
+        });
+    }, [template]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const { execute: submit, isPending } = useAction(editTemplateAction, {
         onSuccess: () => {
