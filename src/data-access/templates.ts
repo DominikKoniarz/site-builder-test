@@ -10,6 +10,33 @@ import {
     createTemplateWithVariablesDTO,
 } from "@/dto/templates.mappers";
 import prisma from "@/lib/prisma";
+import { TemplateEditSchema } from "@/schema/templates/template-edit-schema";
+
+const variablesSelect = {
+    variables: {
+        select: {
+            id: true,
+            name: true,
+            type: true,
+            tag: true,
+            order: true,
+            createdAt: true,
+            updatedAt: true,
+            bannerTemplateVariableConfig: {
+                select: {
+                    id: true,
+                    imageHeight: true,
+                    imageWidth: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+            },
+        },
+        orderBy: {
+            order: "asc" as const,
+        },
+    },
+};
 
 export const getAllTemplates = async (): Promise<TemplateDTO[]> => {
     const templates = await prisma.template.findMany();
@@ -19,39 +46,14 @@ export const getAllTemplates = async (): Promise<TemplateDTO[]> => {
 
 export const getTemplateById = async (
     id: string,
-): Promise<TemplateWithVariablesDTO | null> => {
+): Promise<TemplateDTO | null> => {
     const template = await prisma.template.findUnique({
         where: {
             id,
         },
-        select: {
-            id: true,
-            name: true,
-            description: true,
-            variables: {
-                select: {
-                    id: true,
-                    name: true,
-                    type: true,
-                    tag: true,
-                    order: true,
-                    createdAt: true,
-                    updatedAt: true,
-                    bannerTemplateVariableConfig: {
-                        select: {
-                            id: true,
-                            imageHeight: true,
-                            imageWidth: true,
-                            createdAt: true,
-                            updatedAt: true,
-                        },
-                    },
-                },
-            },
-        },
     });
 
-    return template ? createTemplateWithVariablesDTO(template) : null;
+    return template ? createTemplateDTO(template) : null;
 };
 
 export const getTemplateByName = async (
@@ -64,6 +66,24 @@ export const getTemplateByName = async (
     });
 
     return template ? createTemplateDTO(template) : null;
+};
+
+export const getTemplateByIdWithVariables = async (
+    id: string,
+): Promise<TemplateWithVariablesDTO | null> => {
+    const template = await prisma.template.findUnique({
+        where: {
+            id,
+        },
+        select: {
+            id: true,
+            name: true,
+            description: true,
+            ...variablesSelect,
+        },
+    });
+
+    return template ? createTemplateWithVariablesDTO(template) : null;
 };
 
 export const addNewTemplate = async (data: TemplateAddSchema) => {
@@ -86,6 +106,70 @@ export const addNewTemplate = async (data: TemplateAddSchema) => {
                                   },
                               }
                             : undefined,
+                })),
+            },
+        },
+    });
+
+    return createTemplateDTO(template);
+};
+
+export const updateTemplate = async (
+    data: Pick<TemplateEditSchema, "id" | "name" | "description">,
+    variablesIdsToDelete: string[],
+    variablesToAdd: TemplateEditSchema["variables"],
+    variablesToUpdate: TemplateEditSchema["variables"], // has to have id string
+) => {
+    if (variablesToUpdate.some((variable) => !variable.id))
+        throw new Error("Variables to edit must have id");
+
+    const template = await prisma.template.update({
+        where: {
+            id: data.id,
+        },
+        data: {
+            name: data.name,
+            description: data.description,
+            variables: {
+                deleteMany: {
+                    id: {
+                        in: variablesIdsToDelete,
+                    },
+                },
+                create: variablesToAdd.map((variable) => ({
+                    name: variable.name,
+                    type: variable.type,
+                    tag: variable.tag,
+                    order: variable.order,
+                    bannerTemplateVariableConfig:
+                        variable.type === "BANNER"
+                            ? {
+                                  create: {
+                                      imageHeight: variable.imageHeight,
+                                      imageWidth: variable.imageWidth,
+                                  },
+                              }
+                            : undefined,
+                })),
+                update: variablesToUpdate.map((variable) => ({
+                    where: {
+                        id: variable.id!,
+                    },
+                    data: {
+                        name: variable.name,
+                        type: variable.type,
+                        tag: variable.tag,
+                        order: variable.order,
+                        bannerTemplateVariableConfig:
+                            variable.type === "BANNER"
+                                ? {
+                                      update: {
+                                          imageHeight: variable.imageHeight,
+                                          imageWidth: variable.imageWidth,
+                                      },
+                                  }
+                                : undefined,
+                    },
                 })),
             },
         },

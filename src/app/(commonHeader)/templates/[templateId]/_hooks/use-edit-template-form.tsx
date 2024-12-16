@@ -1,4 +1,6 @@
+import { editTemplateAction } from "@/actions/templates";
 import type { TemplateWithVariablesDTO } from "@/dto/templates.dto";
+import { actionError } from "@/lib/action-error";
 import {
     type TemplateEditSchema,
     templateEditSchema,
@@ -9,7 +11,9 @@ import type {
 } from "@/schema/templates/template-variables-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "nanoid";
+import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const useEditTemplateForm = (template: TemplateWithVariablesDTO) => {
     const form = useForm<TemplateEditSchema>({
@@ -45,8 +49,19 @@ const useEditTemplateForm = (template: TemplateWithVariablesDTO) => {
         mode: "onChange",
     });
 
+    const { execute: submit, isPending } = useAction(editTemplateAction, {
+        onSuccess: () => {
+            toast.success("Template eddited successfully", { duration: 3500 });
+        },
+        onError: (error) => {
+            actionError(error).serverError().validationErrors();
+        },
+    });
+
     return {
         form,
+        submit,
+        isPending,
     };
 };
 

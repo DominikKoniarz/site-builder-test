@@ -1,4 +1,4 @@
-import { getTemplateById } from "@/data-access/templates";
+import { getTemplateByIdWithVariables } from "@/data-access/templates";
 import { redirect } from "next/navigation";
 import TemplateEditForm from "./_components/template-edit-form";
 // import { getTemplates } from "../templates-content";
@@ -22,7 +22,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Templates({ params }: Props) {
     const { templateId } = await params;
-    const template = await getTemplateById(templateId);
+    const template = await getTemplateByIdWithVariables(templateId);
 
     if (!template) redirect("/templates");
 

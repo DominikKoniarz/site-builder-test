@@ -1,10 +1,10 @@
+import { getAllTemplates } from "@/data-access/templates";
 import TemplateList from "./_components/template-list";
-import { getTemplates } from "./templates-content";
 
 export const dynamic = "force-dynamic";
 
 export default async function Templates() {
-    const templates = await getTemplates();
+    const templates = await getAllTemplates();
 
     return (
         <main className="flex h-full w-full flex-row justify-center p-5">

@@ -19,7 +19,7 @@ export default function SubmitButton({
             className={cn("w-fit", className)}
             disabled={isPending || disabled}
         >
-            Submit
+            {isPending ? "Submitting..." : "Submit"}
         </Button>
     );
 }

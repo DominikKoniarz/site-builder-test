@@ -14,17 +14,14 @@ type Props = {
 };
 
 export default function TemplateEditForm({ template }: Props) {
-    const { form } = useEditTemplateForm(template);
+    const { form, isPending, submit } = useEditTemplateForm(template);
 
     const variables = form.watch("variables");
 
     return (
         <Form {...form}>
             <form
-                onSubmit={form.handleSubmit((data) => {
-                    // submit(data);
-                    console.log(data);
-                })}
+                onSubmit={form.handleSubmit((data) => submit(data))}
                 className="flex w-full flex-col gap-4"
             >
                 <TemplateNameInput />
@@ -37,7 +34,7 @@ export default function TemplateEditForm({ template }: Props) {
                     />
                 ))}
                 <AddVariableButton />
-                <SubmitButton className="mx-auto mt-8" />
+                <SubmitButton className="mx-auto mt-8" isPending={isPending} />
             </form>
         </Form>
     );

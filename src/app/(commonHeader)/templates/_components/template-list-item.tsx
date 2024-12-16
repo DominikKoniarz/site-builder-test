@@ -15,7 +15,7 @@ export default function TemplateListItem({ template }: Props) {
         <li className="flex flex-row items-center gap-6 rounded-md border border-slate-200 px-6 py-3">
             <h2 className="text-base font-medium">{template.name}</h2>
             <p className="text-sm font-medium">{template.id}</p>
-            <Link href={generateTemplateLink(template)}>
+            <Link href={generateTemplateLink(template)} className="ml-auto">
                 <Edit />
             </Link>
         </li>

@@ -1,7 +1,7 @@
 import "server-only";
 
+import type { TemplateAddSchema } from "@/schema/templates/template-add-schema";
 import { addNewTemplate, getTemplateByName } from "@/data-access/templates";
-import { TemplateAddSchema } from "@/schema/templates/template-add-schema";
 import { BadRequestError } from "@/types/errors";
 
 export const createTemplate = async (data: TemplateAddSchema) => {

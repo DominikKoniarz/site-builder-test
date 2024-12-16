@@ -31,15 +31,29 @@ const useDeleteVariableButton = (index: number) => {
     const onClick = () => {
         const variables = form.getValues("variables");
 
-        form.setValue(
-            "variables",
-            variables.filter((_, i) => i !== index),
+        // Done because we want to keep the order of variables
+        const variablesAfterOneToDelete = variables
+            .filter((_, i) => i > index)
+            .map((variable) => {
+                return {
+                    ...variable,
+                    order: variable.order - 1,
+                };
+            });
+
+        const variablesBeforeOneToDelete = variables.filter(
+            (_, i) => i < index,
         );
+
+        form.setValue("variables", [
+            ...variablesBeforeOneToDelete,
+            ...variablesAfterOneToDelete,
+        ]);
     };
 
     const currentVariable = form.getValues("variables")[index];
 
-    const isLegacy = "id" in currentVariable;
+    const isLegacy = "id" in currentVariable && currentVariable.id;
 
     return { onClick, isLegacy };
 };
