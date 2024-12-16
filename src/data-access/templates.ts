@@ -17,7 +17,7 @@ export const getAllTemplates = async (): Promise<TemplateDTO[]> => {
     return templates.map((template) => createTemplateDTO(template));
 };
 
-export const getTemplate = async (
+export const getTemplateById = async (
     id: string,
 ): Promise<TemplateWithVariablesDTO | null> => {
     const template = await prisma.template.findUnique({
@@ -52,6 +52,18 @@ export const getTemplate = async (
     });
 
     return template ? createTemplateWithVariablesDTO(template) : null;
+};
+
+export const getTemplateByName = async (
+    name: string,
+): Promise<TemplateDTO | null> => {
+    const template = await prisma.template.findUnique({
+        where: {
+            name,
+        },
+    });
+
+    return template ? createTemplateDTO(template) : null;
 };
 
 export const addNewTemplate = async (data: TemplateAddSchema) => {
