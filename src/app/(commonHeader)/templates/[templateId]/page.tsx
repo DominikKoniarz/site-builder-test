@@ -1,7 +1,9 @@
-import { getTemplateByIdWithVariables } from "@/data-access/templates";
+import {
+    getAllTemplates,
+    getTemplateByIdWithVariables,
+} from "@/data-access/templates";
 import { redirect } from "next/navigation";
 import TemplateEditForm from "./_components/template-edit-form";
-// import { getTemplates } from "../templates-content";
 
 type Props = {
     params: Promise<{
@@ -9,16 +11,15 @@ type Props = {
     }>;
 };
 
-export const dynamic = "force-dynamic";
-
-// export const generateStaticParams = async (): Promise<
-//     { templateId: string }[]
-// > => {
-//     const templates = await getTemplates();
-//     return templates.map((template) => ({
-//         templateId: template.id,
-//     }));
-// };
+// revalidated after template has been edited
+export const generateStaticParams = async (): Promise<
+    { templateId: string }[]
+> => {
+    const templates = await getAllTemplates();
+    return templates.map((template) => ({
+        templateId: template.id,
+    }));
+};
 
 export default async function Templates({ params }: Props) {
     const { templateId } = await params;
