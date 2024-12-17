@@ -5,7 +5,7 @@
 @layer components {
     html,
     body {
-        @apply flex min-h-screen flex-col;
+        @apply flex min-h-screen flex-col overscroll-none;
     }
 }
 

@@ -123,35 +123,39 @@ export const updateTemplate = async (
     if (variablesToUpdate.some((variable) => !variable.id))
         throw new Error("Variables to edit must have id");
 
-    const template = await prisma.template.update({
-        where: {
-            id: data.id,
-        },
-        data: {
-            name: data.name,
-            description: data.description,
-            variables: {
-                deleteMany: {
-                    id: {
-                        in: variablesIdsToDelete,
-                    },
+    const [template] = await prisma.$transaction(
+        [
+            prisma.template.update({
+                where: {
+                    id: data.id,
                 },
-                create: variablesToAdd.map((variable) => ({
-                    name: variable.name,
-                    type: variable.type,
-                    tag: variable.tag,
-                    order: variable.order,
-                    bannerTemplateVariableConfig:
-                        variable.type === "BANNER"
-                            ? {
-                                  create: {
-                                      imageHeight: variable.imageHeight,
-                                      imageWidth: variable.imageWidth,
-                                  },
-                              }
-                            : undefined,
-                })),
-                update: variablesToUpdate.map((variable) => ({
+                data: {
+                    name: data.name,
+                    description: data.description,
+                },
+            }),
+            ...variablesToAdd.map((variable) =>
+                prisma.templateVariable.create({
+                    data: {
+                        templateId: data.id,
+                        name: variable.name,
+                        type: variable.type,
+                        tag: variable.tag,
+                        order: variable.order,
+                        bannerTemplateVariableConfig:
+                            variable.type === "BANNER"
+                                ? {
+                                      create: {
+                                          imageHeight: variable.imageHeight,
+                                          imageWidth: variable.imageWidth,
+                                      },
+                                  }
+                                : undefined,
+                    },
+                }),
+            ),
+            ...variablesToUpdate.map((variable) =>
+                prisma.templateVariable.update({
                     where: {
                         id: variable.id!,
                     },
@@ -160,20 +164,54 @@ export const updateTemplate = async (
                         type: variable.type,
                         tag: variable.tag,
                         order: variable.order,
-                        bannerTemplateVariableConfig:
-                            variable.type === "BANNER"
-                                ? {
-                                      update: {
-                                          imageHeight: variable.imageHeight,
-                                          imageWidth: variable.imageWidth,
-                                      },
-                                  }
-                                : undefined,
                     },
-                })),
-            },
-        },
-    });
+                }),
+            ),
+            // update (or create) config if type is banner
+            ...variablesToUpdate
+                .filter((variable) => variable.type === "BANNER")
+                .map((variable) => {
+                    return prisma.bannerTemplateVariableConfig.upsert({
+                        where: {
+                            templateVariableId: variable.id!,
+                        },
+                        create: {
+                            templateVariableId: variable.id!,
+                            imageHeight: variable.imageHeight,
+                            imageWidth: variable.imageWidth,
+                        },
+                        update: {
+                            imageHeight: variable.imageHeight,
+                            imageWidth: variable.imageWidth,
+                        },
+                    });
+                }),
+            //remove config if type changes
+            prisma.bannerTemplateVariableConfig.deleteMany({
+                where: {
+                    templateVariable: {
+                        id: {
+                            in: variablesToUpdate
+                                .filter(
+                                    (variable) =>
+                                        variable.type !== "BANNER" &&
+                                        variable.id,
+                                )
+                                .map((variable) => variable.id!),
+                        },
+                    },
+                },
+            }),
+            ...variablesIdsToDelete.map((id) =>
+                prisma.templateVariable.delete({
+                    where: {
+                        id,
+                    },
+                }),
+            ),
+        ],
+        { isolationLevel: "Serializable" },
+    );
 
     return createTemplateDTO(template);
 };

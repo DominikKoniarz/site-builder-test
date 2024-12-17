@@ -44,7 +44,7 @@ model BannerTemplateVariableConfig {
     imageWidth         Int
     imageHeight        Int
     templateVariableId String           @unique @db.VarChar(255)
-    templateVariable   TemplateVariable @relation(fields: [templateVariableId], references: [id])
+    templateVariable   TemplateVariable @relation(fields: [templateVariableId], references: [id], onDelete: Cascade)
     createdAt          DateTime         @default(now())
     updatedAt          DateTime         @updatedAt
 }
