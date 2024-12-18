@@ -29,6 +29,16 @@ const useAddTemplateForm = () => {
         },
     });
 
+    // useEffect(() => {
+    //     return () => {
+    //         form.reset({
+    //             name: "",
+    //             description: null,
+    //             variables: [],
+    //         });
+    //     };
+    // }, [pathname]); // eslint-disable-line
+
     return {
         form,
         isPending,

@@ -7,6 +7,7 @@ import TemplateDescTextarea from "@/components/templates/template-desc-textarea"
 import AddVariableButton from "@/components/templates/variables/add-variable-button";
 import useAddTemplateForm from "../_hooks/use-add-template-from";
 import SubmitButton from "@/components/submit-button";
+import DndVariablesWrapper from "@/components/templates/variables/dnd-variables-wrapper";
 
 export default function TemplateAddForm() {
     const { form, submit, isPending } = useAddTemplateForm();
@@ -21,13 +22,15 @@ export default function TemplateAddForm() {
             >
                 <TemplateNameInput />
                 <TemplateDescTextarea />
-                {variables.map((field, index) => (
-                    <TemplateVarDecider
-                        key={field.frontendId}
-                        index={index}
-                        variable={field}
-                    />
-                ))}
+                <DndVariablesWrapper>
+                    {variables.map((field, index) => (
+                        <TemplateVarDecider
+                            key={field.frontendId}
+                            index={index}
+                            variable={field}
+                        />
+                    ))}
+                </DndVariablesWrapper>
                 <AddVariableButton />
                 <SubmitButton className="mx-auto mt-8" isPending={isPending} />
             </form>
