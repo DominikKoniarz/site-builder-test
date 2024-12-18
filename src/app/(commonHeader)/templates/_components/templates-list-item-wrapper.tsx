@@ -1,21 +1,23 @@
+"use client";
+
+import { cn } from "@/lib/utils";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type Props = {
-    frontendId: string;
+    id: string;
     children: React.ReactNode;
 };
 
-type SortableVariableWrapperContext = {
+type TemplateListItemWrapperContext = {
     attributes: DraggableAttributes;
     listeners: SyntheticListenerMap | undefined;
 };
 
-const sortableVariableWrapperContextInitialValue: SortableVariableWrapperContext =
+const templateListItemWrapperContextInitialValue: TemplateListItemWrapperContext =
     {
         attributes: {
             "aria-roledescription": "sortable",
@@ -28,18 +30,15 @@ const sortableVariableWrapperContextInitialValue: SortableVariableWrapperContext
         listeners: undefined,
     };
 
-const SortableVariableWrapperContext =
-    createContext<SortableVariableWrapperContext>(
-        sortableVariableWrapperContextInitialValue,
+const TemplateListItemWrapperContext =
+    createContext<TemplateListItemWrapperContext>(
+        templateListItemWrapperContextInitialValue,
     );
 
-export const useSortableVariableWrapper = () =>
-    useContext(SortableVariableWrapperContext);
+export const useTemplateListItemWrapper = () =>
+    useContext(TemplateListItemWrapperContext);
 
-export default function SortableVariableWrapper({
-    frontendId,
-    children,
-}: Props) {
+export default function TemplatesListItemWrapper({ id, children }: Props) {
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
     const {
@@ -49,7 +48,7 @@ export default function SortableVariableWrapper({
         transform,
         transition,
         isDragging,
-    } = useSortable({ id: frontendId });
+    } = useSortable({ id });
 
     const style = {
         transform: transform ? CSS.Translate.toString(transform) : undefined,
@@ -62,25 +61,27 @@ export default function SortableVariableWrapper({
     }, []);
 
     return (
-        <SortableVariableWrapperContext
+        <TemplateListItemWrapperContext
             value={{
                 attributes: isMounted
                     ? attributes
-                    : sortableVariableWrapperContextInitialValue.attributes,
+                    : templateListItemWrapperContextInitialValue.attributes,
                 listeners,
             }}
         >
             {isMounted ? (
-                <div
+                <li
                     ref={setNodeRef}
                     style={style}
                     className={cn(isDragging ? "z-20" : "z-10")}
+                    {...attributes}
+                    {...listeners}
                 >
                     {children}
-                </div>
+                </li>
             ) : (
                 children
             )}
-        </SortableVariableWrapperContext>
+        </TemplateListItemWrapperContext>
     );
 }

@@ -1,5 +1,5 @@
 import { getAllTemplates } from "@/data-access/templates";
-import TemplateList from "./_components/template-list";
+import TemplatesList from "./_components/templates-list";
 
 export default async function Templates() {
     const templates = await getAllTemplates();
@@ -8,7 +8,11 @@ export default async function Templates() {
         <main className="flex h-full w-full flex-row justify-center p-5">
             <div className="flex flex-col items-center gap-8">
                 <h1 className="text-xl font-bold">Templates</h1>
-                <TemplateList templates={templates} />
+                {templates.length > 0 ? (
+                    <TemplatesList initialTemplates={templates} />
+                ) : (
+                    <p className="mx-auto w-fit italic">No templates found</p>
+                )}
             </div>
         </main>
     );
