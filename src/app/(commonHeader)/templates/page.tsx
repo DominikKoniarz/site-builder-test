@@ -1,8 +1,6 @@
 import { getAllTemplates } from "@/data-access/templates";
 import TemplateList from "./_components/template-list";
 
-export const dynamic = "force-dynamic";
-
 export default async function Templates() {
     const templates = await getAllTemplates();
 

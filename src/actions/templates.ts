@@ -13,6 +13,7 @@ export const addTemplateAction = actionClient
     .action(async ({ parsedInput }) => {
         const template = await createTemplate(parsedInput);
 
+        revalidatePath(`/templates`);
         redirect(`/templates/${template.id}`);
     });
 
@@ -21,5 +22,6 @@ export const editTemplateAction = actionClient
     .action(async ({ parsedInput }) => {
         const template = await editTemplate(parsedInput);
 
+        revalidatePath(`/templates`);
         revalidatePath(`/templates/${template.id}`);
     });
