@@ -17,6 +17,7 @@ model Template {
     id          String  @id @default(uuid())
     name        String  @unique @db.VarChar(255)
     description String? @db.Text
+    order       Int     @default(0)
 
     variables TemplateVariable[]
     page      Page[]
