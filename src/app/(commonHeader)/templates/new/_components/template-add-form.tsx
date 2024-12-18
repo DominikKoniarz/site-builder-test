@@ -25,7 +25,7 @@ export default function TemplateAddForm() {
                     <TemplateVarDecider
                         key={field.frontendId}
                         index={index}
-                        templateVariableType={field.type}
+                        variable={field}
                     />
                 ))}
                 <AddVariableButton />

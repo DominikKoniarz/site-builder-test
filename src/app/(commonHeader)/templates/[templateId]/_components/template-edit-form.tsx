@@ -8,6 +8,7 @@ import TemplateDescTextarea from "@/components/templates/template-desc-textarea"
 import useEditTemplateForm from "../_hooks/use-edit-template-form";
 import AddVariableButton from "@/components/templates/variables/add-variable-button";
 import SubmitButton from "@/components/submit-button";
+import DndVariablesWrapper from "@/components/templates/variables/dnd-variables-wrapper";
 
 type Props = {
     template: TemplateWithVariablesDTO;
@@ -28,13 +29,15 @@ export default function TemplateEditForm({ template }: Props) {
             >
                 <TemplateNameInput />
                 <TemplateDescTextarea />
-                {variables.map((field, index) => (
-                    <TemplateVarDecider
-                        key={field.frontendId}
-                        index={index}
-                        templateVariableType={field.type}
-                    />
-                ))}
+                <DndVariablesWrapper>
+                    {variables.map((field, index) => (
+                        <TemplateVarDecider
+                            key={field.frontendId}
+                            index={index}
+                            variable={field}
+                        />
+                    ))}
+                </DndVariablesWrapper>
                 <AddVariableButton />
                 <SubmitButton className="mx-auto mt-8" isPending={isPending} />
             </form>
