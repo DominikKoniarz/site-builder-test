@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { TemplateAddSchema } from "@/schema/templates/template-add-schema";
+import type { TemplateEditSchema } from "@/schema/templates/template-edit-schema";
 import type {
     TemplateDTO,
     TemplateWithVariablesDTO,
@@ -10,7 +11,6 @@ import {
     createTemplateWithVariablesDTO,
 } from "@/dto/templates.mappers";
 import prisma from "@/lib/prisma";
-import { TemplateEditSchema } from "@/schema/templates/template-edit-schema";
 
 const variablesSelect = {
     variables: {
@@ -79,6 +79,7 @@ export const getTemplateByIdWithVariables = async (
             id: true,
             name: true,
             description: true,
+            order: true,
             ...variablesSelect,
         },
     });

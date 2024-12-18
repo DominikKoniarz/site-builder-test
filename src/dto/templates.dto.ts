@@ -4,6 +4,7 @@ export type TemplateBaseDTO = {
     id: string;
     name: string;
     description: string | null;
+    order: number;
 };
 
 export type TemplateDTO = TemplateBaseDTO;

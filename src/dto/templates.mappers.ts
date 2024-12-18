@@ -8,6 +8,7 @@ export const createTemplateDTO = (template: Template): TemplateDTO => {
         id: template.id,
         name: template.name,
         description: template.description,
+        order: template.order,
     };
 };
 

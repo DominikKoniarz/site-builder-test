@@ -39,7 +39,12 @@ const useTemplatesList = ({ initialTemplates }: Props) => {
                     (item) => item.id === over?.id,
                 );
 
-                return arrayMove(items, oldIndex, newIndex);
+                return arrayMove(items, oldIndex, newIndex).map(
+                    (template, index) => ({
+                        ...template,
+                        order: index,
+                    }),
+                );
             });
         }
     }
