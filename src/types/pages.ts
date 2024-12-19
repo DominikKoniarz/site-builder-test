@@ -10,6 +10,8 @@ export type DbFetchedPageWithVariables = Prisma.PageGetPayload<{
         updatedAt: true;
         variables: {
             select: {
+                createdAt: true;
+                updatedAt: true;
                 templateVariable: {
                     select: {
                         id: true;

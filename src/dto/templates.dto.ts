@@ -5,13 +5,12 @@ export type TemplateBaseDTO = {
     name: string;
     description: string | null;
     order: number;
+    createdAt: Date;
+    updatedAt: Date;
 };
 
 export type TemplateDTO = TemplateBaseDTO;
 
-export type TemplateWithVariablesDTO = {
-    id: string;
-    name: string;
-    description: string | null;
+export type TemplateWithVariablesDTO = TemplateDTO & {
     variables: TemplateVariableDTO[];
 };

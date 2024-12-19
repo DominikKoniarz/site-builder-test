@@ -9,6 +9,8 @@ export const createTemplateDTO = (template: Template): TemplateDTO => {
         name: template.name,
         description: template.description,
         order: template.order,
+        createdAt: template.createdAt,
+        updatedAt: template.updatedAt,
     };
 };
 
@@ -16,9 +18,7 @@ export const createTemplateWithVariablesDTO = (
     template: DbFetchedTemplateWithVariables,
 ): TemplateWithVariablesDTO => {
     return {
-        id: template.id,
-        name: template.name,
-        description: template.description,
+        ...createTemplateDTO(template),
         variables: template.variables.map((variable) =>
             createTemplateVariableDTO(variable),
         ),
