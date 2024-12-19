@@ -19,14 +19,24 @@ export const getPageWithVariables = async (
             createdAt: true,
             updatedAt: true,
             variables: {
+                orderBy: {
+                    templateVariable: {
+                        order: "asc",
+                    },
+                },
                 select: {
                     id: true,
+                    createdAt: true,
+                    updatedAt: true,
                     templateVariable: {
                         select: {
                             id: true,
                             name: true,
                             tag: true,
                             type: true,
+                            createdAt: true,
+                            updatedAt: true,
+                            order: true,
                         },
                     },
                     bannerVariable: {
@@ -62,3 +72,5 @@ export const getPageWithVariables = async (
 
     return page ? createPageWithVariablesDTO(page) : null;
 };
+
+// TODO: Check prisma select types with currently used selects

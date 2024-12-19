@@ -97,7 +97,6 @@ model Page {
 model PageVariable {
     id                 String   @id @default(uuid())
     pageId             String
-    order              Int
     templateVariableId String
     createdAt          DateTime @default(now())
     updatedAt          DateTime @updatedAt

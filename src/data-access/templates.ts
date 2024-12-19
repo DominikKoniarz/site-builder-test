@@ -81,6 +81,8 @@ export const getTemplateByIdWithVariables = async (
             name: true,
             description: true,
             order: true,
+            createdAt: true,
+            updatedAt: true,
             ...variablesSelect,
         },
     });

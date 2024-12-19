@@ -11,6 +11,7 @@ export const createPageVariableDTO = (
             tag: variable.templateVariable.tag,
             type: variable.templateVariable.type,
             value: variable.textVariable.value,
+            order: variable.templateVariable.order,
             createdAt: variable.textVariable.createdAt,
             updatedAt: variable.textVariable.updatedAt,
         } satisfies TextVariableDTO;
@@ -20,6 +21,7 @@ export const createPageVariableDTO = (
             name: variable.templateVariable.name,
             tag: variable.templateVariable.tag,
             type: variable.templateVariable.type,
+            order: variable.templateVariable.order,
             images: variable.bannerVariable.images.map((image) => ({
                 id: image.id,
                 imageName: image.imageName,

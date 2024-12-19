@@ -7,6 +7,7 @@ export type PageVariableBaseDTO = {
     name: string;
     tag: string;
     type: VariableType;
+    order: number;
     createdAt: Date;
     updatedAt: Date;
 };

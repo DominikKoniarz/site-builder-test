@@ -1,50 +1,42 @@
-import type { Prisma } from "@prisma/client";
+import type { VariableType } from "@prisma/client";
 
-export type DbFetchedPageWithVariables = Prisma.PageGetPayload<{
-    select: {
-        id: true;
-        name: true;
-        description: true;
-        slug: true;
-        createdAt: true;
-        updatedAt: true;
-        variables: {
-            select: {
-                createdAt: true;
-                updatedAt: true;
-                templateVariable: {
-                    select: {
-                        id: true;
-                        name: true;
-                        tag: true;
-                        type: true;
-                    };
-                };
-                bannerVariable: {
-                    select: {
-                        id: true;
-                        createdAt: true;
-                        updatedAt: true;
-                        images: {
-                            select: {
-                                id: true;
-                                imageName: true;
-                                order: true;
-                                createdAt: true;
-                                updatedAt: true;
-                            };
-                        };
-                    };
-                };
-                textVariable: {
-                    select: {
-                        id: true;
-                        value: true;
-                        createdAt: true;
-                        updatedAt: true;
-                    };
-                };
-            };
+export type DbFetchedPageWithVariables = {
+    id: string;
+    name: string;
+    description: string | null;
+    slug: string;
+    createdAt: Date;
+    updatedAt: Date;
+    variables: {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        templateVariable: {
+            id: string;
+            name: string;
+            order: number;
+            tag: string;
+            type: VariableType;
+            createdAt: Date;
+            updatedAt: Date;
         };
-    };
-}>;
+        textVariable: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            value: string | null;
+        } | null;
+        bannerVariable: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            images: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                imageName: string;
+                order: number;
+            }[];
+        } | null;
+    }[];
+};

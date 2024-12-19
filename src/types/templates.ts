@@ -1,31 +1,26 @@
-import type { Prisma } from "@prisma/client";
+import type { VariableType } from "@prisma/client";
 
-export type DbFetchedTemplateWithVariables = Prisma.TemplateGetPayload<{
-    select: {
-        id: true;
-        name: true;
-        description: true;
-    };
-    include: {
-        variables: {
-            select: {
-                id: true;
-                name: true;
-                tag: true;
-                type: true;
-                order: true;
-                updatedAt: true;
-                createdAt: true;
-                bannerTemplateVariableConfig: {
-                    select: {
-                        id: true;
-                        imageWidth: true;
-                        imageHeight: true;
-                        createdAt: true;
-                        updatedAt: true;
-                    };
-                };
-            };
-        };
-    };
-}>;
+export type DbFetchedTemplateWithVariables = {
+    id: string;
+    name: string;
+    description: string | null;
+    order: number;
+    createdAt: Date;
+    updatedAt: Date;
+    variables: {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+        order: number;
+        tag: string;
+        type: VariableType;
+        bannerTemplateVariableConfig: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            imageWidth: number;
+            imageHeight: number;
+        } | null;
+    }[];
+};
