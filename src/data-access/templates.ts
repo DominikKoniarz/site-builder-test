@@ -11,6 +11,7 @@ import {
     createTemplateWithVariablesDTO,
 } from "@/dto/templates.mappers";
 import prisma from "@/lib/prisma";
+import { TemplatesOrderSchema } from "@/schema/templates/templates-order-schema";
 
 const variablesSelect = {
     variables: {
@@ -215,4 +216,20 @@ export const updateTemplate = async (
     );
 
     return createTemplateDTO(template);
+};
+
+export const updateTemplatesOrder = async (data: TemplatesOrderSchema) => {
+    await prisma.$transaction(
+        data.templatesIds.map((id, index) =>
+            prisma.template.updateMany({
+                // using updateMany instead of update to avoid throwing error if template with id is not found
+                where: {
+                    id,
+                },
+                data: {
+                    order: index,
+                },
+            }),
+        ),
+    );
 };

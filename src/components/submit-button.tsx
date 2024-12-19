@@ -1,25 +1,26 @@
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
+import { Button, ButtonProps } from "./ui/button";
 
-type Props = {
-    className?: string;
+interface Props extends ButtonProps {
     isPending?: boolean;
-    disabled?: boolean;
-};
+    text?: {
+        default: string;
+        loading: string;
+    };
+}
 
-export default function SubmitButton({
-    className,
-    isPending,
-    disabled,
-}: Props) {
+export default function SubmitButton(props: Props) {
     return (
         <Button
-            type="submit"
+            {...props}
+            type={props.type || "submit"}
             variant="default"
-            className={cn("w-fit", className)}
-            disabled={isPending || disabled}
+            className={cn("w-fit", props.className)}
+            disabled={props.isPending || props.disabled}
         >
-            {isPending ? "Submitting..." : "Submit"}
+            {props.isPending
+                ? props.text?.loading || "Submitting..."
+                : props.text?.default || "Submit"}
         </Button>
     );
 }

@@ -8,15 +8,17 @@ import {
 } from "@dnd-kit/sortable";
 import TemplatesListItem from "./templates-list-item";
 import useTemplatesList from "../_hooks/use-templates-list";
+import SubmitButton from "@/components/submit-button";
 
 type Props = {
     initialTemplates: TemplateDTO[];
 };
 
 export default function TemplatesList({ initialTemplates }: Props) {
-    const { templates, sensors, handleDragEnd } = useTemplatesList({
-        initialTemplates,
-    });
+    const { templates, sensors, handleDragEnd, saveOrder, isSavingOrder } =
+        useTemplatesList({
+            initialTemplates,
+        });
 
     return (
         <DndContext
@@ -28,14 +30,22 @@ export default function TemplatesList({ initialTemplates }: Props) {
                 items={templates.map((template) => template.id)}
                 strategy={verticalListSortingStrategy}
             >
-                <ul className="flex flex-col gap-4">
-                    {templates.map((template) => (
-                        <TemplatesListItem
-                            key={template.id}
-                            template={template}
-                        />
-                    ))}
-                </ul>
+                <div className="flex h-fit w-fit flex-col items-center gap-6">
+                    <ul className="flex flex-col gap-4">
+                        {templates.map((template) => (
+                            <TemplatesListItem
+                                key={template.id}
+                                template={template}
+                            />
+                        ))}
+                    </ul>
+                    <SubmitButton
+                        onClick={saveOrder}
+                        disabled={isSavingOrder}
+                        type="button"
+                        text={{ default: "Save", loading: "Saving..." }}
+                    />
+                </div>
             </SortableContext>
         </DndContext>
     );

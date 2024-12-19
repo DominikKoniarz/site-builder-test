@@ -8,6 +8,10 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
+import { useAction } from "next-safe-action/hooks";
+import toast from "react-hot-toast";
+import { saveTemplatesOrderAction } from "@/actions/templates";
+import { actionError } from "@/lib/action-error";
 
 type Props = {
     initialTemplates: TemplateDTO[];
@@ -49,10 +53,28 @@ const useTemplatesList = ({ initialTemplates }: Props) => {
         }
     }
 
+    const { execute, isPending: isSavingOrder } = useAction(
+        saveTemplatesOrderAction,
+        {
+            onError: (error) => {
+                actionError(error).serverError().validationErrors();
+            },
+            onSuccess: () => {
+                toast.success("Templates order saved");
+            },
+        },
+    );
+
+    const saveOrder = () => {
+        execute({ templatesIds: templates.map((template) => template.id) });
+    };
+
     return {
         templates,
         sensors,
         handleDragEnd,
+        saveOrder,
+        isSavingOrder,
     };
 };
 
