@@ -3,11 +3,33 @@ import "server-only";
 import type { PageWithVariablesDTO } from "@/dto/pages.dto";
 import { createPageDTO, createPageWithVariablesDTO } from "@/dto/pages.mappers";
 import prisma from "@/lib/prisma";
+import { PageAddSchema } from "@/schema/pages/page-add-schema";
+import { TemplateWithVariablesDTO } from "@/dto/templates.dto";
 
 export const getAllPages = async () => {
     const pages = await prisma.page.findMany();
 
     return pages.map((page) => createPageDTO(page));
+};
+
+export const getPageByName = async (name: string) => {
+    const page = await prisma.page.findFirst({
+        where: {
+            name,
+        },
+    });
+
+    return page ? createPageDTO(page) : null;
+};
+
+export const getPageById = async (id: string) => {
+    const page = await prisma.page.findUnique({
+        where: {
+            id,
+        },
+    });
+
+    return page ? createPageDTO(page) : null;
 };
 
 export const getPageWithVariables = async (
@@ -79,4 +101,35 @@ export const getPageWithVariables = async (
     return page ? createPageWithVariablesDTO(page) : null;
 };
 
-// TODO: Check prisma select types with currently used selects
+export const addPage = async (
+    data: PageAddSchema,
+    template: TemplateWithVariablesDTO,
+) => {
+    const page = await prisma.page.create({
+        data: {
+            name: data.name,
+            slug: data.slug,
+            description: data.description,
+            templateId: data.templateId,
+            variables: {
+                create: template.variables.map((variable) => ({
+                    templateVariableId: variable.id,
+                    textVariable:
+                        variable.type === "TEXT"
+                            ? {
+                                  create: {
+                                      value: null,
+                                  },
+                              }
+                            : undefined,
+                    bannerVariable:
+                        variable.type === "BANNER"
+                            ? { create: true }
+                            : undefined,
+                })),
+            },
+        },
+    });
+
+    return createPageDTO(page);
+};

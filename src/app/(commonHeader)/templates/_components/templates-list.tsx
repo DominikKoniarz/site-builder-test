@@ -43,7 +43,7 @@ export default function TemplatesList({ initialTemplates }: Props) {
                         onClick={saveOrder}
                         disabled={isSavingOrder}
                         type="button"
-                        text={{ default: "Save", loading: "Saving..." }}
+                        text={{ default: "Save order", loading: "Saving..." }}
                     />
                 </div>
             </SortableContext>

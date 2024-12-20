@@ -18,6 +18,7 @@ export default function SubmitButton(props: Props) {
             variant="default"
             className={cn("w-fit", props.className)}
             disabled={props.isPending || props.disabled}
+            onClick={props.onClick}
         >
             {props.isPending
                 ? props.text?.loading || "Submitting..."

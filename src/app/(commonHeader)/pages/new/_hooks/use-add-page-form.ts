@@ -1,6 +1,13 @@
+import {
+    type PageAddSchema,
+    pageAddSchema,
+} from "@/schema/pages/page-add-schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PageAddSchema, pageAddSchema } from "@/schema/pages/page-add-schema";
+import { useAction } from "next-safe-action/hooks";
+import { actionError } from "@/lib/action-error";
+import { addPageAction } from "@/actions/pages";
+import toast from "react-hot-toast";
 
 const useAddPageForm = () => {
     const form = useForm<PageAddSchema>({
@@ -14,12 +21,19 @@ const useAddPageForm = () => {
         },
     });
 
+    const { execute: submit, isPending } = useAction(addPageAction, {
+        onSuccess: () => {
+            toast.success("Page added successfully");
+        },
+        onError: (error) => {
+            actionError(error).serverError().validationErrors();
+        },
+    });
+
     return {
         form,
-        submit: (data) => {
-            console.log(data);
-        },
-        isPending: false,
+        submit,
+        isPending,
     };
 };
 

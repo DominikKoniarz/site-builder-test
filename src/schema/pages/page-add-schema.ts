@@ -34,9 +34,9 @@ export const pageAddSchema = z.object({
             message: "Slug must be at most 255 characters long",
         }),
     templateId: z
-        .string({ invalid_type_error: "Template ID must be a string" })
+        .string({ invalid_type_error: "Valid template is required" })
         .uuid({
-            message: "Template ID must be a valid UUID",
+            message: "Please select a valid template",
         }),
 });
 
