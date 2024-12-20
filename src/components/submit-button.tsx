@@ -2,6 +2,8 @@ import { cn } from "@/lib/utils";
 import { Button, ButtonProps } from "./ui/button";
 
 interface Props extends ButtonProps {
+    onClick?: () => void;
+    type?: HTMLButtonElement["type"];
     isPending?: boolean;
     text?: {
         default: string;
@@ -12,7 +14,6 @@ interface Props extends ButtonProps {
 export default function SubmitButton(props: Props) {
     return (
         <Button
-            {...props}
             type={props.type || "submit"}
             variant="default"
             className={cn("w-fit", props.className)}

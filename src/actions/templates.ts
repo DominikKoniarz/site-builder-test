@@ -16,6 +16,7 @@ export const addTemplateAction = actionClient
         const template = await createTemplate(parsedInput);
 
         revalidatePath(`/templates`);
+        revalidatePath(`/pages/new`);
         redirect(`/templates/${template.id}`);
     });
 
@@ -26,6 +27,7 @@ export const editTemplateAction = actionClient
 
         revalidatePath(`/templates`);
         revalidatePath(`/templates/${template.id}`);
+        revalidatePath(`/pages/new`);
     });
 
 export const saveTemplatesOrderAction = actionClient
@@ -34,4 +36,5 @@ export const saveTemplatesOrderAction = actionClient
         await saveTemplatesOrder(parsedInput);
 
         revalidatePath(`/templates`);
+        revalidatePath(`/pages/new`);
     });

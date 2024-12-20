@@ -1,8 +1,14 @@
 import "server-only";
 
 import type { PageWithVariablesDTO } from "@/dto/pages.dto";
-import { createPageWithVariablesDTO } from "@/dto/pages.mappers";
+import { createPageDTO, createPageWithVariablesDTO } from "@/dto/pages.mappers";
 import prisma from "@/lib/prisma";
+
+export const getAllPages = async () => {
+    const pages = await prisma.page.findMany();
+
+    return pages.map((page) => createPageDTO(page));
+};
 
 export const getPageWithVariables = async (
     id: string,

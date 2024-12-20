@@ -5,11 +5,11 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import useTemplateForm from "@/hooks/use-template-form";
 import { Textarea } from "../ui/textarea";
+import usePageForm from "@/hooks/use-page-form";
 
-export default function TemplateDescTextarea() {
-    const { control } = useTemplateForm();
+export default function PageDescTextarea() {
+    const { control } = usePageForm();
 
     return (
         <FormField
@@ -20,7 +20,7 @@ export default function TemplateDescTextarea() {
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                         <Textarea
-                            placeholder="Describe template"
+                            placeholder="Describe page"
                             className="resize-y"
                             {...field}
                             value={field.value ?? ""}

@@ -20,4 +20,8 @@ export const appRoutes: AppPageRoute[] = [
         href: "/pages",
         text: "Pages",
     },
+    {
+        href: "/pages/new",
+        text: "New Page",
+    },
 ];
