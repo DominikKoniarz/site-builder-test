@@ -13,28 +13,36 @@ import {
 import prisma from "@/lib/prisma";
 import { TemplatesOrderSchema } from "@/schema/templates/templates-order-schema";
 
-const variablesSelect = {
-    variables: {
-        select: {
-            id: true,
-            name: true,
-            type: true,
-            tag: true,
-            order: true,
-            createdAt: true,
-            updatedAt: true,
-            bannerTemplateVariableConfig: {
-                select: {
-                    id: true,
-                    imageHeight: true,
-                    imageWidth: true,
-                    createdAt: true,
-                    updatedAt: true,
+const templateWithVariablesSelect = {
+    select: {
+        id: true,
+        name: true,
+        description: true,
+        order: true,
+        createdAt: true,
+        updatedAt: true,
+        variables: {
+            select: {
+                id: true,
+                name: true,
+                type: true,
+                tag: true,
+                order: true,
+                createdAt: true,
+                updatedAt: true,
+                bannerTemplateVariableConfig: {
+                    select: {
+                        id: true,
+                        imageHeight: true,
+                        imageWidth: true,
+                        createdAt: true,
+                        updatedAt: true,
+                    },
                 },
             },
-        },
-        orderBy: {
-            order: "asc" as const,
+            orderBy: {
+                order: "asc" as const,
+            },
         },
     },
 };
@@ -76,15 +84,7 @@ export const getTemplateByIdWithVariables = async (
         where: {
             id,
         },
-        select: {
-            id: true,
-            name: true,
-            description: true,
-            order: true,
-            createdAt: true,
-            updatedAt: true,
-            ...variablesSelect,
-        },
+        ...templateWithVariablesSelect,
     });
 
     return template ? createTemplateWithVariablesDTO(template) : null;
@@ -123,23 +123,81 @@ export const updateTemplate = async (
     variablesIdsToDelete: string[],
     variablesToAdd: TemplateEditSchema["variables"],
     variablesToUpdate: TemplateEditSchema["variables"], // has to have id string
-) => {
+): Promise<TemplateWithVariablesDTO> => {
     if (variablesToUpdate.some((variable) => !variable.id))
         throw new Error("Variables to edit must have id");
 
-    const [template] = await prisma.$transaction(
-        [
-            prisma.template.update({
-                where: {
-                    id: data.id,
+    const template = await prisma.$transaction(async (tx) => {
+        // delete variables that are not in the new template
+        await Promise.all(
+            variablesIdsToDelete.map((id) =>
+                tx.templateVariable.delete({
+                    where: {
+                        id,
+                    },
+                }),
+            ),
+        );
+
+        // remove config if type changes
+        await tx.bannerTemplateVariableConfig.deleteMany({
+            where: {
+                templateVariable: {
+                    id: {
+                        in: variablesToUpdate
+                            .filter(
+                                (variable) =>
+                                    variable.type !== "BANNER" && variable.id,
+                            )
+                            .map((variable) => variable.id!),
+                    },
                 },
-                data: {
-                    name: data.name,
-                    description: data.description,
-                },
-            }),
-            ...variablesToAdd.map((variable) =>
-                prisma.templateVariable.create({
+            },
+        });
+
+        // update variables
+        await Promise.all(
+            variablesToUpdate.map((variable) =>
+                tx.templateVariable.update({
+                    where: {
+                        id: variable.id!,
+                    },
+                    data: {
+                        name: variable.name,
+                        type: variable.type,
+                        tag: variable.tag,
+                        order: variable.order,
+                    },
+                }),
+            ),
+        );
+
+        // update (or create) config if type is banner
+        await Promise.all(
+            variablesToUpdate
+                .filter((variable) => variable.type === "BANNER")
+                .map((variable) => {
+                    return tx.bannerTemplateVariableConfig.upsert({
+                        where: {
+                            templateVariableId: variable.id!,
+                        },
+                        create: {
+                            templateVariableId: variable.id!,
+                            imageHeight: variable.imageHeight,
+                            imageWidth: variable.imageWidth,
+                        },
+                        update: {
+                            imageHeight: variable.imageHeight,
+                            imageWidth: variable.imageWidth,
+                        },
+                    });
+                }),
+        );
+
+        // create new variables
+        await Promise.all(
+            variablesToAdd.map((variable) =>
+                tx.templateVariable.create({
                     data: {
                         templateId: data.id,
                         name: variable.name,
@@ -158,66 +216,24 @@ export const updateTemplate = async (
                     },
                 }),
             ),
-            ...variablesToUpdate.map((variable) =>
-                prisma.templateVariable.update({
-                    where: {
-                        id: variable.id!,
-                    },
-                    data: {
-                        name: variable.name,
-                        type: variable.type,
-                        tag: variable.tag,
-                        order: variable.order,
-                    },
-                }),
-            ),
-            // update (or create) config if type is banner
-            ...variablesToUpdate
-                .filter((variable) => variable.type === "BANNER")
-                .map((variable) => {
-                    return prisma.bannerTemplateVariableConfig.upsert({
-                        where: {
-                            templateVariableId: variable.id!,
-                        },
-                        create: {
-                            templateVariableId: variable.id!,
-                            imageHeight: variable.imageHeight,
-                            imageWidth: variable.imageWidth,
-                        },
-                        update: {
-                            imageHeight: variable.imageHeight,
-                            imageWidth: variable.imageWidth,
-                        },
-                    });
-                }),
-            //remove config if type changes
-            prisma.bannerTemplateVariableConfig.deleteMany({
-                where: {
-                    templateVariable: {
-                        id: {
-                            in: variablesToUpdate
-                                .filter(
-                                    (variable) =>
-                                        variable.type !== "BANNER" &&
-                                        variable.id,
-                                )
-                                .map((variable) => variable.id!),
-                        },
-                    },
-                },
-            }),
-            ...variablesIdsToDelete.map((id) =>
-                prisma.templateVariable.delete({
-                    where: {
-                        id,
-                    },
-                }),
-            ),
-        ],
-        { isolationLevel: "Serializable" },
-    );
+        );
 
-    return createTemplateDTO(template);
+        // update template
+        const template = await tx.template.update({
+            where: {
+                id: data.id,
+            },
+            data: {
+                name: data.name,
+                description: data.description,
+            },
+            ...templateWithVariablesSelect,
+        });
+
+        return template;
+    });
+
+    return createTemplateWithVariablesDTO(template);
 };
 
 export const updateTemplatesOrder = async (data: TemplatesOrderSchema) => {

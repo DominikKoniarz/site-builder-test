@@ -1,15 +1,22 @@
 import "server-only";
 
 import type { PageAddSchema } from "@/schema/pages/page-add-schema";
-import { addPage, getPageByName } from "@/data-access/pages";
+import { addPage, getPageByName, getPageBySlug } from "@/data-access/pages";
 import { BadRequestError, ForbiddenError } from "@/types/errors";
 import { getTemplateByIdWithVariables } from "@/data-access/templates";
 
 export const createPage = async (data: PageAddSchema) => {
-    const foundPage = await getPageByName(data.name);
+    const [foundPageByName, foundPageBySlug] = await Promise.all([
+        getPageByName(data.name),
+        getPageBySlug(data.slug),
+    ]);
 
-    if (foundPage) {
+    if (foundPageByName) {
         throw new BadRequestError("Page with this name already exists");
+    }
+
+    if (foundPageBySlug) {
+        throw new BadRequestError("Page with this slug already exists");
     }
 
     const foundTemplate = await getTemplateByIdWithVariables(data.templateId);
