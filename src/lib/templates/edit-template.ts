@@ -11,7 +11,6 @@ import {
     getAllPagesIdsByTemplateId,
     deletePagesVarsAfterTemplateUpdate,
 } from "@/data-access/pages";
-import { revalidatePath } from "next/cache";
 
 export const editTemplate = async (data: TemplateEditSchema) => {
     const foundTemplate = await getTemplateByIdWithVariables(data.id);
