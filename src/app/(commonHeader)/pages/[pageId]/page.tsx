@@ -1,4 +1,4 @@
-import { getPageWithVariablesById } from "@/data-access/pages";
+import { getAllPages, getPageWithVariablesById } from "@/data-access/pages";
 import { redirect } from "next/navigation";
 
 type Props = {
@@ -7,15 +7,12 @@ type Props = {
     }>;
 };
 
-// revalidated after template has been edited
-// export const generateStaticParams = async (): Promise<
-//     { templateId: string }[]
-// > => {
-//     const templates = await getAllTemplates();
-//     return templates.map((template) => ({
-//         templateId: template.id,
-//     }));
-// };
+export const generateStaticParams = async (): Promise<{ pageId: string }[]> => {
+    const pages = await getAllPages();
+    return pages.map((page) => ({
+        pageId: page.id,
+    }));
+};
 
 export default async function Templates({ params }: Props) {
     const { pageId } = await params;
