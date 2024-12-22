@@ -23,11 +23,16 @@ export const addTemplateAction = actionClient
 export const editTemplateAction = actionClient
     .schema(templateEditSchema)
     .action(async ({ parsedInput }) => {
-        const template = await editTemplate(parsedInput);
+        const { updatedTemplate: template, updatedPagesIds } =
+            await editTemplate(parsedInput);
 
         revalidatePath(`/templates`);
         revalidatePath(`/templates/${template.id}`);
         revalidatePath(`/pages/new`);
+
+        updatedPagesIds.forEach((pageId) => {
+            revalidatePath(`/pages/${pageId}`);
+        });
     });
 
 export const saveTemplatesOrderAction = actionClient

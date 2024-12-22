@@ -59,9 +59,5 @@ export const editTemplate = async (data: TemplateEditSchema) => {
     // TODO: after that remove pages files if needed (filesToRemove)
     filesToRemove;
 
-    foundPagesIds.forEach((pageId) => {
-        revalidatePath(`/pages/${pageId}`);
-    });
-
-    return updatedTemplate;
+    return { updatedTemplate, updatedPagesIds: foundPagesIds };
 };
