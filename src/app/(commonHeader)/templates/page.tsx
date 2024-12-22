@@ -5,7 +5,7 @@ export default async function Templates() {
     const templates = await getAllTemplates();
 
     return (
-        <main className="flex h-full w-full flex-row justify-center p-5">
+        <main className="flex h-full w-full flex-1 flex-row justify-center overflow-hidden p-5">
             <div className="flex flex-col items-center gap-8">
                 <h1 className="text-xl font-bold">Templates</h1>
                 {templates.length > 0 ? (

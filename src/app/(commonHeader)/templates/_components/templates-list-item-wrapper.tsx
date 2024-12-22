@@ -74,8 +74,6 @@ export default function TemplatesListItemWrapper({ id, children }: Props) {
                     ref={setNodeRef}
                     style={style}
                     className={cn(isDragging ? "z-20" : "z-10")}
-                    {...attributes}
-                    {...listeners}
                 >
                     {children}
                 </li>
