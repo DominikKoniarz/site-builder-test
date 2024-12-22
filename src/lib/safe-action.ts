@@ -9,9 +9,9 @@ import { createSafeActionClient } from "next-safe-action";
 export const actionClient = createSafeActionClient({
     handleServerError: (error) => {
         if (env.NEXT_PUBLIC_IS_DEV)
-            console.error(
+            console.log(
                 `${new Date().toLocaleString()} Server action error: ${error.message}`,
-                error,
+                error.stack,
             );
 
         if (error instanceof BadRequestError) {
