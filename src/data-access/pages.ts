@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import { PageAddSchema } from "@/schema/pages/page-add-schema";
 import { TemplateWithVariablesDTO } from "@/dto/templates.dto";
 import { TemplateVariableDTO } from "@/dto/template-variables.dto";
+import { TemplateEditSchema } from "@/schema/templates/template-edit-schema";
 
 const pageWithVariablesSelect = {
     select: {
@@ -101,7 +102,7 @@ export const getPageBySlug = async (slug: string) => {
     return page ? createPageDTO(page) : null;
 };
 
-export const getPageWithVariables = async (
+export const getPageWithVariablesById = async (
     id: string,
 ): Promise<PageWithVariablesDTO | null> => {
     const page = await prisma.page.findUnique({
@@ -151,7 +152,9 @@ export const addPage = async (
     return createPageDTO(page);
 };
 
-export const getAllPagesIds = async (templateId: string): Promise<string[]> => {
+export const getAllPagesIdsByTemplateId = async (
+    templateId: string,
+): Promise<string[]> => {
     const pages = await prisma.page.findMany({
         where: {
             templateId,
@@ -164,106 +167,103 @@ export const getAllPagesIds = async (templateId: string): Promise<string[]> => {
     return pages.map((page) => page.id);
 };
 
-export const updatePagesAfterTemplateUpdate = async (
-    varsToAddOnPages: TemplateVariableDTO[],
-    varsToDeleteOnPages: TemplateVariableDTO[],
+export const addVarsToPagesAfterTemplateUpdate = async (
+    templateVarsToAddOnPages: TemplateVariableDTO[],
     pagesIds: string[],
 ) => {
-    await prisma.$transaction(async (tx) => {
-        const bannersToDelete = await tx.bannerVariable.findMany({
+    await prisma.$transaction(
+        pagesIds.map((pageId) =>
+            prisma.page.update({
+                where: {
+                    id: pageId,
+                },
+                data: {
+                    variables: {
+                        create: templateVarsToAddOnPages.map((variable) => ({
+                            templateVariableId: variable.id,
+                            textVariable:
+                                variable.type === "TEXT"
+                                    ? {
+                                          create: {
+                                              value: null,
+                                          },
+                                      }
+                                    : undefined,
+                            bannerVariable:
+                                variable.type === "BANNER"
+                                    ? {
+                                          create: {
+                                              images: undefined,
+                                          },
+                                      }
+                                    : undefined,
+                        })),
+                    },
+                },
+            }),
+        ),
+    );
+};
+
+export const deletePagesVarsAfterTemplateUpdate = async (
+    templateVarsIdsToDeleteOnPages: string[],
+    pagesIds: string[],
+) => {
+    return prisma.$transaction(async (tx) => {
+        if (!templateVarsIdsToDeleteOnPages.length) return null;
+
+        const varsWithBannersToDelete = await tx.pageVariable.findMany({
             where: {
-                pageVariableId: {
-                    in: varsToDeleteOnPages.map((variable) => variable.id),
+                templateVariableId: {
+                    in: templateVarsIdsToDeleteOnPages,
+                },
+                pageId: {
+                    in: pagesIds,
+                },
+                templateVariable: {
+                    type: "BANNER",
                 },
             },
             select: {
                 id: true,
-                pageVariable: {
+                bannerVariable: {
                     select: {
                         id: true,
-                        page: {
+                        images: {
                             select: {
                                 id: true,
+                                imageName: true,
                             },
                         },
-                    },
-                },
-                images: {
-                    select: {
-                        id: true,
                     },
                 },
             },
         });
 
-        // delete banner images
-        await Promise.all(
-            bannersToDelete.map((banner) =>
-                banner.images.map((image) =>
-                    tx.bannerImage.delete({
-                        where: {
-                            id: image.id,
-                        },
-                    }),
-                ),
-            ),
-        );
-
-        // delete banner variables
-        await Promise.all(
-            bannersToDelete.map((banner) =>
-                tx.bannerVariable.delete({
-                    where: {
-                        id: banner.id,
-                    },
-                }),
-            ),
-        );
+        // all records by relations are deleted with onDelete: CASCADE
 
         // delete variables from pages
-        await Promise.all(
-            varsToDeleteOnPages.map((variable) =>
-                tx.pageVariable.deleteMany({
-                    where: {
-                        templateVariableId: variable.id,
-                        pageId: {
-                            in: pagesIds,
-                        },
+        if (templateVarsIdsToDeleteOnPages.length)
+            await tx.pageVariable.deleteMany({
+                where: {
+                    templateVariableId: {
+                        in: templateVarsIdsToDeleteOnPages,
                     },
-                }),
-            ),
-        );
-
-        // add new variables to pages
-        await Promise.all(
-            varsToAddOnPages.map((variable) =>
-                tx.pageVariable.createMany({
-                    data: pagesIds.map((pageId) => ({
-                        pageId,
-                        templateVariableId: variable.id,
-                        textVariable:
-                            variable.type === "TEXT"
-                                ? {
-                                      create: {
-                                          value: null,
-                                      },
-                                  }
-                                : undefined,
-                        bannerVariable:
-                            variable.type === "BANNER"
-                                ? {
-                                      create: {
-                                          images: undefined,
-                                      },
-                                  }
-                                : undefined,
-                    })),
-                }),
-            ),
-        );
+                    pageId: {
+                        in: pagesIds,
+                    },
+                },
+            });
 
         return {
-            bannerImagesIdsToDelete: bannersToDelete.flatMap((b) => b.images),
+            bannersToDelete: varsWithBannersToDelete.map((v) => ({
+                varId: v.id,
+                bannerId: v.bannerVariable?.id,
+                images: v.bannerVariable?.images.map((i) => ({
+                    id: i.id,
+                    imageName: i.imageName,
+                })),
+            })),
         };
     });
 };

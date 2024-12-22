@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function TemplatesListItem({ template }: Props) {
-    const generateTemplateLink = (template: TemplateDTO) => {
+    const generateTemplateLink = (template: TemplateDTO): string => {
         return `/templates/${template.id}`;
     };
 

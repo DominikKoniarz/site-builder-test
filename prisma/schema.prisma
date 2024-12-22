@@ -56,7 +56,7 @@ model TextVariable {
     id             String       @id @default(uuid())
     value          String?      @db.Text
     pageVariableId String       @unique @db.VarChar(255)
-    pageVariable   PageVariable @relation(fields: [pageVariableId], references: [id])
+    pageVariable   PageVariable @relation(fields: [pageVariableId], references: [id], onDelete: Cascade)
     createdAt      DateTime     @default(now())
     updatedAt      DateTime     @updatedAt
 }
@@ -64,7 +64,7 @@ model TextVariable {
 model BannerVariable {
     id             String       @id @default(uuid())
     pageVariableId String       @unique @db.VarChar(255)
-    pageVariable   PageVariable @relation(fields: [pageVariableId], references: [id])
+    pageVariable   PageVariable @relation(fields: [pageVariableId], references: [id], onDelete: Cascade)
     createdAt      DateTime     @default(now())
     updatedAt      DateTime     @updatedAt
 
@@ -75,7 +75,7 @@ model BannerImage {
     id        String         @id @default(uuid())
     imageName String         @db.VarChar(255)
     bannerId  String         @db.VarChar(255)
-    banner    BannerVariable @relation(fields: [bannerId], references: [id])
+    banner    BannerVariable @relation(fields: [bannerId], references: [id], onDelete: Cascade)
     order     Int
     createdAt DateTime       @default(now())
     updatedAt DateTime       @updatedAt
@@ -102,7 +102,7 @@ model PageVariable {
     updatedAt          DateTime @updatedAt
 
     page             Page             @relation(fields: [pageId], references: [id])
-    templateVariable TemplateVariable @relation(fields: [templateVariableId], references: [id])
+    templateVariable TemplateVariable @relation(fields: [templateVariableId], references: [id], onUpdate: Cascade)
     textVariable     TextVariable?
     bannerVariable   BannerVariable?
 }

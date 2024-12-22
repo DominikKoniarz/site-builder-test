@@ -128,95 +128,94 @@ export const updateTemplate = async (
         throw new Error("Variables to edit must have id");
 
     const template = await prisma.$transaction(async (tx) => {
-        // delete variables that are not in the new template
-        await Promise.all(
-            variablesIdsToDelete.map((id) =>
-                tx.templateVariable.delete({
-                    where: {
-                        id,
-                    },
-                }),
-            ),
-        );
-
         // remove config if type changes
-        await tx.bannerTemplateVariableConfig.deleteMany({
-            where: {
-                templateVariable: {
-                    id: {
-                        in: variablesToUpdate
-                            .filter(
-                                (variable) =>
-                                    variable.type !== "BANNER" && variable.id,
-                            )
-                            .map((variable) => variable.id!),
+        const templateVarsIdsToDeleteBannerConfig = variablesToUpdate
+            .filter((variable) => variable.type !== "BANNER" && variable.id)
+            .map((variable) => variable.id!);
+        if (templateVarsIdsToDeleteBannerConfig.length)
+            await tx.bannerTemplateVariableConfig.deleteMany({
+                where: {
+                    templateVariable: {
+                        id: {
+                            in: templateVarsIdsToDeleteBannerConfig,
+                        },
                     },
                 },
-            },
-        });
+            });
+
+        // delete variables that are not in the new template
+        const deleteVariablesPromises = variablesIdsToDelete.map((id) =>
+            tx.templateVariable.delete({
+                where: {
+                    id,
+                },
+            }),
+        );
+        if (deleteVariablesPromises.length)
+            await Promise.all(deleteVariablesPromises);
 
         // update variables
-        await Promise.all(
-            variablesToUpdate.map((variable) =>
-                tx.templateVariable.update({
-                    where: {
-                        id: variable.id!,
-                    },
-                    data: {
-                        name: variable.name,
-                        type: variable.type,
-                        tag: variable.tag,
-                        order: variable.order,
-                    },
-                }),
-            ),
+        const updateVariablesPromises = variablesToUpdate.map((variable) =>
+            tx.templateVariable.update({
+                where: {
+                    id: variable.id!,
+                },
+                data: {
+                    name: variable.name,
+                    type: variable.type,
+                    tag: variable.tag,
+                    order: variable.order,
+                },
+            }),
         );
+        if (updateVariablesPromises.length)
+            await Promise.all(updateVariablesPromises);
 
         // update (or create) config if type is banner
-        await Promise.all(
-            variablesToUpdate
-                .filter((variable) => variable.type === "BANNER")
-                .map((variable) => {
-                    return tx.bannerTemplateVariableConfig.upsert({
-                        where: {
-                            templateVariableId: variable.id!,
-                        },
-                        create: {
-                            templateVariableId: variable.id!,
-                            imageHeight: variable.imageHeight,
-                            imageWidth: variable.imageWidth,
-                        },
-                        update: {
-                            imageHeight: variable.imageHeight,
-                            imageWidth: variable.imageWidth,
-                        },
-                    });
-                }),
-        );
-
-        // create new variables
-        await Promise.all(
-            variablesToAdd.map((variable) =>
-                tx.templateVariable.create({
-                    data: {
-                        templateId: data.id,
-                        name: variable.name,
-                        type: variable.type,
-                        tag: variable.tag,
-                        order: variable.order,
-                        bannerTemplateVariableConfig:
-                            variable.type === "BANNER"
-                                ? {
-                                      create: {
-                                          imageHeight: variable.imageHeight,
-                                          imageWidth: variable.imageWidth,
-                                      },
-                                  }
-                                : undefined,
+        const updateBannerConfigPromises = variablesToUpdate
+            .filter((variable) => variable.type === "BANNER")
+            .map((variable) =>
+                tx.bannerTemplateVariableConfig.upsert({
+                    where: {
+                        templateVariableId: variable.id!,
+                    },
+                    create: {
+                        templateVariableId: variable.id!,
+                        imageHeight: variable.imageHeight,
+                        imageWidth: variable.imageWidth,
+                    },
+                    update: {
+                        imageHeight: variable.imageHeight,
+                        imageWidth: variable.imageWidth,
                     },
                 }),
-            ),
+            );
+        if (updateBannerConfigPromises.length)
+            await Promise.all(updateBannerConfigPromises);
+
+        // create new variables
+        const createVariablesPromises = variablesToAdd.map((variable) =>
+            tx.templateVariable.create({
+                data: {
+                    templateId: data.id,
+                    name: variable.name,
+                    type: variable.type,
+                    tag: variable.tag,
+                    order: variable.order,
+                    bannerTemplateVariableConfig:
+                        variable.type === "BANNER"
+                            ? {
+                                  create: {
+                                      imageHeight: variable.imageHeight,
+                                      imageWidth: variable.imageWidth,
+                                  },
+                              }
+                            : undefined,
+                },
+            }),
         );
+        if (createVariablesPromises.length)
+            await Promise.all(createVariablesPromises);
 
         // update template
         const template = await tx.template.update({
