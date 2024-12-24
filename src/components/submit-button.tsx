@@ -1,14 +1,12 @@
 import { cn } from "@/lib/utils";
 import { Button, ButtonProps } from "./ui/button";
+import { Loader2Icon } from "lucide-react";
 
 interface Props extends ButtonProps {
     onClick?: () => void;
     type?: HTMLButtonElement["type"];
     isPending?: boolean;
-    text?: {
-        default: string;
-        loading: string;
-    };
+    text?: string;
 }
 
 export default function SubmitButton(props: Props) {
@@ -20,9 +18,11 @@ export default function SubmitButton(props: Props) {
             disabled={props.isPending || props.disabled}
             onClick={props.onClick}
         >
-            {props.isPending
-                ? props.text?.loading || "Submitting..."
-                : props.text?.default || "Submit"}
+            {props.isPending ? (
+                <Loader2Icon className="animate-spin" />
+            ) : (
+                props.text || "Submit"
+            )}
         </Button>
     );
 }

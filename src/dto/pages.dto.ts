@@ -1,4 +1,4 @@
-import type { BannerVariableDTO, TextVariableDTO } from "./variables.dto";
+import type { PageVariableDTO } from "./variables.dto";
 
 export type PageBaseDTO = {
     id: string;
@@ -12,5 +12,5 @@ export type PageBaseDTO = {
 export type PageDTO = PageBaseDTO;
 
 export type PageWithVariablesDTO = PageBaseDTO & {
-    variables: (TextVariableDTO | BannerVariableDTO)[];
+    variables: PageVariableDTO[];
 };

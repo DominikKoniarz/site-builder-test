@@ -6,6 +6,8 @@ import { Form } from "@/components/ui/form";
 import PageNameInput from "@/components/pages/page-name-input";
 import PageSlugInput from "@/components/pages/page-slug-input";
 import PageDescTextarea from "@/components/pages/page-desc-textarea";
+import PageVarDecider from "@/components/pages/page-var-decider";
+import SubmitButton from "@/components/submit-button";
 
 type Props = {
     page: PageWithVariablesDTO;
@@ -27,6 +29,19 @@ export default function PageEditForm({ page }: Props) {
                 <PageNameInput />
                 <PageSlugInput />
                 <PageDescTextarea />
+                {variables.map((field, index) => (
+                    <PageVarDecider
+                        key={field.id}
+                        index={index}
+                        formVariable={field}
+                        dbVariable={page.variables[index]}
+                    />
+                ))}
+                <SubmitButton
+                    className="mx-auto mt-8"
+                    isPending={isPending}
+                    text="Save"
+                />
             </form>
         </Form>
     );

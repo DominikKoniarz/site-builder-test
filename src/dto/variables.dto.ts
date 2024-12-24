@@ -2,7 +2,7 @@ import type { VariableType } from "@prisma/client";
 
 // DTOs of vars accesed in app after extracting from page variables
 
-export type PageVariableBaseDTO = {
+type PageVariableBaseDTO = {
     id: string;
     name: string;
     tag: string;
@@ -30,3 +30,5 @@ export type BannerVariableDTO = PageVariableBaseDTO & {
     type: (typeof VariableType)["BANNER"];
     images: BannerImageDTO[];
 };
+
+export type PageVariableDTO = TextVariableDTO | BannerVariableDTO;

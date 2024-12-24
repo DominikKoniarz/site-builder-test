@@ -9,12 +9,17 @@ const variableBaseSchema = z.object({
 });
 
 const textVariableSchema = variableBaseSchema.extend({
-    value: z
-        .string({ invalid_type_error: "Valid var value is required" })
-        .min(1, { message: "Variable value is required" })
-        .max(65535, {
-            message: "Variable value must be at most 65535 characters long",
-        }),
+    value: z.preprocess(
+        (arg) =>
+            typeof arg === "string" ? (arg.length > 0 ? arg : null) : arg,
+        z
+            .string({ invalid_type_error: "Valid var value is required" })
+            .min(1, { message: "Variable value is required" })
+            .max(65535, {
+                message: "Variable value must be at most 65535 characters long",
+            })
+            .nullable(),
+    ),
     type: z.literal(VariableType.TEXT, {
         message: "Invalid variable type",
     }),
