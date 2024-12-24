@@ -73,7 +73,7 @@ model BannerVariable {
 
 model BannerImage {
     id        String         @id @default(uuid())
-    imageName String         @db.VarChar(255)
+    imageName String         @db.VarChar(4096)
     bannerId  String         @db.VarChar(255)
     banner    BannerVariable @relation(fields: [bannerId], references: [id], onDelete: Cascade)
     order     Int

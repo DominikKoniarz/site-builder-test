@@ -9,7 +9,7 @@ export const createPageVariableDTO = (
             id: variable.textVariable.id,
             name: variable.templateVariable.name,
             tag: variable.templateVariable.tag,
-            type: variable.templateVariable.type,
+            type: variable.templateVariable.type as "TEXT",
             value: variable.textVariable.value,
             order: variable.templateVariable.order,
             createdAt: variable.textVariable.createdAt,
@@ -20,7 +20,7 @@ export const createPageVariableDTO = (
             id: variable.bannerVariable.id,
             name: variable.templateVariable.name,
             tag: variable.templateVariable.tag,
-            type: variable.templateVariable.type,
+            type: variable.templateVariable.type as "BANNER",
             order: variable.templateVariable.order,
             images: variable.bannerVariable.images.map((image) => ({
                 id: image.id,

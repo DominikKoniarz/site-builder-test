@@ -1,5 +1,6 @@
 import { getAllPages, getPageWithVariablesById } from "@/data-access/pages";
 import { redirect } from "next/navigation";
+import PageEditForm from "./_components/page-edit-form";
 
 type Props = {
     params: Promise<{
@@ -7,6 +8,7 @@ type Props = {
     }>;
 };
 
+// revalidated after page has been edited or (template has been edited and page has been updated)
 export const generateStaticParams = async (): Promise<{ pageId: string }[]> => {
     const pages = await getAllPages();
     return pages.map((page) => ({
@@ -22,18 +24,9 @@ export default async function Templates({ params }: Props) {
 
     return (
         <main className="flex h-full w-full flex-row justify-center p-5">
-            <div className="flex flex-col gap-4">
-                {page.variables.map((variable) => (
-                    <div
-                        key={variable.id}
-                        className="flex flex-row items-center gap-8"
-                    >
-                        <p className="">{variable.id}</p>
-                        <h1 className="text-xl font-bold">{variable.name}</h1>
-                        <p>{variable.tag}</p>
-                        <p>{variable.type}</p>
-                    </div>
-                ))}
+            <div className="flex flex-col items-center gap-8">
+                <h1 className="text-xl font-bold">Edit page</h1>
+                <PageEditForm page={page} />
             </div>
         </main>
     );

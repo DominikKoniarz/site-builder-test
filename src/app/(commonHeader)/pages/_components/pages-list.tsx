@@ -1,4 +1,4 @@
-import { PageDTO } from "@/dto/pages.dto";
+import type { PageDTO } from "@/dto/pages.dto";
 import PageListItem from "./page-list-item";
 
 type Props = {

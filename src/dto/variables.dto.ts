@@ -6,13 +6,13 @@ export type PageVariableBaseDTO = {
     id: string;
     name: string;
     tag: string;
-    type: VariableType;
     order: number;
     createdAt: Date;
     updatedAt: Date;
 };
 
 export type TextVariableDTO = PageVariableBaseDTO & {
+    type: (typeof VariableType)["TEXT"];
     value: string | null;
     createdAt: Date;
     updatedAt: Date;
@@ -27,5 +27,6 @@ export type BannerImageDTO = {
 };
 
 export type BannerVariableDTO = PageVariableBaseDTO & {
+    type: (typeof VariableType)["BANNER"];
     images: BannerImageDTO[];
 };
