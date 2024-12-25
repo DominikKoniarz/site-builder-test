@@ -1,8 +1,11 @@
 import type { PageWithVariablesDTO } from "@/dto/pages.dto";
+import type {
+    PageEditBannerImageExistingSchema,
+    PageEditBannerVariableSchema,
+    PageEditTextVariableSchema,
+} from "@/schema/pages/page-variables-schemas";
 import {
-    type PageEditBannerVariableSchema,
     pageEditSchema,
-    type PageEditTextVariableSchema,
     type PageEditSchema,
 } from "@/schema/pages/page-edit-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,17 +27,27 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                         id: variable.id,
                         type: variable.type,
                         value: variable.value,
-                    } as PageEditTextVariableSchema;
+                    } satisfies PageEditTextVariableSchema;
                 } else if (variable.type === "BANNER") {
                     return {
                         id: variable.id,
                         type: variable.type,
-                        images: variable.images.map((image) => ({
-                            id: image.id,
-                            imageName: image.imageName,
-                            order: image.order,
-                        })),
-                    } as PageEditBannerVariableSchema;
+                        images: variable.images.map(
+                            (image) =>
+                                ({
+                                    id: image.id,
+                                    imageName: image.imageName,
+                                    order: image.order,
+                                    type: "existing",
+                                    cropData: {
+                                        x: image.cropX,
+                                        y: image.cropY,
+                                        width: image.cropWidth,
+                                        height: image.cropHeight,
+                                    },
+                                }) satisfies PageEditBannerImageExistingSchema,
+                        ),
+                    } satisfies PageEditBannerVariableSchema;
                 }
             }),
         },
@@ -52,17 +65,27 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                         id: variable.id,
                         type: variable.type,
                         value: variable.value,
-                    } as PageEditTextVariableSchema;
+                    } satisfies PageEditTextVariableSchema;
                 } else if (variable.type === "BANNER") {
                     return {
                         id: variable.id,
                         type: variable.type,
-                        images: variable.images.map((image) => ({
-                            id: image.id,
-                            imageName: image.imageName,
-                            order: image.order,
-                        })),
-                    } as PageEditBannerVariableSchema;
+                        images: variable.images.map(
+                            (image) =>
+                                ({
+                                    id: image.id,
+                                    imageName: image.imageName,
+                                    order: image.order,
+                                    type: "existing",
+                                    cropData: {
+                                        x: image.cropX,
+                                        y: image.cropY,
+                                        width: image.cropWidth,
+                                        height: image.cropHeight,
+                                    },
+                                }) satisfies PageEditBannerImageExistingSchema,
+                        ),
+                    } satisfies PageEditBannerVariableSchema;
                 }
             }),
         });

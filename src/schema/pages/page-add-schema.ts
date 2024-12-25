@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { pageBaseSchema } from "./page.base.schema";
+import { pageBaseSchema } from "./page-base-schema";
 
 export const pageAddSchema = pageBaseSchema.extend({
     templateId: z

@@ -72,13 +72,17 @@ model BannerVariable {
 }
 
 model BannerImage {
-    id        String         @id @default(uuid())
-    imageName String         @db.VarChar(4096)
-    bannerId  String         @db.VarChar(255)
-    banner    BannerVariable @relation(fields: [bannerId], references: [id], onDelete: Cascade)
-    order     Int
-    createdAt DateTime       @default(now())
-    updatedAt DateTime       @updatedAt
+    id         String         @id @default(uuid())
+    imageName  String         @db.VarChar(4096)
+    bannerId   String         @db.VarChar(255)
+    banner     BannerVariable @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+    order      Int
+    cropX      Int
+    cropY      Int
+    cropWidth  Int
+    cropHeight Int
+    createdAt  DateTime       @default(now())
+    updatedAt  DateTime       @updatedAt
 }
 
 model Page {
@@ -105,6 +109,13 @@ model PageVariable {
     templateVariable TemplateVariable @relation(fields: [templateVariableId], references: [id], onUpdate: Cascade)
     textVariable     TextVariable?
     bannerVariable   BannerVariable?
+}
+
+model TmpImage {
+    id        String   @id @default(uuid())
+    imageName String   @db.VarChar(4096)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 enum VariableType {

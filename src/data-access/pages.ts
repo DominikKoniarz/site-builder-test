@@ -6,7 +6,6 @@ import prisma from "@/lib/prisma";
 import { PageAddSchema } from "@/schema/pages/page-add-schema";
 import { TemplateWithVariablesDTO } from "@/dto/templates.dto";
 import { TemplateVariableDTO } from "@/dto/template-variables.dto";
-import { TemplateEditSchema } from "@/schema/templates/template-edit-schema";
 
 const pageWithVariablesSelect = {
     select: {
@@ -49,6 +48,10 @@ const pageWithVariablesSelect = {
                                 order: true,
                                 createdAt: true,
                                 updatedAt: true,
+                                cropX: true,
+                                cropY: true,
+                                cropWidth: true,
+                                cropHeight: true,
                             },
                         },
                     },

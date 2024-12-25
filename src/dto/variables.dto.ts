@@ -24,6 +24,10 @@ export type BannerImageDTO = {
     order: number;
     createdAt: Date;
     updatedAt: Date;
+    cropX: number;
+    cropY: number;
+    cropWidth: number;
+    cropHeight: number;
 };
 
 export type BannerVariableDTO = PageVariableBaseDTO & {
