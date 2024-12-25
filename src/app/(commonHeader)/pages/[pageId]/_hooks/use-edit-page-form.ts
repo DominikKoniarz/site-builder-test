@@ -11,6 +11,10 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useAction } from "next-safe-action/hooks";
+import { editPageAction } from "@/actions/pages";
+import toast from "react-hot-toast";
+import { actionError } from "@/lib/action-error";
 
 const useEditPageForm = (page: PageWithVariablesDTO) => {
     const form = useForm<PageEditSchema>({
@@ -91,12 +95,19 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
         });
     }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    const { execute: submit, isPending } = useAction(editPageAction, {
+        onSuccess: () => {
+            toast.success("Page eddited successfully");
+        },
+        onError: (error) => {
+            actionError(error).serverError().validationErrors();
+        },
+    });
+
     return {
         form,
-        submit: (data: any) => {
-            console.log(data);
-        },
-        isPending: false,
+        submit,
+        isPending,
     };
 };
 

@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import { PageAddSchema } from "@/schema/pages/page-add-schema";
 import { TemplateWithVariablesDTO } from "@/dto/templates.dto";
 import { TemplateVariableDTO } from "@/dto/template-variables.dto";
+import { PageEditSchema } from "@/schema/pages/page-edit-schema";
 
 const pageWithVariablesSelect = {
     select: {
@@ -269,4 +270,32 @@ export const deletePagesVarsAfterTemplateUpdate = async (
             })),
         };
     });
+};
+
+// for now updating only textVariables
+export const updatePage = async (data: PageEditSchema) => {
+    await prisma.$transaction([
+        prisma.page.update({
+            where: {
+                id: data.id,
+            },
+            data: {
+                name: data.name,
+                slug: data.slug,
+                description: data.description,
+            },
+        }),
+        ...data.variables
+            .filter((variable) => variable.type === "TEXT")
+            .map((variable) =>
+                prisma.textVariable.update({
+                    where: {
+                        id: variable.id,
+                    },
+                    data: {
+                        value: variable.value,
+                    },
+                }),
+            ),
+    ]);
 };

@@ -1,6 +1,7 @@
 "use server";
 
 import { createPage } from "@/lib/pages/create-page";
+import { editPage } from "@/lib/pages/edit-page";
 import { actionClient } from "@/lib/safe-action";
 import { pageAddSchema } from "@/schema/pages/page-add-schema";
 import { pageEditSchema } from "@/schema/pages/page-edit-schema";
@@ -19,8 +20,8 @@ export const addPageAction = actionClient
 export const editPageAction = actionClient
     .schema(pageEditSchema)
     .action(async ({ parsedInput }) => {
-        console.log(parsedInput);
+        const page = await editPage(parsedInput);
 
         revalidatePath(`/pages`);
-        redirect(`/pages/${parsedInput.id}`);
+        redirect(`/pages/${page.id}`);
     });
