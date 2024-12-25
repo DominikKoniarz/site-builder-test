@@ -39,6 +39,11 @@ const bannerImageBaseSchema = z.object({
         .int({ message: "Image order must be an integer" }),
 });
 
+// before successfull upload of new image
+const loadingBannerImageSchema = bannerImageBaseSchema.extend({
+    type: z.literal("loading"),
+});
+
 const newBannerImageSchema = bannerImageBaseSchema.extend({
     tmpImageId: z
         .string({ invalid_type_error: "Valid tmp image id is required" })
@@ -65,6 +70,7 @@ const existingBannerImageSchema = bannerImageBaseSchema.extend({
 });
 
 const bannerImageSchema = z.union([
+    loadingBannerImageSchema,
     newBannerImageSchema,
     existingBannerImageSchema,
 ]);

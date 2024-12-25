@@ -1,6 +1,7 @@
 import type { PageEditSchema } from "@/schema/pages/page-edit-schema";
 import type { PageVariableDTO } from "@/dto/variables.dto";
 import PageTextVariable from "./variables/text/page-text-variable";
+import PageBannerVariable from "./variables/banner/page-banner-variable";
 
 type Props = {
     index: number;
@@ -18,11 +19,7 @@ export default function PageVarDecider({
     }
 
     if (formVariable.type == "BANNER") {
-        return (
-            <div>
-                <p>Banner</p>
-            </div>
-        );
+        return <PageBannerVariable index={index} dbVariable={dbVariable} />;
     }
 
     return null;
