@@ -15,6 +15,7 @@ import { useAction } from "next-safe-action/hooks";
 import { editPageAction } from "@/actions/pages";
 import toast from "react-hot-toast";
 import { actionError } from "@/lib/action-error";
+import { nanoid } from "nanoid";
 
 const useEditPageForm = (page: PageWithVariablesDTO) => {
     const form = useForm<PageEditSchema>({
@@ -40,6 +41,7 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                             (image) =>
                                 ({
                                     id: image.id,
+                                    frontendId: nanoid(),
                                     imageName: image.imageName,
                                     order: image.order,
                                     type: "existing",
@@ -78,6 +80,7 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                             (image) =>
                                 ({
                                     id: image.id,
+                                    frontendId: nanoid(),
                                     imageName: image.imageName,
                                     order: image.order,
                                     type: "existing",

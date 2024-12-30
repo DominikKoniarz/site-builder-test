@@ -24,7 +24,7 @@ export default function PageTextVariable({
                 control={control}
                 name={`variables.${index}.value`}
                 render={({ field }) => (
-                    <FormItem className="w-56 space-y-1">
+                    <FormItem className="w-full space-y-1">
                         <FormLabel>{dbVariable.name}</FormLabel>
                         <FormControl>
                             <Input

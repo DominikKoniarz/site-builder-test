@@ -24,7 +24,7 @@ export default async function Templates({ params }: Props) {
 
     return (
         <main className="flex h-full w-full flex-row justify-center p-5">
-            <div className="flex flex-col items-center gap-8">
+            <div className="flex w-full flex-col items-center gap-8">
                 <h1 className="text-xl font-bold">Edit page</h1>
                 <PageEditForm page={page} />
             </div>

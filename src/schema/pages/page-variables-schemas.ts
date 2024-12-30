@@ -42,12 +42,14 @@ const bannerImageBaseSchema = z.object({
 // before successfull upload of new image
 const loadingBannerImageSchema = bannerImageBaseSchema.extend({
     type: z.literal("loading"),
+    frontendId: z.string(),
 });
 
 const newBannerImageSchema = bannerImageBaseSchema.extend({
     tmpImageId: z
         .string({ invalid_type_error: "Valid tmp image id is required" })
         .uuid({ message: "Valid tmp image id is required" }),
+    frontendId: z.string(),
     imageName: z.string(),
     type: z.literal("new"),
     cropData: bannerImageCropDataSchema,
@@ -57,6 +59,7 @@ const existingBannerImageSchema = bannerImageBaseSchema.extend({
     id: z
         .string({ invalid_type_error: "Valid image id is required" })
         .uuid({ message: "Valid image id is required" }),
+    frontendId: z.string(),
     imageName: z
         .string({ invalid_type_error: "Valid image name is required" })
         .min(1, {

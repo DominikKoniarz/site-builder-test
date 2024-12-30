@@ -5,6 +5,7 @@ import { editPage } from "@/lib/pages/edit-page";
 import { actionClient } from "@/lib/safe-action";
 import { pageAddSchema } from "@/schema/pages/page-add-schema";
 import { pageEditSchema } from "@/schema/pages/page-edit-schema";
+import { generateImageUploadUrlSchema } from "@/schema/pages/page-images-schemas";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -23,5 +24,12 @@ export const editPageAction = actionClient
         const page = await editPage(parsedInput);
 
         revalidatePath(`/pages`);
-        redirect(`/pages/${page.id}`);
+        revalidatePath(`/pages/${page.id}`);
+    });
+
+export const generateImagesUploadUrl = actionClient
+    .schema(generateImageUploadUrlSchema)
+    .action(async ({ parsedInput }) => {
+        console.log(parsedInput);
+        return { url: "https://example.com" };
     });

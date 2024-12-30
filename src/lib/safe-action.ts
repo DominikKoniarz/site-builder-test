@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import {
     BadRequestError,
     ForbiddenError,
@@ -8,11 +7,10 @@ import { createSafeActionClient } from "next-safe-action";
 
 export const actionClient = createSafeActionClient({
     handleServerError: (error) => {
-        if (env.NEXT_PUBLIC_IS_DEV)
-            console.log(
-                `${new Date().toLocaleString()} Server action error: ${error.message}`,
-                error.stack,
-            );
+        console.log(
+            `${new Date().toLocaleString()} Server action error: ${error.message}`,
+            error.stack,
+        );
 
         if (error instanceof BadRequestError) {
             return error.message;

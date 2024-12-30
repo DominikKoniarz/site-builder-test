@@ -24,7 +24,7 @@ export default function PageEditForm({ page }: Props) {
                 onSubmit={form.handleSubmit((data) => {
                     submit(data);
                 })}
-                className="flex w-full flex-col gap-4"
+                className="flex w-full max-w-sm flex-col gap-4"
             >
                 <PageNameInput />
                 <PageSlugInput />
