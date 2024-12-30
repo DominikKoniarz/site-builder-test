@@ -8,6 +8,10 @@ export const env = createEnv({
      */
     server: {
         DATABASE_URL: z.string().url(),
+        R2_ENDPOINT: z.string().url(),
+        R2_BUCKET_NAME: z.string().min(1),
+        R2_ACCESS_KEY_ID: z.string().min(1),
+        R2_SECRET_ACCESS_KEY: z.string().min(1),
     },
     /*
      * Environment variables available on the client (and server).
@@ -28,5 +32,9 @@ export const env = createEnv({
         DATABASE_URL: process.env.DATABASE_URL,
         NEXT_PUBLIC_IS_DEV: process.env.NODE_ENV === "development",
         NEXT_PUBLIC_IS_PROD: process.env.NODE_ENV === "production",
+        R2_ENDPOINT: process.env.R2_ENDPOINT,
+        R2_BUCKET_NAME: process.env.R2_BUCKET_NAME,
+        R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
+        R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
     },
 });
