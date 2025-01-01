@@ -90,6 +90,9 @@ export { textVariableSchema, bannerVariableSchema };
 export type PageEditTextVariableSchema = z.infer<typeof textVariableSchema>;
 export type PageEditBannerVariableSchema = z.infer<typeof bannerVariableSchema>;
 
+export type PageEditBannerImageLoadingSchema = z.infer<
+    typeof loadingBannerImageSchema
+>;
 export type PageEditBannerImageExistingSchema = z.infer<
     typeof existingBannerImageSchema
 >;

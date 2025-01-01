@@ -1,9 +1,17 @@
 import type { NextConfig } from "next";
+import { env } from "@/env";
 
 const nextConfig: NextConfig = {
-    /* config options here */
-    experimental: {
-        // dynamicIO: true,
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: env.NEXT_PUBLIC_R2_BUCKET_HOSTNAME,
+                // port: "",
+                // search: "",
+                // pathname: "",
+            },
+        ],
     },
 };
 

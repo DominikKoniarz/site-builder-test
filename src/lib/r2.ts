@@ -2,7 +2,7 @@ import { env } from "@/env";
 import { S3Client } from "@aws-sdk/client-s3";
 
 // client to use Cloudflare R2
-export const S3 = new S3Client({
+export const R2 = new S3Client({
     region: "auto",
     endpoint: env.R2_ENDPOINT,
     credentials: {

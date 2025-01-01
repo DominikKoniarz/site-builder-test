@@ -21,6 +21,7 @@ export const env = createEnv({
     client: {
         NEXT_PUBLIC_IS_DEV: z.boolean(),
         NEXT_PUBLIC_IS_PROD: z.boolean(),
+        NEXT_PUBLIC_R2_BUCKET_HOSTNAME: z.string().min(1),
     },
     /*
      * Due to how Next.js bundles environment variables on Edge and Client,
@@ -36,5 +37,7 @@ export const env = createEnv({
         R2_BUCKET_NAME: process.env.R2_BUCKET_NAME,
         R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
         R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
+        NEXT_PUBLIC_R2_BUCKET_HOSTNAME:
+            process.env.NEXT_PUBLIC_R2_BUCKET_HOSTNAME,
     },
 });

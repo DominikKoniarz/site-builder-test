@@ -2,6 +2,7 @@
 
 import { createPage } from "@/lib/pages/create-page";
 import { editPage } from "@/lib/pages/edit-page";
+import { generateImageUploadUrl } from "@/lib/pages/generate-image-upload-url";
 import { actionClient } from "@/lib/safe-action";
 import { pageAddSchema } from "@/schema/pages/page-add-schema";
 import { pageEditSchema } from "@/schema/pages/page-edit-schema";
@@ -27,9 +28,10 @@ export const editPageAction = actionClient
         revalidatePath(`/pages/${page.id}`);
     });
 
-export const generateImagesUploadUrl = actionClient
+export const generateImageUploadUrlAction = actionClient
     .schema(generateImageUploadUrlSchema)
     .action(async ({ parsedInput }) => {
-        console.log(parsedInput);
-        return { url: "https://example.com" };
+        const data = await generateImageUploadUrl(parsedInput);
+
+        return data;
     });
