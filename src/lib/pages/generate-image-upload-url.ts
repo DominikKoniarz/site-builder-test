@@ -1,3 +1,5 @@
+import "server-only";
+
 import { type GenerateImageUploadUrlSchema } from "@/schema/pages/page-images-schemas";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { R2 } from "../r2";
