@@ -13,15 +13,17 @@ export default function ImagesGrid({ index }: { index: number }) {
 
     return (
         <div className="mb-2 flex h-fit w-full flex-row flex-wrap gap-4">
-            {images.map((image) =>
-                image.type === "loading" ? (
-                    <LoadingImage key={image.frontendId} />
-                ) : image.type === "new" ? (
-                    <NewImage key={image.frontendId} image={image} />
-                ) : (
-                    <ExistingImage key={image.frontendId} image={image} />
-                ),
-            )}
+            {images
+                .sort((a, b) => a.order - b.order)
+                .map((image) =>
+                    image.type === "loading" ? (
+                        <LoadingImage key={image.frontendId} />
+                    ) : image.type === "new" ? (
+                        <NewImage key={image.frontendId} image={image} />
+                    ) : (
+                        <ExistingImage key={image.frontendId} image={image} />
+                    ),
+                )}
         </div>
     );
 }
