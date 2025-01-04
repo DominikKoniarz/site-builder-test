@@ -25,24 +25,9 @@ export default function CropImageDialog({ src, imageIndex }: Props) {
     const { index, dbVariable } = usePageBannerVarContext();
     const form = usePageForm();
 
-    // const cropData = form.getValues(
-    //     `variables.${index}.images.${imageIndex}.cropData`,
-    // );
+    const imgRef = useRef<HTMLImageElement | null>(null);
 
-    const [crop, setCrop] = useState<Crop | undefined>(
-        // cropData
-        //     ? {
-        //           x: cropData.x,
-        //           y: cropData.y,
-        //           width: cropData.width,
-        //           height: cropData.height,
-        //           unit: "px",
-        //       }
-        //     : undefined,
-        undefined, // fix this case db crop data differs from cropper crop data in the browser
-    );
-
-    const imgRef = useRef<HTMLImageElement>(null);
+    const [crop, setCrop] = useState<Crop | undefined>();
 
     const onCrop = (data: PixelCrop) => {
         const image = form.getValues(`variables.${index}.images.${imageIndex}`);
@@ -106,6 +91,30 @@ export default function CropImageDialog({ src, imageIndex }: Props) {
                             src={src}
                             ref={imgRef}
                             className="max-h-[500px] max-w-[500px]"
+                            onLoad={() => {
+                                const img = imgRef.current;
+                                if (!img) return;
+
+                                const cropData = form.getValues(
+                                    `variables.${index}.images.${imageIndex}.cropData`,
+                                );
+                                if (!cropData) return;
+
+                                const realWidth = img.naturalWidth;
+                                const realHeight = img.naturalHeight;
+
+                                setCrop({
+                                    x: (cropData.x / realWidth) * img.width,
+                                    y: (cropData.y / realHeight) * img.height,
+                                    width:
+                                        (cropData.width / realWidth) *
+                                        img.width,
+                                    height:
+                                        (cropData.height / realHeight) *
+                                        img.height,
+                                    unit: "px",
+                                });
+                            }}
                         />
                     </ReactCrop>
                 </div>
