@@ -33,6 +33,11 @@ export type BannerImageDTO = {
 export type BannerVariableDTO = PageVariableBaseDTO & {
     type: (typeof VariableType)["BANNER"];
     images: BannerImageDTO[];
+    config: {
+        id: string;
+        imageHeight: number;
+        imageWidth: number;
+    } | null;
 };
 
 export type PageVariableDTO = TextVariableDTO | BannerVariableDTO;

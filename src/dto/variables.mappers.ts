@@ -22,6 +22,7 @@ export const createPageVariableDTO = (
             tag: variable.templateVariable.tag,
             type: variable.templateVariable.type as "BANNER",
             order: variable.templateVariable.order,
+            config: variable.templateVariable.bannerTemplateVariableConfig,
             images: variable.bannerVariable.images.map((image) => ({
                 id: image.id,
                 imageName: image.imageName,

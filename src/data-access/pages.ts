@@ -36,6 +36,13 @@ const pageWithVariablesSelect = {
                         createdAt: true,
                         updatedAt: true,
                         order: true,
+                        bannerTemplateVariableConfig: {
+                            select: {
+                                id: true,
+                                imageHeight: true,
+                                imageWidth: true,
+                            },
+                        },
                     },
                 },
                 bannerVariable: {

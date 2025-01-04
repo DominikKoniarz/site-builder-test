@@ -19,6 +19,11 @@ export type DbFetchedPageWithVariables = {
             type: VariableType;
             createdAt: Date;
             updatedAt: Date;
+            bannerTemplateVariableConfig: {
+                id: string;
+                imageWidth: number;
+                imageHeight: number;
+            } | null;
         };
         textVariable: {
             id: string;
