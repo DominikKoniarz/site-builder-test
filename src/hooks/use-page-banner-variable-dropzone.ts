@@ -13,7 +13,7 @@ import { nanoid } from "nanoid";
 import { actionError } from "@/lib/action-error";
 import toast from "react-hot-toast";
 
-const usePageBannerVariable = (index: number) => {
+const usePageBannerVariableDropzone = (index: number) => {
     const form = usePageForm();
 
     const { executeAsync } = useAction(generateImageUploadUrlAction);
@@ -131,4 +131,4 @@ const usePageBannerVariable = (index: number) => {
     };
 };
 
-export default usePageBannerVariable;
+export default usePageBannerVariableDropzone;

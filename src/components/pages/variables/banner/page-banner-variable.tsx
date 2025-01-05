@@ -1,12 +1,12 @@
-import usePageBannerVariable from "@/hooks/use-page-banner-variable";
-import ImagesGrid from "./images-grid";
+import usePageBannerVariableDropzone from "@/hooks/use-page-banner-variable-dropzone";
 import { usePageBannerVarContext } from "@/context/page-banner-var-context";
+import ImagesGrid from "./images-grid";
 
 export default function PageBannerVariable() {
     const { index, dbVariable } = usePageBannerVarContext();
 
     const { getRootProps, getInputProps, isDragActive } =
-        usePageBannerVariable(index);
+        usePageBannerVariableDropzone(index);
 
     return (
         <div className="flex flex-col gap-2 rounded-xl border bg-slate-800 p-4 pt-3">
