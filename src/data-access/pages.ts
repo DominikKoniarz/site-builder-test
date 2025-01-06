@@ -320,3 +320,40 @@ export const updatePage = async (data: PageEditSchema) => {
             ),
     ]);
 };
+
+export const getPageBannerVariableConfig = async (
+    bannerVariableId: string,
+): Promise<{
+    id: string;
+    imageWidth: number;
+    imageHeight: number;
+} | null> => {
+    const data = await prisma.bannerVariable.findUnique({
+        where: {
+            id: bannerVariableId,
+        },
+        select: {
+            pageVariable: {
+                select: {
+                    templateVariable: {
+                        select: {
+                            bannerTemplateVariableConfig: {
+                                select: {
+                                    id: true,
+                                    imageHeight: true,
+                                    imageWidth: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    if (data?.pageVariable?.templateVariable?.bannerTemplateVariableConfig) {
+        return data.pageVariable.templateVariable.bannerTemplateVariableConfig;
+    }
+
+    return null;
+};

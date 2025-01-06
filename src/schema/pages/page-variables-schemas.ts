@@ -97,3 +97,7 @@ export type PageEditBannerImageExistingSchema = z.infer<
     typeof existingBannerImageSchema
 >;
 export type PageEditBannerImageNewSchema = z.infer<typeof newBannerImageSchema>;
+
+export type PageEditBannerImageCropDataSchema = z.infer<
+    typeof bannerImageCropDataSchema
+>;

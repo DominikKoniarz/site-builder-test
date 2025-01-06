@@ -1,5 +1,5 @@
 import type { PageEditBannerImageNewSchema } from "@/schema/pages/page-variables-schemas";
-import { generateImagePublicURL } from "@/lib/images";
+import { generateTmpImagePublicURL } from "@/lib/images";
 import Image from "next/image";
 import CropImageDialog from "./crop-image-dialog";
 
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function NewImage({ image, imageIndex }: Props) {
-    const src = generateImagePublicURL(image);
+    const src = generateTmpImagePublicURL(image);
 
     return (
         <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-lg">

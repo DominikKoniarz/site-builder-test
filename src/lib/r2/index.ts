@@ -1,3 +1,5 @@
+import "server-only";
+
 import { env } from "@/env";
 import { S3Client } from "@aws-sdk/client-s3";
 

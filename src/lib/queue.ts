@@ -1,4 +1,4 @@
-type Task = () => Promise<void> | void;
+type Task = Promise<void> | void;
 
 export class Queue {
     private tasks: Task[] = [];
@@ -35,10 +35,8 @@ export class Queue {
             if (!task) break;
 
             try {
-                const result = task();
-
-                if (result instanceof Promise) {
-                    await result;
+                if (task instanceof Promise) {
+                    await task;
                 }
             } catch (err) {
                 console.error(

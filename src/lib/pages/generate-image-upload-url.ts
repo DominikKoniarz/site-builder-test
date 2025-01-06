@@ -1,12 +1,9 @@
 import "server-only";
 
 import { type GenerateImageUploadUrlSchema } from "@/schema/pages/page-images-schemas";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { R2 } from "../r2";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { env } from "@/env";
 import { addTmpImage } from "@/data-access/tmp-images";
 import { generateTmpImageKey } from "../images";
+import { getTmpImageSignedUrl } from "../r2/presigner";
 
 type GeneratedUrlData = {
     tmpImageId: string;
@@ -23,14 +20,7 @@ export const generateImageUploadUrl = async (
 
     const key = generateTmpImageKey(dbTmpImage.id, image.name);
 
-    const url: string = await getSignedUrl(
-        R2,
-        new PutObjectCommand({
-            Bucket: env.R2_BUCKET_NAME,
-            Key: key,
-        }),
-        { expiresIn: 60 * 5 }, // 5 minutes
-    );
+    const url: string = await getTmpImageSignedUrl(key);
 
     return {
         tmpImageId: dbTmpImage.id,
