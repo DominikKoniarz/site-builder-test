@@ -5,8 +5,8 @@ import type {
     PageEditTextVariableSchema,
 } from "@/schema/pages/page-variables-schemas";
 import {
-    pageEditSchema,
     type PageEditSchema,
+    pageEditSchema,
 } from "@/schema/pages/page-edit-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
@@ -30,12 +30,14 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                 if (variable.type === "TEXT") {
                     return {
                         id: variable.id,
+                        textVariableId: variable.textVariableId,
                         type: variable.type,
                         value: variable.value,
                     } satisfies PageEditTextVariableSchema;
                 } else if (variable.type === "BANNER") {
                     return {
                         id: variable.id,
+                        bannerVariableId: variable.bannerVariableId,
                         type: variable.type,
                         images: variable.images.map(
                             (image) =>
@@ -69,12 +71,14 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                 if (variable.type === "TEXT") {
                     return {
                         id: variable.id,
+                        textVariableId: variable.textVariableId,
                         type: variable.type,
                         value: variable.value,
                     } satisfies PageEditTextVariableSchema;
                 } else if (variable.type === "BANNER") {
                     return {
                         id: variable.id,
+                        bannerVariableId: variable.bannerVariableId,
                         type: variable.type,
                         images: variable.images.map(
                             (image) =>

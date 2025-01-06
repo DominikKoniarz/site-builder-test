@@ -311,7 +311,7 @@ export const updatePage = async (data: PageEditSchema) => {
             .map((variable) =>
                 prisma.textVariable.update({
                     where: {
-                        id: variable.id,
+                        id: variable.textVariableId,
                     },
                     data: {
                         value: variable.value,
@@ -322,28 +322,24 @@ export const updatePage = async (data: PageEditSchema) => {
 };
 
 export const getPageBannerVariableConfig = async (
-    bannerVariableId: string,
+    pageVariableId: string,
 ): Promise<{
     id: string;
     imageWidth: number;
     imageHeight: number;
 } | null> => {
-    const data = await prisma.bannerVariable.findUnique({
+    const data = await prisma.pageVariable.findUnique({
         where: {
-            id: bannerVariableId,
+            id: pageVariableId,
         },
         select: {
-            pageVariable: {
+            templateVariable: {
                 select: {
-                    templateVariable: {
+                    bannerTemplateVariableConfig: {
                         select: {
-                            bannerTemplateVariableConfig: {
-                                select: {
-                                    id: true,
-                                    imageHeight: true,
-                                    imageWidth: true,
-                                },
-                            },
+                            id: true,
+                            imageHeight: true,
+                            imageWidth: true,
                         },
                     },
                 },
@@ -351,8 +347,8 @@ export const getPageBannerVariableConfig = async (
         },
     });
 
-    if (data?.pageVariable?.templateVariable?.bannerTemplateVariableConfig) {
-        return data.pageVariable.templateVariable.bannerTemplateVariableConfig;
+    if (data?.templateVariable?.bannerTemplateVariableConfig) {
+        return data.templateVariable.bannerTemplateVariableConfig;
     }
 
     return null;

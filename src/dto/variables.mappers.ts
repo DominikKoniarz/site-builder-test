@@ -6,7 +6,8 @@ export const createPageVariableDTO = (
 ): TextVariableDTO | BannerVariableDTO => {
     if (variable.textVariable) {
         return {
-            id: variable.textVariable.id,
+            id: variable.id,
+            textVariableId: variable.textVariable.id,
             name: variable.templateVariable.name,
             tag: variable.templateVariable.tag,
             type: variable.templateVariable.type as "TEXT",
@@ -17,7 +18,8 @@ export const createPageVariableDTO = (
         } satisfies TextVariableDTO;
     } else if (variable.bannerVariable) {
         return {
-            id: variable.bannerVariable.id,
+            id: variable.id,
+            bannerVariableId: variable.bannerVariable.id,
             name: variable.templateVariable.name,
             tag: variable.templateVariable.tag,
             type: variable.templateVariable.type as "BANNER",

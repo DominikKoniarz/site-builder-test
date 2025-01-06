@@ -8,6 +8,9 @@ const variableBaseSchema = z.object({
 });
 
 const textVariableSchema = variableBaseSchema.extend({
+    textVariableId: z
+        .string({ invalid_type_error: "Valid text var id is required" })
+        .uuid({ message: "Valid text var id is required" }),
     value: z.preprocess(
         (arg) =>
             typeof arg === "string" ? (arg.length > 0 ? arg : null) : arg,
@@ -79,6 +82,9 @@ const bannerImageSchema = z.union([
 ]);
 
 const bannerVariableSchema = variableBaseSchema.extend({
+    bannerVariableId: z
+        .string({ invalid_type_error: "Valid text var id is required" })
+        .uuid({ message: "Valid text var id is required" }),
     type: z.literal(VariableType.BANNER, {
         message: "Invalid variable type",
     }),

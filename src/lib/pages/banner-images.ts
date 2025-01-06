@@ -55,7 +55,6 @@ export const processNewBannerImage = async (
     }
 
     if (props.cropData) {
-        console.log("Crop data found");
         const metadata = await getMetadata(buffer);
 
         if (!metadata.width || !metadata.height) {
@@ -79,7 +78,6 @@ export const processNewBannerImage = async (
         // for test
         await uploadTmpImage(croppedBuffer, foundTmpImage.imageName);
     } else {
-        console.log("No crop data");
         // no crop data, just resize
         const croppedBuffer = await resizeImage(
             buffer,
