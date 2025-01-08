@@ -27,7 +27,11 @@ export default function ImagesGrid() {
                             image={image}
                         />
                     ) : (
-                        <ExistingImage key={image.frontendId} image={image} />
+                        <ExistingImage
+                            key={image.frontendId}
+                            image={image}
+                            index={index}
+                        />
                     ),
                 )}
         </div>

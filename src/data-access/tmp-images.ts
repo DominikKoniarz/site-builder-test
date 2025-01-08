@@ -23,3 +23,11 @@ export const getTmpImageById = async (
 
     return foundImage ? createTmpImageDTO(foundImage) : null;
 };
+
+export const removeTmpImageFromDb = (id: string) => {
+    return prisma.tmpImage.delete({
+        where: {
+            id,
+        },
+    });
+};

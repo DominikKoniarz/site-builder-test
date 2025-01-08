@@ -1,7 +1,8 @@
-import type { VariableType } from "@prisma/client";
+import type { PageState, VariableType } from "@prisma/client";
 
 export type DbFetchedPageWithVariables = {
     id: string;
+    state: PageState;
     name: string;
     description: string | null;
     slug: string;

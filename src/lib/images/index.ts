@@ -14,6 +14,26 @@ export const generateTmpImageKey = (tmpImageId: string, imageName: string) => {
     return `${tmpDirPrefix}/${tmpImageId}/${imageName}`;
 };
 
+export const generateBannerImagePublicURL = (
+    pageId: string,
+    pageVariableId: string,
+    imageId: string,
+    type: "original" | "crop",
+    imageName: string,
+): string => {
+    return `https://${env.NEXT_PUBLIC_R2_BUCKET_HOSTNAME}/pages/${pageId}/variables/${pageVariableId}/banner/${imageId}/${type}/${imageName}`;
+};
+
+export const generateBannerImageKey = (
+    pageId: string,
+    pageVariableId: string,
+    imageId: string,
+    type: "original" | "crop",
+    imageName: string,
+) => {
+    return `pages/${pageId}/variables/${pageVariableId}/banner/${imageId}/${type}/${imageName}`;
+};
+
 export const sanitizeCropData = (
     cropData: CropData,
     imageWidth: number,

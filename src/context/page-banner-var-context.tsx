@@ -12,6 +12,7 @@ const pageBannerVarContextInitialValue: PageBannerVarContextType = {
     index: -1,
     dbVariable: {
         id: "",
+        bannerVariableId: "",
         type: "BANNER",
         name: "",
         tag: "",

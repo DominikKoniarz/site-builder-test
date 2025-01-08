@@ -12,7 +12,6 @@ export const editPage = async (data: PageEditSchema) => {
     if (!foundPage) throw new BadRequestError("Page not found");
 
     // for now updating only textVariables
-    // maybe should rethink using ids of subvariables instead of main variables records!!!!!!!
     await updatePage(data);
 
     // after(scheduleNewBannerImagesProcessing(data));

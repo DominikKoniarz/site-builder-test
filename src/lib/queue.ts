@@ -1,4 +1,4 @@
-type Task = Promise<void> | void;
+type Task = (() => void) | (() => Promise<void>);
 
 export class Queue {
     private tasks: Task[] = [];
@@ -35,13 +35,14 @@ export class Queue {
             if (!task) break;
 
             try {
-                if (task instanceof Promise) {
-                    await task;
+                const result = task();
+                if (result instanceof Promise) {
+                    await result;
                 }
-            } catch (err) {
-                console.error(
+            } catch (error) {
+                console.log(
                     `Error processing task in queue ${this.name}:`,
-                    err,
+                    error instanceof Error ? error.stack : error,
                 );
             }
         }

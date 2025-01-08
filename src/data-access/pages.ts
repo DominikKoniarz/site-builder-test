@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { PageDTO, PageWithVariablesDTO } from "@/dto/pages.dto";
+import type { PageState } from "@prisma/client";
 import { createPageDTO, createPageWithVariablesDTO } from "@/dto/pages.mappers";
 import prisma from "@/lib/prisma";
 import { PageAddSchema } from "@/schema/pages/page-add-schema";
@@ -12,6 +13,7 @@ import { DbFetchedPageWithVariables } from "@/types/pages";
 const pageWithVariablesSelect = {
     select: {
         id: true,
+        state: true,
         name: true,
         description: true,
         slug: true,
@@ -146,6 +148,7 @@ export const addPage = async (
 ): Promise<PageDTO> => {
     const page = await prisma.page.create({
         data: {
+            state: "READY",
             name: data.name,
             slug: data.slug,
             description: data.description,
@@ -301,6 +304,7 @@ export const updatePage = async (data: PageEditSchema) => {
                 id: data.id,
             },
             data: {
+                state: "PROCESSING",
                 name: data.name,
                 slug: data.slug,
                 description: data.description,
@@ -352,4 +356,39 @@ export const getPageBannerVariableConfig = async (
     }
 
     return null;
+};
+
+export const createBannerImage = (data: {
+    id: string;
+    imageName: string;
+    order: number;
+    bannerVariableId: string;
+    cropWidth: number;
+    cropHeight: number;
+    cropX: number;
+    cropY: number;
+}) => {
+    return prisma.bannerImage.create({
+        data: {
+            id: data.id,
+            bannerId: data.bannerVariableId,
+            imageName: data.imageName,
+            order: data.order,
+            cropWidth: data.cropWidth,
+            cropHeight: data.cropHeight,
+            cropX: data.cropX,
+            cropY: data.cropY,
+        },
+    });
+};
+
+export const changePageState = (id: string, state: PageState) => {
+    return prisma.page.update({
+        where: {
+            id,
+        },
+        data: {
+            state,
+        },
+    });
 };

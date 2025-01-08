@@ -6,6 +6,7 @@ import { createPageVariableDTO } from "./variables.mappers";
 export const createPageDTO = (page: Page): PageDTO => {
     return {
         id: page.id,
+        state: page.state,
         name: page.name,
         description: page.description,
         slug: page.slug,
@@ -19,6 +20,7 @@ export const createPageWithVariablesDTO = (
 ): PageWithVariablesDTO => {
     return {
         id: page.id,
+        state: page.state,
         name: page.name,
         description: page.description,
         slug: page.slug,

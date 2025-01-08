@@ -3,18 +3,32 @@ import "server-only";
 import type { PageEditSchema } from "@/schema/pages/page-edit-schema";
 import type { PageEditBannerImageCropDataSchema } from "@/schema/pages/page-variables-schemas";
 import { Queue } from "../queue";
-import { getTmpImageById } from "@/data-access/tmp-images";
+import {
+    getTmpImageById,
+    removeTmpImageFromDb,
+} from "@/data-access/tmp-images";
 import { revalidatePath } from "next/cache";
 import { sanitizeCropData } from "../images";
-import { getPageBannerVariableConfig } from "@/data-access/pages";
+import {
+    changePageState,
+    createBannerImage,
+    getPageBannerVariableConfig,
+} from "@/data-access/pages";
 import { cropAndResizeImage, getMetadata, resizeImage } from "../sharp";
-import { downloadTmpImage, uploadTmpImage } from "../r2/files";
+import {
+    copyTmpImageToPage,
+    removeTmpImage,
+    downloadTmpImage,
+    uploadCroppedBannerImage,
+} from "../r2/files";
+import { v4 as uuidv4 } from "uuid";
 
 const queue = new Queue("process-new-banner-images");
 
 type ProsessNewBannerImageProps = {
     pageId: string;
     pageVariableId: string;
+    bannerVariableId: string;
     tmpImageId: string;
     order: number;
     cropData: PageEditBannerImageCropDataSchema;
@@ -75,8 +89,36 @@ export const processNewBannerImage = async (
             bannerVariableConfig.imageHeight,
         );
 
-        // for test
-        await uploadTmpImage(croppedBuffer, foundTmpImage.imageName);
+        const uuid = uuidv4();
+
+        await Promise.all([
+            uploadCroppedBannerImage(
+                croppedBuffer,
+                props.pageId,
+                props.pageVariableId,
+                uuid,
+                foundTmpImage.imageName,
+            ),
+            copyTmpImageToPage(
+                props.pageId,
+                props.pageVariableId,
+                uuid,
+                foundTmpImage.imageName,
+                props.tmpImageId,
+            ),
+        ]);
+
+        // error here
+        await createBannerImage({
+            id: uuid,
+            imageName: foundTmpImage.imageName,
+            order: props.order,
+            bannerVariableId: props.bannerVariableId,
+            cropHeight: cropData.height,
+            cropWidth: cropData.width,
+            cropX: cropData.x,
+            cropY: cropData.y,
+        });
     } else {
         // no crop data, just resize
         const croppedBuffer = await resizeImage(
@@ -85,15 +127,41 @@ export const processNewBannerImage = async (
             bannerVariableConfig.imageHeight,
         );
 
-        // for test
-        await uploadTmpImage(croppedBuffer, foundTmpImage.imageName);
+        const uuid = uuidv4();
+
+        await Promise.all([
+            uploadCroppedBannerImage(
+                croppedBuffer,
+                props.pageId,
+                props.pageVariableId,
+                uuid,
+                foundTmpImage.imageName,
+            ),
+            copyTmpImageToPage(
+                props.pageId,
+                props.pageVariableId,
+                uuid,
+                foundTmpImage.imageName,
+                props.tmpImageId,
+            ),
+        ]);
+
+        await createBannerImage({
+            id: uuid,
+            imageName: foundTmpImage.imageName,
+            order: props.order,
+            bannerVariableId: props.bannerVariableId,
+            cropHeight: 0, // for now 0 maybe
+            cropWidth: 0,
+            cropX: 0,
+            cropY: 0,
+        });
     }
 
-    // copy uncropped image with valid key
-    // delete uncropped image?
-    // remove tmp image from DB
-    // update page variable with new image
-    // revalidate page
+    await Promise.allSettled([
+        await removeTmpImage(props.tmpImageId, foundTmpImage.imageName),
+        await removeTmpImageFromDb(props.tmpImageId),
+    ]);
 
     revalidatePath(`/pages/${props.pageId}`);
 };
@@ -103,10 +171,11 @@ export const scheduleNewBannerImagesProcessing = (data: PageEditSchema) => {
         if (variable.type === "BANNER") {
             variable.images.forEach((image) => {
                 if (image.type === "new") {
-                    queue.addTask(
+                    queue.addTask(() =>
                         processNewBannerImage({
                             pageId: data.id,
                             pageVariableId: variable.id,
+                            bannerVariableId: variable.bannerVariableId,
                             tmpImageId: image.tmpImageId,
                             order: image.order,
                             cropData: image.cropData,
@@ -115,6 +184,10 @@ export const scheduleNewBannerImagesProcessing = (data: PageEditSchema) => {
                 }
             });
         }
+    });
+
+    queue.addTask(() => {
+        return changePageState(data.id, "READY");
     });
 
     return queue;

@@ -86,14 +86,15 @@ model BannerImage {
 }
 
 model Page {
-    id          String   @id @default(uuid())
-    name        String   @unique @db.VarChar(255)
-    description String?  @db.Text
-    slug        String   @unique @db.VarChar(255)
-    templateId  String   @db.VarChar(255)
-    template    Template @relation(fields: [templateId], references: [id])
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id          String    @id @default(uuid())
+    state       PageState
+    name        String    @unique @db.VarChar(255)
+    description String?   @db.Text
+    slug        String    @unique @db.VarChar(255)
+    templateId  String    @db.VarChar(255)
+    template    Template  @relation(fields: [templateId], references: [id])
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
 
     variables PageVariable[]
 }
@@ -121,4 +122,9 @@ model TmpImage {
 enum VariableType {
     TEXT
     BANNER
+}
+
+enum PageState {
+    PROCESSING
+    READY
 }
