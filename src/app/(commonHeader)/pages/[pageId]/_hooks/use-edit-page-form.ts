@@ -104,7 +104,8 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
 
     const { execute: submit, isPending } = useAction(editPageAction, {
         onSuccess: () => {
-            toast.success("Page eddited successfully");
+            // here sth else
+            // toast.success("Page eddited successfully");
         },
         onError: (error) => {
             actionError(error).serverError().validationErrors();

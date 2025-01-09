@@ -1,6 +1,7 @@
 import { getAllPages, getPageWithVariablesById } from "@/data-access/pages";
 import { redirect } from "next/navigation";
 import PageEditForm from "./_components/page-edit-form";
+import PageProcessing from "./_components/page-processing";
 
 type Props = {
     params: Promise<{
@@ -26,7 +27,11 @@ export default async function Templates({ params }: Props) {
         <main className="flex h-full w-full flex-row justify-center p-5">
             <div className="flex w-full flex-col items-center gap-8">
                 <h1 className="text-xl font-bold">Edit page</h1>
-                <PageEditForm page={page} />
+                {page.state === "READY" ? (
+                    <PageEditForm page={page} />
+                ) : (
+                    <PageProcessing />
+                )}
             </div>
         </main>
     );

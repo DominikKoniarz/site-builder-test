@@ -33,6 +33,7 @@ export default function ExistingImage({ image, index }: Props) {
                     height: "100%",
                     objectFit: "cover",
                 }}
+                priority={true}
             />
         </div>
     );

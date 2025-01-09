@@ -186,8 +186,9 @@ export const scheduleNewBannerImagesProcessing = (data: PageEditSchema) => {
         }
     });
 
-    queue.addTask(() => {
-        return changePageState(data.id, "READY");
+    queue.addTask(async () => {
+        await changePageState(data.id, "READY");
+        revalidatePath(`/pages/${data.id}`);
     });
 
     return queue;

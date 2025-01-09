@@ -297,8 +297,8 @@ export const deletePagesVarsAfterTemplateUpdate = async (
 };
 
 // for now updating only textVariables
-export const updatePage = async (data: PageEditSchema) => {
-    await prisma.$transaction([
+export const updatePage = (data: PageEditSchema) => {
+    return prisma.$transaction([
         prisma.page.update({
             where: {
                 id: data.id,
