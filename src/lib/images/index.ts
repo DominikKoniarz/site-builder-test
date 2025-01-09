@@ -56,7 +56,7 @@ export const sanitizeCropData = (
 
 export const getMimeFromName = (name: string): string => {
     const lastDotIndex = name.lastIndexOf(".");
-    const ext = name.slice(lastDotIndex + 1);
+    const ext = name.slice(lastDotIndex + 1).toLowerCase();
 
     switch (ext) {
         case "jpg":

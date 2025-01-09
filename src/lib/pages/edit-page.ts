@@ -4,7 +4,7 @@ import type { PageEditSchema } from "@/schema/pages/page-edit-schema";
 import { getPageById, updatePage } from "@/data-access/pages";
 import { BadRequestError, ForbiddenError } from "@/types/errors";
 import { after } from "next/server";
-import { scheduleNewBannerImagesProcessing } from "./banner-images";
+import { scheduleBannerImagesProcessing } from "./banner-images";
 
 export const editPage = async (data: PageEditSchema) => {
     const foundPage = await getPageById(data.id);
@@ -19,7 +19,7 @@ export const editPage = async (data: PageEditSchema) => {
     // for now updating only textVariables
     await updatePage(data);
 
-    const queue = scheduleNewBannerImagesProcessing(data);
+    const queue = scheduleBannerImagesProcessing(data);
 
     after(() => queue.start());
 

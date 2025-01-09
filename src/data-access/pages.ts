@@ -363,10 +363,12 @@ export const createBannerImage = (data: {
     imageName: string;
     order: number;
     bannerVariableId: string;
-    cropWidth: number;
-    cropHeight: number;
-    cropX: number;
-    cropY: number;
+    cropData?: {
+        width: number;
+        height: number;
+        x: number;
+        y: number;
+    };
 }) => {
     return prisma.bannerImage.create({
         data: {
@@ -374,10 +376,10 @@ export const createBannerImage = (data: {
             bannerId: data.bannerVariableId,
             imageName: data.imageName,
             order: data.order,
-            cropWidth: data.cropWidth,
-            cropHeight: data.cropHeight,
-            cropX: data.cropX,
-            cropY: data.cropY,
+            cropWidth: data?.cropData?.width || 0,
+            cropHeight: data?.cropData?.height || 0,
+            cropX: data?.cropData?.x || 0,
+            cropY: data?.cropData?.y || 0,
         },
     });
 };

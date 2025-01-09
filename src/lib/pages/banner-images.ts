@@ -108,16 +108,12 @@ export const processNewBannerImage = async (
             ),
         ]);
 
-        // error here
         await createBannerImage({
             id: uuid,
             imageName: foundTmpImage.imageName,
             order: props.order,
             bannerVariableId: props.bannerVariableId,
-            cropHeight: cropData.height,
-            cropWidth: cropData.width,
-            cropX: cropData.x,
-            cropY: cropData.y,
+            cropData,
         });
     } else {
         // no crop data, just resize
@@ -151,10 +147,6 @@ export const processNewBannerImage = async (
             imageName: foundTmpImage.imageName,
             order: props.order,
             bannerVariableId: props.bannerVariableId,
-            cropHeight: 0, // for now 0 maybe
-            cropWidth: 0,
-            cropX: 0,
-            cropY: 0,
         });
     }
 
@@ -166,7 +158,8 @@ export const processNewBannerImage = async (
     revalidatePath(`/pages/${props.pageId}`);
 };
 
-export const scheduleNewBannerImagesProcessing = (data: PageEditSchema) => {
+export const scheduleBannerImagesProcessing = (data: PageEditSchema) => {
+    // new images
     data.variables.forEach((variable) => {
         if (variable.type === "BANNER") {
             variable.images.forEach((image) => {

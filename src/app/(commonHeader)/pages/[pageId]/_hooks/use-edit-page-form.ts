@@ -13,7 +13,6 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAction } from "next-safe-action/hooks";
 import { editPageAction } from "@/actions/pages";
-import toast from "react-hot-toast";
 import { actionError } from "@/lib/action-error";
 import { nanoid } from "nanoid";
 
@@ -104,8 +103,7 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
 
     const { execute: submit, isPending } = useAction(editPageAction, {
         onSuccess: () => {
-            // here sth else
-            // toast.success("Page eddited successfully");
+            // info visible on page as html content
         },
         onError: (error) => {
             actionError(error).serverError().validationErrors();
