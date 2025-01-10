@@ -22,6 +22,7 @@ import {
     uploadCroppedBannerImage,
 } from "../r2/files";
 import { v4 as uuidv4 } from "uuid";
+import { X } from "lucide-react";
 
 const queue = new Queue("process-new-banner-images");
 
@@ -158,7 +159,9 @@ export const processNewBannerImage = async (
     revalidatePath(`/pages/${props.pageId}`);
 };
 
-export const scheduleBannerImagesProcessing = (data: PageEditSchema) => {
+export const scheduleBannerImagesProcessing = async (data: PageEditSchema) => {
+    let scheduledCount: number = 0;
+
     // new images
     data.variables.forEach((variable) => {
         if (variable.type === "BANNER") {
@@ -174,15 +177,21 @@ export const scheduleBannerImagesProcessing = (data: PageEditSchema) => {
                             cropData: image.cropData,
                         }),
                     );
+
+                    scheduledCount++;
                 }
             });
         }
     });
 
-    queue.addTask(async () => {
+    if (scheduledCount > 0) {
+        queue.addTask(async () => {
+            await changePageState(data.id, "READY");
+            revalidatePath(`/pages/${data.id}`);
+        });
+    } else {
         await changePageState(data.id, "READY");
-        revalidatePath(`/pages/${data.id}`);
-    });
+    }
 
     return queue;
 };

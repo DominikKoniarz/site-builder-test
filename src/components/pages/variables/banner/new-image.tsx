@@ -1,7 +1,7 @@
 import type { PageEditBannerImageNewSchema } from "@/schema/pages/page-variables-schemas";
 import { generateTmpImagePublicURL } from "@/lib/images";
 import Image from "next/image";
-import CropImageDialog from "./crop-image-dialog";
+import ImageOptions from "./image-options";
 
 type Props = {
     image: PageEditBannerImageNewSchema;
@@ -24,9 +24,7 @@ export default function NewImage({ image, imageIndex }: Props) {
                     objectFit: "cover",
                 }}
             />
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                <CropImageDialog src={src} imageIndex={imageIndex} />
-            </div>
+            <ImageOptions imageIndex={imageIndex} src={src} />
         </div>
     );
 }

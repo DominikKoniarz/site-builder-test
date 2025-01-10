@@ -16,10 +16,9 @@ export const editPage = async (data: PageEditSchema) => {
             "Page is being processed. Please try again later",
         );
 
-    // for now updating only textVariables
     await updatePage(data);
 
-    const queue = scheduleBannerImagesProcessing(data);
+    const queue = await scheduleBannerImagesProcessing(data);
 
     after(() => queue.start());
 

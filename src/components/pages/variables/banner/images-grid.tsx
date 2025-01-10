@@ -30,7 +30,8 @@ export default function ImagesGrid() {
                         <ExistingImage
                             key={image.frontendId}
                             image={image}
-                            index={index}
+                            imageIndex={imageIndex}
+                            varIndex={index}
                         />
                     ),
                 )}

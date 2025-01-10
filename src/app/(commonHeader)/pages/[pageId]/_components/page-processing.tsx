@@ -4,7 +4,7 @@ import { usePooling } from "@/hooks/use-pooling";
 import { LoaderCircle } from "lucide-react";
 
 export default function PageProcessing() {
-    usePooling(1500);
+    usePooling(1000);
 
     return (
         <div className="mx-auto mt-8 flex flex-col items-center gap-4">

@@ -1,4 +1,4 @@
-import { getAllPages, getPageWithVariablesById } from "@/data-access/pages";
+import { getPageWithVariablesById } from "@/data-access/pages";
 import { redirect } from "next/navigation";
 import PageEditForm from "./_components/page-edit-form";
 import PageProcessing from "./_components/page-processing";
@@ -9,13 +9,7 @@ type Props = {
     }>;
 };
 
-// revalidated after page has been edited or (template has been edited and page has been updated)
-export const generateStaticParams = async (): Promise<{ pageId: string }[]> => {
-    const pages = await getAllPages();
-    return pages.map((page) => ({
-        pageId: page.id,
-    }));
-};
+export const dynamic = "force-dynamic";
 
 export default async function Templates({ params }: Props) {
     const { pageId } = await params;

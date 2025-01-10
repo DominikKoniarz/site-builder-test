@@ -2,16 +2,18 @@ import usePageForm from "@/hooks/use-page-form";
 import { generateBannerImagePublicURL } from "@/lib/images";
 import { PageEditBannerImageExistingSchema } from "@/schema/pages/page-variables-schemas";
 import Image from "next/image";
+import ImageOptions from "./image-options";
 
 type Props = {
     image: PageEditBannerImageExistingSchema;
-    index: number;
+    varIndex: number;
+    imageIndex: number;
 };
 
-export default function ExistingImage({ image, index }: Props) {
+export default function ExistingImage({ image, varIndex, imageIndex }: Props) {
     const form = usePageForm();
     const pageId = form.watch("id");
-    const variableId = form.watch(`variables.${index}.id`);
+    const variableId = form.watch(`variables.${varIndex}.id`);
 
     const src = generateBannerImagePublicURL(
         pageId,
@@ -22,7 +24,7 @@ export default function ExistingImage({ image, index }: Props) {
     );
 
     return (
-        <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-lg">
+        <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-lg">
             <Image
                 src={src}
                 width={100} // a little bit bigger than width for more quality
@@ -35,6 +37,7 @@ export default function ExistingImage({ image, index }: Props) {
                 }}
                 priority={true}
             />
+            <ImageOptions imageIndex={imageIndex} src={src} />
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import type { Crop, PixelCrop } from "react-image-crop";
+import { useMemo, useRef, useState } from "react";
 import { usePageBannerVarContext } from "@/context/page-banner-var-context";
 import usePageForm from "./use-page-form";
-import { useMemo, useRef, useState } from "react";
 
 const useCropImageDialog = (imageIndex: number) => {
     const { index, dbVariable } = usePageBannerVarContext();
@@ -12,7 +12,7 @@ const useCropImageDialog = (imageIndex: number) => {
 
     const onCrop = (data: PixelCrop) => {
         const image = form.getValues(`variables.${index}.images.${imageIndex}`);
-        if (image.type !== "new") return;
+        if (image.type === "loading") return;
 
         // calculate real image size crop data
         const img = imgRef.current;
@@ -51,7 +51,7 @@ const useCropImageDialog = (imageIndex: number) => {
         const cropData = form.getValues(
             `variables.${index}.images.${imageIndex}.cropData`,
         );
-        if (!cropData) return;
+        if (!cropData || Object.values(cropData).every((v) => !v)) return;
 
         const realWidth = img.naturalWidth;
         const realHeight = img.naturalHeight;
