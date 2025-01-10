@@ -7,7 +7,6 @@ import {
     getTmpImageById,
     removeTmpImageFromDb,
 } from "@/data-access/tmp-images";
-import { revalidatePath } from "next/cache";
 import { sanitizeCropData } from "../images";
 import {
     changePageState,
@@ -22,7 +21,6 @@ import {
     uploadCroppedBannerImage,
 } from "../r2/files";
 import { v4 as uuidv4 } from "uuid";
-import { X } from "lucide-react";
 
 const queue = new Queue("process-new-banner-images");
 
@@ -155,8 +153,6 @@ export const processNewBannerImage = async (
         await removeTmpImage(props.tmpImageId, foundTmpImage.imageName),
         await removeTmpImageFromDb(props.tmpImageId),
     ]);
-
-    revalidatePath(`/pages/${props.pageId}`);
 };
 
 export const scheduleBannerImagesProcessing = async (data: PageEditSchema) => {
@@ -187,7 +183,6 @@ export const scheduleBannerImagesProcessing = async (data: PageEditSchema) => {
     if (scheduledCount > 0) {
         queue.addTask(async () => {
             await changePageState(data.id, "READY");
-            revalidatePath(`/pages/${data.id}`);
         });
     } else {
         await changePageState(data.id, "READY");
