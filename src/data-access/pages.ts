@@ -388,49 +388,12 @@ export const createBannerImage = (data: {
 export const removeBannerImagesFromDb = (images: RemovedBannerImage[]) => {
     if (!images.length) throw new Error("No images to remove");
 
-    return prisma.$transaction(async (tx) => {
-        const deleted = await Promise.allSettled(
-            images.map((image) =>
-                tx.bannerImage.delete({
-                    where: {
-                        id: image.id,
-                    },
-                }),
-            ),
-        );
-
-        const removedCountPerBanner = new Map<string, number>();
-
-        deleted.forEach((result) => {
-            if (result.status === "fulfilled") {
-                const bannerId = result.value.bannerId;
-
-                if (removedCountPerBanner.has(bannerId)) {
-                    removedCountPerBanner.set(
-                        bannerId,
-                        removedCountPerBanner.get(bannerId)! + 1,
-                    );
-                } else {
-                    removedCountPerBanner.set(bannerId, 1);
-                }
-            }
-        });
-
-        // decrement all images order per banner by count of removed images
-        await Promise.allSettled(
-            removedCountPerBanner.entries().map(([bannerId, count]) =>
-                tx.bannerImage.updateMany({
-                    where: {
-                        bannerId,
-                    },
-                    data: {
-                        order: {
-                            decrement: count,
-                        },
-                    },
-                }),
-            ),
-        );
+    return prisma.bannerImage.deleteMany({
+        where: {
+            id: {
+                in: images.map((image) => image.id),
+            },
+        },
     });
 };
 
