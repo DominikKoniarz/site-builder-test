@@ -8,9 +8,11 @@ type Props = {
 
 export default function ImageOptions({ imageIndex, src }: Props) {
     return (
-        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-row gap-2.5">
-            <CropImageDialog src={src} imageIndex={imageIndex} />
-            <DeleteImageDialog imageIndex={imageIndex} />
+        <div className="group absolute left-1/2 top-1/2 grid h-full w-full -translate-x-1/2 -translate-y-1/2 place-items-center bg-transparent">
+            <div className="flex flex-row gap-2.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                <CropImageDialog src={src} imageIndex={imageIndex} />
+                <DeleteImageDialog imageIndex={imageIndex} />
+            </div>
         </div>
     );
 }
