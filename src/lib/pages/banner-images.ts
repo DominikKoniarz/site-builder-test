@@ -2,6 +2,7 @@ import "server-only";
 
 import type { PageEditSchema } from "@/schema/pages/page-edit-schema";
 import type { PageEditBannerImageCropDataSchema } from "@/schema/pages/page-variables-schemas";
+import type { RemovedBannerImage } from "@/types/images";
 import { Queue } from "../queue";
 import {
     getTmpImageById,
@@ -12,6 +13,7 @@ import {
     changePageState,
     createBannerImage,
     getPageBannerVariableConfig,
+    removeBannerImagesFromDb,
 } from "@/data-access/pages";
 import { cropAndResizeImage, getMetadata, resizeImage } from "../sharp";
 import {
@@ -19,8 +21,10 @@ import {
     removeTmpImage,
     downloadTmpImage,
     uploadCroppedBannerImage,
+    removeBannerImages,
 } from "../r2/files";
 import { v4 as uuidv4 } from "uuid";
+import { PageWithVariablesDTO } from "@/dto/pages.dto";
 
 const queue = new Queue("process-new-banner-images");
 
@@ -33,9 +37,7 @@ type ProsessNewBannerImageProps = {
     cropData: PageEditBannerImageCropDataSchema;
 };
 
-export const processNewBannerImage = async (
-    props: ProsessNewBannerImageProps,
-) => {
+const processNewBannerImage = async (props: ProsessNewBannerImageProps) => {
     const [foundTmpImage, bannerVariableConfig] = await Promise.all([
         getTmpImageById(props.tmpImageId),
         getPageBannerVariableConfig(props.pageVariableId),
@@ -155,7 +157,20 @@ export const processNewBannerImage = async (
     ]);
 };
 
-export const scheduleBannerImagesProcessing = async (data: PageEditSchema) => {
+const deleteUnusedBannerImages = async (
+    imagesToRemove: RemovedBannerImage[],
+) => {
+    if (imagesToRemove.length === 0) return;
+
+    await removeBannerImagesFromDb(imagesToRemove);
+
+    await removeBannerImages(imagesToRemove);
+};
+
+export const scheduleBannerImagesProcessing = async (
+    data: PageEditSchema,
+    currentPageData: PageWithVariablesDTO,
+) => {
     let scheduledCount: number = 0;
 
     // new images
@@ -179,6 +194,38 @@ export const scheduleBannerImagesProcessing = async (data: PageEditSchema) => {
             });
         }
     });
+
+    // banner images to remove
+    const imagesToRemove: RemovedBannerImage[] = [];
+
+    currentPageData.variables.forEach((variable) => {
+        if (variable.type === "BANNER") {
+            variable.images.forEach((image) => {
+                const foundVar = data.variables.find(
+                    (v) => v.id === variable.id,
+                );
+                if (!foundVar || foundVar.type !== "BANNER") return;
+
+                const found = foundVar.images.find(
+                    (i) => i.type === "existing" && i.id === image.id,
+                );
+
+                if (!found) {
+                    imagesToRemove.push({
+                        id: image.id,
+                        pageId: data.id,
+                        pageVariableId: variable.id,
+                        imageName: image.imageName,
+                    });
+                }
+            });
+        }
+    });
+
+    if (imagesToRemove.length > 0) {
+        queue.addTask(() => deleteUnusedBannerImages(imagesToRemove));
+        scheduledCount++;
+    }
 
     if (scheduledCount > 0) {
         queue.addTask(async () => {

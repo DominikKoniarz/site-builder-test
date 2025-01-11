@@ -4,3 +4,10 @@ export type CropData = {
     width: number;
     height: number;
 };
+
+export type RemovedBannerImage = {
+    id: string;
+    pageId: string;
+    pageVariableId: string;
+    imageName: string;
+};

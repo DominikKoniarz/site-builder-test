@@ -2,6 +2,7 @@ import "server-only";
 
 import type { PageDTO, PageWithVariablesDTO } from "@/dto/pages.dto";
 import type { PageState } from "@prisma/client";
+import type { RemovedBannerImage } from "@/types/images";
 import { createPageDTO, createPageWithVariablesDTO } from "@/dto/pages.mappers";
 import prisma from "@/lib/prisma";
 import { PageAddSchema } from "@/schema/pages/page-add-schema";
@@ -380,6 +381,18 @@ export const createBannerImage = (data: {
             cropHeight: data?.cropData?.height || 0,
             cropX: data?.cropData?.x || 0,
             cropY: data?.cropData?.y || 0,
+        },
+    });
+};
+
+export const removeBannerImagesFromDb = (images: RemovedBannerImage[]) => {
+    if (!images.length) throw new Error("No images to remove");
+
+    return prisma.bannerImage.deleteMany({
+        where: {
+            id: {
+                in: images.map((image) => image.id),
+            },
         },
     });
 };

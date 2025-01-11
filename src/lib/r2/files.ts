@@ -1,8 +1,10 @@
 import "server-only";
 
+import type { RemovedBannerImage } from "@/types/images";
 import {
     CopyObjectCommand,
     DeleteObjectCommand,
+    DeleteObjectsCommand,
     GetObjectCommand,
     GetObjectCommandOutput,
     NoSuchKey,
@@ -122,5 +124,49 @@ export const removeTmpImage = async (
             Bucket: env.R2_BUCKET_NAME,
             Key: generateTmpImageKey(tmpImageId, tmpImageName),
         },
+    );
+};
+
+export const removeBannerImages = async (images: RemovedBannerImage[]) => {
+    const keys: { Key: string }[] = images.flatMap((image) => [
+        {
+            Key: generateBannerImageKey(
+                image.pageId,
+                image.pageVariableId,
+                image.id,
+                "crop",
+                image.imageName,
+            ),
+        },
+        {
+            Key: generateBannerImageKey(
+                image.pageId,
+                image.pageVariableId,
+                image.id,
+                "original",
+                image.imageName,
+            ),
+        },
+    ]);
+
+    await R2.send(
+        new DeleteObjectsCommand({
+            Bucket: env.R2_BUCKET_NAME,
+            Delete: {
+                Objects: keys,
+            },
+        }),
+    );
+
+    await Promise.allSettled(
+        keys.map((key) =>
+            waitUntilObjectNotExists(
+                { client: R2, maxWaitTime: 10, minDelay: 500 },
+                {
+                    Bucket: env.R2_BUCKET_NAME,
+                    Key: key.Key,
+                },
+            ),
+        ),
     );
 };

@@ -15,6 +15,9 @@ import { Trash } from "lucide-react";
 type Props = {
     imageIndex: number;
 };
+//
+// here if new image that do not do dialog, delete imeadietly
+//
 
 export default function DeleteImageDialog({ imageIndex }: Props) {
     const { isOpen, setIsOpen, removeImage } = useDeleteImageDialog(imageIndex);
