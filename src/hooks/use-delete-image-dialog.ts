@@ -8,6 +8,9 @@ const useDeleteImageDialog = (imageIndex: number) => {
     const { index } = usePageBannerVarContext();
     const form = usePageForm();
 
+    const isNew: boolean =
+        form.watch(`variables.${index}.images.${imageIndex}`).type === "new";
+
     const removeImage = () => {
         const images = form.getValues(`variables.${index}.images`);
 
@@ -23,6 +26,7 @@ const useDeleteImageDialog = (imageIndex: number) => {
         isOpen,
         setIsOpen,
         removeImage,
+        isNew,
     };
 };
 

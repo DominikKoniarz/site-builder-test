@@ -15,12 +15,21 @@ import { Trash } from "lucide-react";
 type Props = {
     imageIndex: number;
 };
-//
-// here if new image that do not do dialog, delete imeadietly
-//
 
 export default function DeleteImageDialog({ imageIndex }: Props) {
-    const { isOpen, setIsOpen, removeImage } = useDeleteImageDialog(imageIndex);
+    const { isOpen, setIsOpen, removeImage, isNew } =
+        useDeleteImageDialog(imageIndex);
+
+    if (isNew)
+        return (
+            <Button
+                type="button"
+                className="h-8 w-8 bg-white p-1 text-black hover:bg-white/90 [&_svg]:size-5"
+                onClick={removeImage}
+            >
+                <Trash />
+            </Button>
+        );
 
     return (
         <Dialog open={isOpen} onOpenChange={(state) => setIsOpen(state)}>
