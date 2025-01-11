@@ -26,8 +26,8 @@ export const createPageWithVariablesDTO = (
         slug: page.slug,
         createdAt: page.createdAt,
         updatedAt: page.updatedAt,
-        variables: page.variables.map((variable) =>
-            createPageVariableDTO(variable),
+        variables: page.variables.map((variable, index) =>
+            createPageVariableDTO(variable, index),
         ),
     };
 };

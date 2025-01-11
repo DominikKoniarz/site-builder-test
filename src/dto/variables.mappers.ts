@@ -3,6 +3,7 @@ import type { BannerVariableDTO, TextVariableDTO } from "./variables.dto";
 
 export const createPageVariableDTO = (
     variable: DbFetchedVariable,
+    index?: number, // used on page edit to keep order and remove efect of removeing images (maybe unified later)
 ): TextVariableDTO | BannerVariableDTO => {
     if (variable.textVariable) {
         return {
@@ -12,7 +13,7 @@ export const createPageVariableDTO = (
             tag: variable.templateVariable.tag,
             type: variable.templateVariable.type as "TEXT",
             value: variable.textVariable.value,
-            order: variable.templateVariable.order,
+            order: index ?? variable.templateVariable.order,
             createdAt: variable.textVariable.createdAt,
             updatedAt: variable.textVariable.updatedAt,
         } satisfies TextVariableDTO;
@@ -23,7 +24,7 @@ export const createPageVariableDTO = (
             name: variable.templateVariable.name,
             tag: variable.templateVariable.tag,
             type: variable.templateVariable.type as "BANNER",
-            order: variable.templateVariable.order,
+            order: index ?? variable.templateVariable.order,
             config: variable.templateVariable.bannerTemplateVariableConfig,
             images: variable.bannerVariable.images.map((image) => ({
                 id: image.id,
