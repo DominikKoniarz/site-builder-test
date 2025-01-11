@@ -17,10 +17,10 @@ type Props = {
 };
 
 export default function DeleteImageDialog({ imageIndex }: Props) {
-    const { isOpen, setIsOpen, removeImage, isNew } =
+    const { isOpen, setIsOpen, removeImage, isNew, isShiftPressed } =
         useDeleteImageDialog(imageIndex);
 
-    if (isNew)
+    if (isNew || isShiftPressed)
         return (
             <Button
                 type="button"
