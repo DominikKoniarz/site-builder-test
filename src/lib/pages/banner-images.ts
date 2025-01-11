@@ -171,8 +171,6 @@ export const scheduleBannerImagesProcessing = async (
     data: PageEditSchema,
     currentPageData: PageWithVariablesDTO,
 ) => {
-    let scheduledCount: number = 0;
-
     // new images
     data.variables.forEach((variable) => {
         if (variable.type === "BANNER") {
@@ -188,8 +186,6 @@ export const scheduleBannerImagesProcessing = async (
                             cropData: image.cropData,
                         }),
                     );
-
-                    scheduledCount++;
                 }
             });
         }
@@ -224,10 +220,9 @@ export const scheduleBannerImagesProcessing = async (
 
     if (imagesToRemove.length > 0) {
         queue.addTask(() => deleteUnusedBannerImages(imagesToRemove));
-        scheduledCount++;
     }
 
-    if (scheduledCount > 0) {
+    if (queue.getQueueLength() > 0) {
         queue.addTask(async () => {
             await changePageState(data.id, "READY");
         });

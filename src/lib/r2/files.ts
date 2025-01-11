@@ -128,6 +128,8 @@ export const removeTmpImage = async (
 };
 
 export const removeBannerImages = async (images: RemovedBannerImage[]) => {
+    if (images.length === 0) throw new Error("No images to remove");
+
     const keys: { Key: string }[] = images.flatMap((image) => [
         {
             Key: generateBannerImageKey(
