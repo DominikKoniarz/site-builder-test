@@ -11,3 +11,13 @@ export type RemovedBannerImage = {
     pageVariableId: string;
     imageName: string;
 };
+
+export type ChangedBannerImage = {
+    id: string;
+    pageId: string;
+    pageVariableId: string;
+    bannerVariableId: string;
+    imageName: string;
+    order: number;
+    cropData: CropData | null;
+};

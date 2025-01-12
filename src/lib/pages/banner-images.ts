@@ -2,7 +2,7 @@ import "server-only";
 
 import type { PageEditSchema } from "@/schema/pages/page-edit-schema";
 import type { PageEditBannerImageCropDataSchema } from "@/schema/pages/page-variables-schemas";
-import type { RemovedBannerImage } from "@/types/images";
+import type { ChangedBannerImage, RemovedBannerImage } from "@/types/images";
 import { Queue } from "../queue";
 import {
     getTmpImageById,
@@ -222,7 +222,51 @@ export const scheduleBannerImagesProcessing = async (
         queue.addTask(() => deleteUnusedBannerImages(imagesToRemove));
     }
 
-    // update existing images here
+    const changedBannerImages: ChangedBannerImage[] = [];
+
+    data.variables.forEach((variable) => {
+        if (variable.type === "BANNER") {
+            variable.images.forEach((image) => {
+                if (image.type === "existing") {
+                    const foundVar = currentPageData.variables.find(
+                        (v) => v.id === variable.id,
+                    );
+
+                    if (!foundVar || foundVar.type !== "BANNER") return;
+
+                    const found = foundVar.images.find(
+                        (i) => i.id === image.id,
+                    );
+
+                    if (!found) return;
+
+                    if (!image.cropData && !found.cropData) return;
+
+                    if (
+                        image.cropData &&
+                        found.cropData &&
+                        image.cropData.x === found.cropData.x &&
+                        image.cropData.y === found.cropData.y &&
+                        image.cropData.width === found.cropData.width &&
+                        image.cropData.height === found.cropData.height
+                    )
+                        return;
+
+                    changedBannerImages.push({
+                        id: image.id,
+                        pageId: data.id,
+                        pageVariableId: variable.id,
+                        bannerVariableId: variable.bannerVariableId,
+                        imageName: image.imageName,
+                        order: image.order,
+                        cropData: image.cropData,
+                    });
+                }
+            });
+        }
+    });
+
+    console.log("Changed banner images", changedBannerImages);
 
     if (queue.getQueueLength() > 0) {
         queue.addTask(async () => {

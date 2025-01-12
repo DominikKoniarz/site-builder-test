@@ -46,12 +46,14 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                                     imageName: image.imageName,
                                     order: index, // using index as order to remove any potential differences
                                     type: "existing",
-                                    cropData: {
-                                        x: image.cropX,
-                                        y: image.cropY,
-                                        width: image.cropWidth,
-                                        height: image.cropHeight,
-                                    },
+                                    cropData: image.cropData
+                                        ? {
+                                              x: image.cropData.x,
+                                              y: image.cropData.y,
+                                              width: image.cropData.width,
+                                              height: image.cropData.height,
+                                          }
+                                        : null,
                                 }) satisfies PageEditBannerImageExistingSchema,
                         ),
                     } satisfies PageEditBannerVariableSchema;
@@ -87,12 +89,14 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                                     imageName: image.imageName,
                                     order: index, // using index as order to remove any potential differences
                                     type: "existing",
-                                    cropData: {
-                                        x: image.cropX,
-                                        y: image.cropY,
-                                        width: image.cropWidth,
-                                        height: image.cropHeight,
-                                    },
+                                    cropData: image.cropData
+                                        ? {
+                                              x: image.cropData.x,
+                                              y: image.cropData.y,
+                                              width: image.cropData.width,
+                                              height: image.cropData.height,
+                                          }
+                                        : null,
                                 }) satisfies PageEditBannerImageExistingSchema,
                         ),
                     } satisfies PageEditBannerVariableSchema;

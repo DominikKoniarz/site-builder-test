@@ -72,17 +72,26 @@ model BannerVariable {
 }
 
 model BannerImage {
-    id         String         @id @default(uuid())
-    imageName  String         @db.VarChar(4096)
-    bannerId   String         @db.VarChar(255)
-    banner     BannerVariable @relation(fields: [bannerId], references: [id], onDelete: Cascade)
-    order      Int
-    cropX      Int
-    cropY      Int
-    cropWidth  Int
-    cropHeight Int
-    createdAt  DateTime       @default(now())
-    updatedAt  DateTime       @updatedAt
+    id        String               @id @default(uuid())
+    imageName String               @db.VarChar(4096)
+    order     Int
+    bannerId  String               @db.VarChar(255)
+    banner    BannerVariable       @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+    cropData  BannerImageCropData?
+    createdAt DateTime             @default(now())
+    updatedAt DateTime             @updatedAt
+}
+
+model BannerImageCropData {
+    id            String      @id @default(uuid())
+    x             Int
+    y             Int
+    width         Int
+    height        Int
+    bannerImageId String      @unique @db.VarChar(255)
+    image         BannerImage @relation(fields: [bannerImageId], references: [id])
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
 }
 
 model Page {

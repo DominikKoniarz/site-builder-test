@@ -60,10 +60,15 @@ const pageWithVariablesSelect = {
                                 order: true,
                                 createdAt: true,
                                 updatedAt: true,
-                                cropX: true,
-                                cropY: true,
-                                cropWidth: true,
-                                cropHeight: true,
+                                cropData: {
+                                    select: {
+                                        id: true,
+                                        width: true,
+                                        height: true,
+                                        x: true,
+                                        y: true,
+                                    },
+                                },
                             },
                             orderBy: {
                                 order: "asc" as const,
@@ -380,10 +385,16 @@ export const createBannerImage = (data: {
             bannerId: data.bannerVariableId,
             imageName: data.imageName,
             order: data.order,
-            cropWidth: data?.cropData?.width || 0,
-            cropHeight: data?.cropData?.height || 0,
-            cropX: data?.cropData?.x || 0,
-            cropY: data?.cropData?.y || 0,
+            cropData: data.cropData
+                ? {
+                      create: {
+                          width: data.cropData.width,
+                          height: data.cropData.height,
+                          x: data.cropData.x,
+                          y: data.cropData.y,
+                      },
+                  }
+                : undefined,
         },
     });
 };
@@ -391,13 +402,22 @@ export const createBannerImage = (data: {
 export const removeBannerImagesFromDb = (images: RemovedBannerImage[]) => {
     if (!images.length) throw new Error("No images to remove");
 
-    return prisma.bannerImage.deleteMany({
-        where: {
-            id: {
-                in: images.map((image) => image.id),
+    return prisma.$transaction([
+        prisma.bannerImageCropData.deleteMany({
+            where: {
+                bannerImageId: {
+                    in: images.map((image) => image.id),
+                },
             },
-        },
-    });
+        }),
+        prisma.bannerImage.deleteMany({
+            where: {
+                id: {
+                    in: images.map((image) => image.id),
+                },
+            },
+        }),
+    ]);
 };
 
 export const changePageState = (id: string, state: PageState) => {

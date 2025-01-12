@@ -42,10 +42,13 @@ export type DbFetchedPageWithVariables = {
                 updatedAt: Date;
                 imageName: string;
                 order: number;
-                cropX: number;
-                cropY: number;
-                cropWidth: number;
-                cropHeight: number;
+                cropData: {
+                    id: string;
+                    x: number;
+                    y: number;
+                    width: number;
+                    height: number;
+                } | null;
             }[];
         } | null;
     }[];

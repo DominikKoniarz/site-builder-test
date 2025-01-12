@@ -31,10 +31,15 @@ export const createPageVariableDTO = (
                 order: image.order,
                 createdAt: image.createdAt,
                 updatedAt: image.updatedAt,
-                cropHeight: image.cropHeight,
-                cropWidth: image.cropWidth,
-                cropX: image.cropX,
-                cropY: image.cropY,
+                cropData:
+                    (image.cropData && {
+                        id: image.cropData.id,
+                        x: image.cropData.x,
+                        y: image.cropData.y,
+                        width: image.cropData.width,
+                        height: image.cropData.height,
+                    }) ||
+                    null,
             })),
             createdAt: variable.bannerVariable.createdAt,
             updatedAt: variable.bannerVariable.updatedAt,

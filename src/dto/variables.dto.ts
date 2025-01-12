@@ -19,16 +19,21 @@ export type TextVariableDTO = PageVariableBaseDTO & {
     updatedAt: Date;
 };
 
+export type BannerImageCropDataDTO = {
+    id: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+};
+
 export type BannerImageDTO = {
     id: string;
     imageName: string;
     order: number;
     createdAt: Date;
     updatedAt: Date;
-    cropX: number;
-    cropY: number;
-    cropWidth: number;
-    cropHeight: number;
+    cropData: BannerImageCropDataDTO | null;
 };
 
 export type BannerVariableDTO = PageVariableBaseDTO & {
