@@ -39,12 +39,12 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                         bannerVariableId: variable.bannerVariableId,
                         type: variable.type,
                         images: variable.images.map(
-                            (image) =>
+                            (image, index) =>
                                 ({
                                     id: image.id,
                                     frontendId: nanoid(),
                                     imageName: image.imageName,
-                                    order: image.order,
+                                    order: index, // using index as order to remove any potential differences
                                     type: "existing",
                                     cropData: {
                                         x: image.cropX,
@@ -80,12 +80,12 @@ const useEditPageForm = (page: PageWithVariablesDTO) => {
                         bannerVariableId: variable.bannerVariableId,
                         type: variable.type,
                         images: variable.images.map(
-                            (image) =>
+                            (image, index) =>
                                 ({
                                     id: image.id,
                                     frontendId: nanoid(),
                                     imageName: image.imageName,
-                                    order: image.order,
+                                    order: index, // using index as order to remove any potential differences
                                     type: "existing",
                                     cropData: {
                                         x: image.cropX,

@@ -222,6 +222,8 @@ export const scheduleBannerImagesProcessing = async (
         queue.addTask(() => deleteUnusedBannerImages(imagesToRemove));
     }
 
+    // update existing images here
+
     if (queue.getQueueLength() > 0) {
         queue.addTask(async () => {
             await changePageState(data.id, "READY");

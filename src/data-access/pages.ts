@@ -65,6 +65,9 @@ const pageWithVariablesSelect = {
                                 cropWidth: true,
                                 cropHeight: true,
                             },
+                            orderBy: {
+                                order: "asc" as const,
+                            },
                         },
                     },
                 },

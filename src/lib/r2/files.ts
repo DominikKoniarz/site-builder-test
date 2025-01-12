@@ -163,7 +163,7 @@ export const removeBannerImages = async (images: RemovedBannerImage[]) => {
     await Promise.allSettled(
         keys.map((key) =>
             waitUntilObjectNotExists(
-                { client: R2, maxWaitTime: 10, minDelay: 500 },
+                { client: R2, maxWaitTime: 10, minDelay: 0.5 },
                 {
                     Bucket: env.R2_BUCKET_NAME,
                     Key: key.Key,
