@@ -20,19 +20,16 @@ import {
 } from "../images";
 import { env } from "@/env";
 
-type DownloadTmpImageReturn =
-    | [GetObjectCommandOutput, null]
-    | [null, NoSuchKey];
+type DownloadImageReturn = [GetObjectCommandOutput, null] | [null, NoSuchKey];
 
-export const downloadTmpImage = async (
-    tmpImageId: string,
-    tmpImageName: string,
-): Promise<DownloadTmpImageReturn> => {
+export const downloadImage = async (
+    key: string,
+): Promise<DownloadImageReturn> => {
     try {
         const response = await R2.send(
             new GetObjectCommand({
                 Bucket: env.R2_BUCKET_NAME,
-                Key: generateTmpImageKey(tmpImageId, tmpImageName),
+                Key: key,
             }),
         );
 

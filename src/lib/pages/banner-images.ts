@@ -8,18 +8,25 @@ import {
     getTmpImageById,
     removeTmpImageFromDb,
 } from "@/data-access/tmp-images";
-import { sanitizeCropData } from "../images";
+import {
+    generateBannerImageKey,
+    generateTmpImageKey,
+    sanitizeCropData,
+} from "../images";
 import {
     changePageState,
     createBannerImage,
+    getBannerImageById,
     getPageBannerVariableConfig,
     removeBannerImagesFromDb,
+    updateBannerImageCropData,
+    updateBannerImageOrder,
 } from "@/data-access/pages";
 import { cropAndResizeImage, getMetadata, resizeImage } from "../sharp";
 import {
     copyTmpImageToPage,
     removeTmpImage,
-    downloadTmpImage,
+    downloadImage,
     uploadCroppedBannerImage,
     removeBannerImages,
 } from "../r2/files";
@@ -53,10 +60,9 @@ const processNewBannerImage = async (props: ProsessNewBannerImageProps) => {
         return;
     }
 
-    const [response, error] = await downloadTmpImage(
-        foundTmpImage.id,
-        foundTmpImage.imageName,
-    );
+    const key = generateTmpImageKey(foundTmpImage.id, foundTmpImage.imageName);
+
+    const [response, error] = await downloadImage(key);
 
     if (error) {
         console.error("Error downloading tmp image. No such key", error);
@@ -167,29 +173,132 @@ const deleteUnusedBannerImages = async (
     await removeBannerImages(imagesToRemove);
 };
 
+const updateExistingBannerImage = async (data: ChangedBannerImage) => {
+    const [foundBannerImage, bannerVariableConfig] = await Promise.all([
+        getBannerImageById(data.id),
+        getPageBannerVariableConfig(data.pageVariableId),
+    ]);
+
+    if (!foundBannerImage) {
+        console.error("Banner image not found");
+        return;
+    }
+
+    await updateBannerImageOrder({
+        // for now here queued after main update request (adds delay and waiting time, but works)
+        id: data.id,
+        order: data.order,
+    });
+
+    if (!data.isCropDataChanged) return; // if crop data is not changed, no need to process image
+
+    if (!bannerVariableConfig) {
+        console.error("Banner variable config not found");
+        return;
+    }
+
+    const originalImageKey = generateBannerImageKey(
+        data.pageId,
+        data.pageVariableId,
+        data.id,
+        "original",
+        data.imageName,
+    );
+
+    const [response, error] = await downloadImage(originalImageKey);
+
+    if (error) {
+        console.error("Error downloading original image. No such key", error);
+        return;
+    }
+
+    const buffer = await response.Body?.transformToByteArray();
+    if (!buffer) {
+        console.error("Buffer not found");
+        return;
+    }
+
+    if (data.cropData) {
+        const metadata = await getMetadata(buffer);
+
+        if (!metadata.width || !metadata.height) {
+            console.error("Image metadata not found");
+            return;
+        }
+
+        const cropData = sanitizeCropData(
+            data.cropData,
+            metadata.width,
+            metadata.height,
+        );
+
+        const croppedBuffer = await cropAndResizeImage(
+            buffer,
+            cropData,
+            bannerVariableConfig.imageWidth,
+            bannerVariableConfig.imageHeight,
+        );
+
+        await uploadCroppedBannerImage(
+            croppedBuffer,
+            data.pageId,
+            data.pageVariableId,
+            data.id,
+            data.imageName,
+        );
+    } else {
+        // no crop data, just resize
+        const croppedBuffer = await resizeImage(
+            buffer,
+            bannerVariableConfig.imageWidth,
+            bannerVariableConfig.imageHeight,
+        );
+
+        await uploadCroppedBannerImage(
+            croppedBuffer,
+            data.pageId,
+            data.pageVariableId,
+            data.id,
+            data.imageName,
+        );
+    }
+
+    await updateBannerImageCropData({
+        id: data.id,
+        cropData: data.cropData,
+    });
+};
+
 export const scheduleBannerImagesProcessing = async (
     data: PageEditSchema,
     currentPageData: PageWithVariablesDTO,
 ) => {
+    const newImagesToProcess: ProsessNewBannerImageProps[] = [];
+
     // new images
     data.variables.forEach((variable) => {
         if (variable.type === "BANNER") {
-            variable.images.forEach((image) => {
+            variable.images.forEach((image, index) => {
                 if (image.type === "new") {
-                    queue.addTask(() =>
-                        processNewBannerImage({
-                            pageId: data.id,
-                            pageVariableId: variable.id,
-                            bannerVariableId: variable.bannerVariableId,
-                            tmpImageId: image.tmpImageId,
-                            order: image.order,
-                            cropData: image.cropData,
-                        }),
-                    );
+                    newImagesToProcess.push({
+                        pageId: data.id,
+                        pageVariableId: variable.id,
+                        bannerVariableId: variable.bannerVariableId,
+                        tmpImageId: image.tmpImageId,
+                        order: index,
+                        cropData: image.cropData,
+                    });
                 }
             });
         }
     });
+
+    // queue to process new images
+    if (newImagesToProcess.length > 0) {
+        newImagesToProcess.forEach((image) => {
+            queue.addTask(() => processNewBannerImage(image));
+        });
+    }
 
     // banner images to remove
     const imagesToRemove: RemovedBannerImage[] = [];
@@ -218,6 +327,7 @@ export const scheduleBannerImagesProcessing = async (
         }
     });
 
+    // queue to remove unused images
     if (imagesToRemove.length > 0) {
         queue.addTask(() => deleteUnusedBannerImages(imagesToRemove));
     }
@@ -226,7 +336,7 @@ export const scheduleBannerImagesProcessing = async (
 
     data.variables.forEach((variable) => {
         if (variable.type === "BANNER") {
-            variable.images.forEach((image) => {
+            variable.images.forEach((image, index) => {
                 if (image.type === "existing") {
                     const foundVar = currentPageData.variables.find(
                         (v) => v.id === variable.id,
@@ -240,17 +350,19 @@ export const scheduleBannerImagesProcessing = async (
 
                     if (!found) return;
 
-                    if (!image.cropData && !found.cropData) return;
+                    let isCropDataChanged: boolean = true;
 
                     if (
-                        image.cropData &&
-                        found.cropData &&
-                        image.cropData.x === found.cropData.x &&
-                        image.cropData.y === found.cropData.y &&
-                        image.cropData.width === found.cropData.width &&
-                        image.cropData.height === found.cropData.height
-                    )
-                        return;
+                        (!image.cropData && !found.cropData) ||
+                        (image.cropData &&
+                            found.cropData &&
+                            image.cropData.x === found.cropData.x &&
+                            image.cropData.y === found.cropData.y &&
+                            image.cropData.width === found.cropData.width &&
+                            image.cropData.height === found.cropData.height)
+                    ) {
+                        isCropDataChanged = false;
+                    }
 
                     changedBannerImages.push({
                         id: image.id,
@@ -258,7 +370,8 @@ export const scheduleBannerImagesProcessing = async (
                         pageVariableId: variable.id,
                         bannerVariableId: variable.bannerVariableId,
                         imageName: image.imageName,
-                        order: image.order,
+                        order: index,
+                        isCropDataChanged,
                         cropData: image.cropData,
                     });
                 }
@@ -266,7 +379,11 @@ export const scheduleBannerImagesProcessing = async (
         }
     });
 
-    console.log("Changed banner images", changedBannerImages);
+    if (changedBannerImages.length > 0) {
+        changedBannerImages.forEach((image) => {
+            queue.addTask(() => updateExistingBannerImage(image));
+        });
+    }
 
     if (queue.getQueueLength() > 0) {
         queue.addTask(async () => {

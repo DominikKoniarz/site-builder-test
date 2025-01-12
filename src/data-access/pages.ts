@@ -399,6 +399,62 @@ export const createBannerImage = (data: {
     });
 };
 
+export const getBannerImageById = (id: string) => {
+    return prisma.bannerImage.findUnique({
+        where: {
+            id,
+        },
+    });
+};
+
+export const updateBannerImageOrder = (data: { id: string; order: number }) => {
+    return prisma.bannerImage.update({
+        where: {
+            id: data.id,
+        },
+        data: {
+            order: data.order,
+        },
+    });
+};
+
+export const updateBannerImageCropData = (data: {
+    id: string;
+    cropData?: {
+        width: number;
+        height: number;
+        x: number;
+        y: number;
+    } | null;
+}) => {
+    if (!data.cropData)
+        return prisma.bannerImageCropData.deleteMany({
+            // delete many to skip error if no crop data
+            where: {
+                bannerImageId: data.id,
+            },
+        });
+    else
+        return prisma.bannerImageCropData.upsert({
+            where: {
+                bannerImageId: data.id,
+            },
+            update: {
+                width: data.cropData.width,
+                height: data.cropData.height,
+                x: data.cropData.x,
+                y: data.cropData.y,
+            },
+            create: {
+                bannerImageId: data.id,
+                width: data.cropData.width,
+                height: data.cropData.height,
+                x: data.cropData.x,
+                y: data.cropData.y,
+            },
+        });
+};
+
 export const removeBannerImagesFromDb = (images: RemovedBannerImage[]) => {
     if (!images.length) throw new Error("No images to remove");
 

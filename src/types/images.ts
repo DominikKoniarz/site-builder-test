@@ -19,5 +19,6 @@ export type ChangedBannerImage = {
     bannerVariableId: string;
     imageName: string;
     order: number;
+    isCropDataChanged: boolean;
     cropData: CropData | null;
 };

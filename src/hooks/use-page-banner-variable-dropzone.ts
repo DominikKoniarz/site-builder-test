@@ -33,10 +33,12 @@ const usePageBannerVariableDropzone = (index: number) => {
         const images = bannerVariable.images;
         const frontendId = nanoid();
 
+        const highestOrder = Math.max(...images.map((image) => image.order));
+
         const newImage: PageEditBannerImageLoadingSchema = {
             type: "loading",
             frontendId,
-            order: images.length,
+            order: highestOrder + 1,
         };
 
         const actionData: GenerateImageUploadUrlSchema = {
@@ -78,7 +80,7 @@ const usePageBannerVariableDropzone = (index: number) => {
                                     type: "new",
                                     imageName: file.name,
                                     frontendId,
-                                    order: images.length,
+                                    order: foundImage.order,
                                     tmpImageId: tmpImageId,
                                     cropData: null,
                                 } satisfies PageEditBannerImageNewSchema,
