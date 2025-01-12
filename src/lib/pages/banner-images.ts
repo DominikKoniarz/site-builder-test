@@ -3,6 +3,7 @@ import "server-only";
 import type { PageEditSchema } from "@/schema/pages/page-edit-schema";
 import type { PageEditBannerImageCropDataSchema } from "@/schema/pages/page-variables-schemas";
 import type { ChangedBannerImage, RemovedBannerImage } from "@/types/images";
+import type { PageWithVariablesDTO } from "@/dto/pages.dto";
 import { Queue } from "../queue";
 import {
     getTmpImageById,
@@ -31,7 +32,6 @@ import {
     removeBannerImages,
 } from "../r2/files";
 import { v4 as uuidv4 } from "uuid";
-import { PageWithVariablesDTO } from "@/dto/pages.dto";
 
 const queue = new Queue("process-new-banner-images");
 

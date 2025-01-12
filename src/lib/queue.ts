@@ -40,6 +40,7 @@ export class Queue {
                     await result;
                 }
             } catch (error) {
+                // TODO: Logging service
                 console.log(
                     `Error processing task in queue ${this.name}:`,
                     error instanceof Error ? error.stack : error,

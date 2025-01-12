@@ -11,7 +11,7 @@ export const editPage = async (data: PageEditSchema) => {
 
     if (!foundPage) throw new BadRequestError("Page not found");
 
-    // protection againt editing processed page
+    // protection against editing processed page
     if (foundPage.state === "PROCESSING")
         throw new ForbiddenError(
             "Page is being processed. Please try again later",
