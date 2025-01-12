@@ -10,6 +10,18 @@ const useCropImageDialog = (imageIndex: number) => {
     const imgRef = useRef<HTMLImageElement | null>(null);
     const [crop, setCrop] = useState<Crop | undefined>();
 
+    const resetCrop = () => {
+        const image = form.getValues(`variables.${index}.images.${imageIndex}`);
+        if (image.type === "loading") return;
+
+        form.setValue(`variables.${index}.images.${imageIndex}`, {
+            ...image,
+            cropData: null,
+        });
+
+        setCrop(undefined);
+    };
+
     const onCrop = (data: PixelCrop) => {
         const image = form.getValues(`variables.${index}.images.${imageIndex}`);
         if (image.type === "loading") return;
@@ -71,6 +83,7 @@ const useCropImageDialog = (imageIndex: number) => {
         onCrop,
         aspectRatio,
         onImgLoad,
+        resetCrop,
     };
 };
 

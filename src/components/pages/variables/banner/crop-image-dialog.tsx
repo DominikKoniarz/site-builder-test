@@ -20,7 +20,7 @@ type Props = {
 };
 
 export default function CropImageDialog({ src, imageIndex }: Props) {
-    const { aspectRatio, crop, imgRef, onCrop, onImgLoad } =
+    const { aspectRatio, crop, imgRef, onCrop, onImgLoad, resetCrop } =
         useCropImageDialog(imageIndex);
 
     return (
@@ -56,6 +56,15 @@ export default function CropImageDialog({ src, imageIndex }: Props) {
                     </ReactCrop>
                 </div>
                 <DialogFooter>
+                    <DialogClose asChild>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={resetCrop}
+                        >
+                            Reset crop
+                        </Button>
+                    </DialogClose>
                     <DialogClose asChild>
                         <Button type="button">Save</Button>
                     </DialogClose>
