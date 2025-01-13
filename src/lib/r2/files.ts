@@ -7,6 +7,7 @@ import {
     DeleteObjectsCommand,
     GetObjectCommand,
     GetObjectCommandOutput,
+    ListObjectsV2Command,
     NoSuchKey,
     PutObjectCommand,
     waitUntilObjectExists,
@@ -124,6 +125,31 @@ export const removeTmpImage = async (
     );
 };
 
+export const removeMultipleTmpImages = async (keys: string[]) => {
+    if (keys.length === 0) throw new Error("No images keys to remove");
+
+    await R2.send(
+        new DeleteObjectsCommand({
+            Bucket: env.R2_BUCKET_NAME,
+            Delete: {
+                Objects: keys.map((Key) => ({ Key })),
+            },
+        }),
+    );
+
+    await Promise.allSettled(
+        keys.map((key) =>
+            waitUntilObjectNotExists(
+                { client: R2, maxWaitTime: 10, minDelay: 0.5 },
+                {
+                    Bucket: env.R2_BUCKET_NAME,
+                    Key: key,
+                },
+            ),
+        ),
+    );
+};
+
 export const removeBannerImages = async (images: RemovedBannerImage[]) => {
     if (images.length === 0) throw new Error("No images to remove");
 
@@ -168,4 +194,15 @@ export const removeBannerImages = async (images: RemovedBannerImage[]) => {
             ),
         ),
     );
+};
+
+export const listObjectsByPrefix = async (prefix: string) => {
+    const response = await R2.send(
+        new ListObjectsV2Command({
+            Bucket: env.R2_BUCKET_NAME,
+            Prefix: prefix,
+        }),
+    );
+
+    return response;
 };

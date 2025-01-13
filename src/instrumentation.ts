@@ -1,3 +1,10 @@
+import { tmpImagesCron } from "./lib/images/cron";
+
 export function register() {
-    console.log("Cron will be here later to remove old tmp images");
+    tmpImagesCron.start();
+
+    console.log(
+        "Tmp images cron job started. Next invocation:",
+        tmpImagesCron.nextDate().toISO(),
+    );
 }

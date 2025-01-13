@@ -31,3 +31,19 @@ export const removeTmpImageFromDb = (id: string) => {
         },
     });
 };
+
+export const getAllTmpImages = async (): Promise<TmpImageDto[]> => {
+    const images = await prisma.tmpImage.findMany();
+
+    return images.map((image) => createTmpImageDTO(image));
+};
+
+export const removeMultipleTmpImagesFromDb = (ids: string[]) => {
+    return prisma.tmpImage.deleteMany({
+        where: {
+            id: {
+                in: ids,
+            },
+        },
+    });
+};

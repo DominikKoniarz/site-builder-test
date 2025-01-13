@@ -2,16 +2,16 @@ import type { PageEditBannerImageNewSchema } from "@/schema/pages/page-variables
 import type { CropData } from "@/types/images";
 import { env } from "@/env";
 
-const tmpDirPrefix: string = "tmp-image";
+export const TMP_DIR_PREFIX: string = "tmp-image";
 
 export const generateTmpImagePublicURL = (
     image: PageEditBannerImageNewSchema,
 ): string => {
-    return `https://${env.NEXT_PUBLIC_R2_BUCKET_HOSTNAME}/${tmpDirPrefix}/${image.tmpImageId}/${image.imageName}`;
+    return `https://${env.NEXT_PUBLIC_R2_BUCKET_HOSTNAME}/${TMP_DIR_PREFIX}/${image.tmpImageId}/${image.imageName}`;
 };
 
 export const generateTmpImageKey = (tmpImageId: string, imageName: string) => {
-    return `${tmpDirPrefix}/${tmpImageId}/${imageName}`;
+    return `${TMP_DIR_PREFIX}/${tmpImageId}/${imageName}`;
 };
 
 export const generateBannerImagePublicURL = (
