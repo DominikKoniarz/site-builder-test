@@ -3,10 +3,10 @@ name: Deploy to VPS
 on:
     push:
         branches:
-            - deploy
+            - main
 
 jobs:
-    deploy:
+    main:
         runs-on: ubuntu-latest
 
         steps:

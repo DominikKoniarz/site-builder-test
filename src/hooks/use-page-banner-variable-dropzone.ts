@@ -18,107 +18,120 @@ const usePageBannerVariableDropzone = (index: number) => {
 
     const { executeAsync } = useAction(generateImageUploadUrlAction);
 
-    const removeImageAfterUploadError = (frontendId: string) => {
-        form.setValue(`variables.${index}.images`, [
-            ...form
-                .getValues(`variables.${index}.images`)
-                .filter((image) => image.frontendId !== frontendId),
-        ]);
-    };
+    const removeImageAfterUploadError = useCallback(
+        (frontendId: string) => {
+            form.setValue(`variables.${index}.images`, [
+                ...form
+                    .getValues(`variables.${index}.images`)
+                    .filter((image) => image.frontendId !== frontendId),
+            ]);
+        },
+        [form, index],
+    );
 
-    const uploadImage = async (file: File) => {
-        const bannerVariable = form.getValues(`variables.${index}`);
-        if (bannerVariable.type !== "BANNER") return; // type check
+    const uploadImage = useCallback(
+        async (file: File) => {
+            const bannerVariable = form.getValues(`variables.${index}`);
+            if (bannerVariable.type !== "BANNER") return; // type check
 
-        const images = bannerVariable.images;
-        const frontendId = nanoid();
+            const images = bannerVariable.images;
+            const frontendId = nanoid();
 
-        const highestOrder = Math.max(...images.map((image) => image.order));
+            const highestOrder = Math.max(
+                ...images.map((image) => image.order),
+            );
 
-        const newImage: PageEditBannerImageLoadingSchema = {
-            type: "loading",
-            frontendId,
-            order: highestOrder + 1,
-        };
-
-        const actionData: GenerateImageUploadUrlSchema = {
-            image: {
+            const newImage: PageEditBannerImageLoadingSchema = {
+                type: "loading",
                 frontendId,
-                name: file.name,
-                size: file.size,
-                type: file.type,
-            },
-        };
+                order: highestOrder + 1,
+            };
 
-        form.setValue(`variables.${index}.images`, [...images, newImage]);
+            const actionData: GenerateImageUploadUrlSchema = {
+                image: {
+                    frontendId,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                },
+            };
 
-        try {
-            const response = await executeAsync(actionData);
-            if (!response) return;
+            form.setValue(`variables.${index}.images`, [...images, newImage]);
 
-            if (response.data) {
-                const { url, tmpImageId } = response.data;
+            try {
+                const response = await executeAsync(actionData);
+                if (!response) return;
 
-                fetch(url, {
-                    method: "PUT",
-                    body: file,
-                })
-                    .then(() => {
-                        const foundImage = form
-                            .getValues(`variables.${index}.images`)
-                            .find((image) => image.frontendId === frontendId);
+                if (response.data) {
+                    const { url, tmpImageId } = response.data;
 
-                        if (foundImage) {
-                            form.setValue(`variables.${index}.images`, [
-                                ...form
-                                    .getValues(`variables.${index}.images`)
-                                    .filter(
-                                        (image) =>
-                                            image.frontendId !== frontendId,
-                                    ),
-                                {
-                                    type: "new",
-                                    imageName: file.name,
-                                    frontendId,
-                                    order: foundImage.order,
-                                    tmpImageId: tmpImageId,
-                                    cropData: null,
-                                } satisfies PageEditBannerImageNewSchema,
-                            ]);
-                        }
+                    fetch(url, {
+                        method: "PUT",
+                        body: file,
                     })
-                    .catch((error) => {
-                        removeImageAfterUploadError(frontendId);
-                        toast.error("Error uploading image", {
-                            duration: 5000,
+                        .then(() => {
+                            const foundImage = form
+                                .getValues(`variables.${index}.images`)
+                                .find(
+                                    (image) => image.frontendId === frontendId,
+                                );
+
+                            if (foundImage) {
+                                form.setValue(`variables.${index}.images`, [
+                                    ...form
+                                        .getValues(`variables.${index}.images`)
+                                        .filter(
+                                            (image) =>
+                                                image.frontendId !== frontendId,
+                                        ),
+                                    {
+                                        type: "new",
+                                        imageName: file.name,
+                                        frontendId,
+                                        order: foundImage.order,
+                                        tmpImageId: tmpImageId,
+                                        cropData: null,
+                                    } satisfies PageEditBannerImageNewSchema,
+                                ]);
+                            }
+                        })
+                        .catch((error) => {
+                            removeImageAfterUploadError(frontendId);
+                            toast.error("Error uploading image", {
+                                duration: 5000,
+                            });
+
+                            console.error(error);
                         });
+                } else {
+                    actionError({
+                        input: undefined,
+                        error: {
+                            bindArgsValidationErrors:
+                                response.bindArgsValidationErrors,
+                            serverError: response.serverError,
+                            validationErrors: response.validationErrors,
+                        },
+                    })
+                        .serverError()
+                        .validationErrors();
+                }
+            } catch (error) {
+                removeImageAfterUploadError(frontendId);
+                toast.error("Error uploading image", { duration: 5000 });
 
-                        console.error(error);
-                    });
-            } else {
-                actionError({
-                    input: undefined,
-                    error: {
-                        bindArgsValidationErrors:
-                            response.bindArgsValidationErrors,
-                        serverError: response.serverError,
-                        validationErrors: response.validationErrors,
-                    },
-                })
-                    .serverError()
-                    .validationErrors();
+                console.error(error);
             }
-        } catch (error) {
-            removeImageAfterUploadError(frontendId);
-            toast.error("Error uploading image", { duration: 5000 });
+        },
+        [executeAsync, form, index, removeImageAfterUploadError],
+    );
 
-            console.error(error);
-        }
-    };
-
-    const onDrop = useCallback(async (acceptedFiles: File[]) => {
-        await Promise.all(acceptedFiles.map(uploadImage));
-    }, []);
+    const onDrop = useCallback(
+        async (acceptedFiles: File[]) => {
+            await Promise.all(acceptedFiles.map(uploadImage));
+        },
+        [uploadImage],
+    );
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,

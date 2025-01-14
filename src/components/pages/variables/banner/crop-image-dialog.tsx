@@ -47,11 +47,13 @@ export default function CropImageDialog({ src, imageIndex }: Props) {
                         aspect={aspectRatio}
                         onChange={(c) => onCrop(c)}
                     >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={src}
                             ref={imgRef}
                             className="max-h-[500px] max-w-[500px]"
                             onLoad={onImgLoad}
+                            alt="Crop preview"
                         />
                     </ReactCrop>
                 </div>

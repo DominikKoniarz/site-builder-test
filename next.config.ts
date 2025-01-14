@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import { env } from "@/env";
 
+const WITH_DOCKER = process.env.WITH_DOCKER === "true";
+
 const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
@@ -13,6 +15,7 @@ const nextConfig: NextConfig = {
             },
         ],
     },
+    output: WITH_DOCKER ? "standalone" : undefined,
 };
 
 export default nextConfig;

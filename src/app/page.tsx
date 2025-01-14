@@ -8,7 +8,7 @@ export default async function Home() {
 
     if (page) {
         const text = getPageVariable(page, "t.text-1");
-        // console.log(text);
+        console.log(text);
     }
 
     return (

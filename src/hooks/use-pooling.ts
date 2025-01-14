@@ -10,5 +10,5 @@ export const usePooling = (interval: number) => {
         }, interval);
 
         return () => clearInterval(intervalId);
-    }, []);
+    }, [router, interval]);
 };
