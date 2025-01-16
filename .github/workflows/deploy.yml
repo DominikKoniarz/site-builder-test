@@ -24,4 +24,4 @@ jobs:
                       cd ~/domains/site-builder.dominikkoniarz.pl/
                       git pull
                   # docker compose -f docker-compose-db.yaml up -d
-                  # docker compose -f docker-compose-app.yaml -p site-builder-app up -d --build
+                  # docker compose -f docker-compose-app.yaml up -d --build

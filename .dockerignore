@@ -7,3 +7,4 @@ README.md
 .git
 notes.md
 .env.example
+docker-compose-app.yaml
