@@ -7,7 +7,7 @@ export const env = createEnv({
      * Will throw if you access these variables on the client.
      */
     server: {
-        DATABASE_URL: z.string().url(),
+        DATABASE_URL: z.string().min(1),
         R2_ENDPOINT: z.string().url(),
         R2_BUCKET_NAME: z.string().min(1),
         R2_ACCESS_KEY_ID: z.string().min(1),
