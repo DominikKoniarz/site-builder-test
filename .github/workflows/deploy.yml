@@ -23,6 +23,7 @@ jobs:
                   script: |
                       cd ~/domains/site-builder.dominikkoniarz.pl/
                       git pull
+                      source ~/.bashrc
                       node -v
                       npm -v
                       pnpm -v
