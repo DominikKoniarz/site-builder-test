@@ -20,15 +20,19 @@ jobs:
                   username: ${{ secrets.VPS_USER }}
                   key: ${{ secrets.VPS_SSH_KEY }}
                   port: 22
-                  script: |
-                      cd ~/domains/site-builder.dominikkoniarz.pl/
-                      git pull
-                      source ~/.bashrc
-                      node -v
-                      npm -v
-                      pnpm -v
-                  #   pnpm prisma generate
-                  #   pnpm build
-                  #   pm2 start ecosystem.config.js
-                  #   docker compose -f docker-compose-db.yaml up -d
-                  #   docker compose -f docker-compose-app.yaml up -d --build
+            - name: Use Node.js 20
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 20.x
+            - name: Enter dir
+              run: cd ~/domains/site-builder.dominikkoniarz.pl/
+            - name: Git pull
+              run: git pull
+            - name: Install dependencies
+              run: |
+                  pnpm -v
+                  pnpm install
+            - name: Build
+              run: pnpm run build
+            - name: Start
+              run: pm2 start ecosystem.config.js
