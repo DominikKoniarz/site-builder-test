@@ -4,8 +4,6 @@ services:
             context: .
             args:
                 DATABASE_URL: "postgresql://postgres:postgres@host.docker.internal:6000/site-builder-test?schema=public&connect_timeout=60"
-        extra_hosts:
-            - "host.docker.internal:host-gateway"
         ports:
             - "3000-3003:3000"
         deploy:
