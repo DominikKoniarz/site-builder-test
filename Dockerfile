@@ -14,7 +14,8 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml prisma ./
 RUN pnpm fetch
 
-RUN pnpm prisma generate
+# RUN pnpm prisma generate
+RUN pnpm prisma db push
 
 # Rebuild the source code only when needed
 FROM base AS builder
