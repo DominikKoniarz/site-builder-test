@@ -25,7 +25,7 @@ jobs:
               with:
                   node-version: 20.x
             - name: Enter dir
-              run: cd /root/domains/site-builder.dominikkoniarz.pl/
+              run: cd /domains/site-builder.dominikkoniarz.pl/
             - name: Git pull
               run: git pull
             - name: Install dependencies
