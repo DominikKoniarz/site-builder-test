@@ -23,12 +23,15 @@ jobs:
                   script: |
                       cd /domains/site-builder.dominikkoniarz.pl
                       git pull
-                      pnpm -v
-                      pnpm install
-                      pnpm prisma generate
-                      pnpm run build
-                      export PATH=$PATH:/root/.local/share/pnpm/pm2
-                      pm2 -v
+                      whereis pnpm
+                      where     node
+                      whereis pm2
+                  #   pnpm -v
+                  #   pnpm install
+                  #   pnpm prisma generate
+                  #   pnpm run build
+                  #   export PATH=$PATH:/root/.local/share/pnpm/pm2
+                  #   pm2 -v
                   #   pm2 start ecosystem.config.js
 
 #                       root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# whereis pnpm
