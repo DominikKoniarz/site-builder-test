@@ -22,6 +22,8 @@ jobs:
                   port: 22
                   script: |
                       cd /domains/site-builder.dominikkoniarz.pl
+                      export PATH=/root/.local/share/pnpm:$PATH
+                      export PATH=/root/.local/share/pnpm/pnpm:$PATH
                       ./scripts/deploy.sh
 
 #                       root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# whereis pnpm
