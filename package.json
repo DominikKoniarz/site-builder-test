@@ -6,7 +6,8 @@
         "dev": "next dev --turbo",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "pm2": "pm2"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.717.0",

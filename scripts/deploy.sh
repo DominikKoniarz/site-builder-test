@@ -5,6 +5,5 @@ pnpm -v
 pnpm install
 pnpm prisma generate
 pnpm run build
-# pm2 start ecosystem.config.js
-pm2 start npm --name "nextjs-app" -- start
-# pnpm start
+pnpm run pm2 delete nextjs-app
+pnpm run pm2 start ecosystem.config.js
