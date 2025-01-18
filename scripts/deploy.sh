@@ -2,4 +2,4 @@ pnpm -v
 pnpm install --frozen-lockfile
 pnpm prisma generate
 pnpm run build
-pm2 start ecosystem.config.js
+/root/.local/share/pnpm/pm2 start ecosystem.config.js
