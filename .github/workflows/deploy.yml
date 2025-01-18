@@ -23,6 +23,7 @@ jobs:
                   script: |
                       cd /domains/site-builder.dominikkoniarz.pl
                       git pull
+                      export PATH=/root/.local/share/pnpm:$PATH
                       ./scripts/deploy.sh
 
 #                       root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# whereis pnpm
