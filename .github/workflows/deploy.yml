@@ -23,14 +23,7 @@ jobs:
                   script: |
                       cd /domains/site-builder.dominikkoniarz.pl
                       git pull
-                      export PATH=$PATH:/root/.local/share/pnpm/pnpm
-                      export PATH=$PATH:/root/.local/share/pnpm/node
-                      export PATH=$PATH:/root/.local/share/pnpm/pm2
-                      pnpm -v
-                      pnpm install --frozen-lockfile
-                      pnpm prisma generate
-                      pnpm run build
-                      pnpm run vps:start
+                      ./scripts/deploy.sh
 
 #                       root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# whereis pnpm
 # pnpm: /root/.local/share/pnpm/pnpm
