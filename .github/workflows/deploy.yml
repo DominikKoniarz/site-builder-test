@@ -27,11 +27,10 @@ jobs:
                       export PATH=$PATH:/root/.local/share/pnpm/node
                       export PATH=$PATH:/root/.local/share/pnpm/pm2
                       pnpm -v
-                      pnpm install
+                      pnpm install --frozen-lockfile
                       pnpm prisma generate
                       pnpm run build
-                      pm2 -v
-                      pm2 start ecosystem.config.js
+                      pnpm run vps:start
 
 #                       root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# whereis pnpm
 # pnpm: /root/.local/share/pnpm/pnpm
