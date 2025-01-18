@@ -2,10 +2,10 @@ module.exports = {
     apps: [
         {
             name: "nextjs-app",
-            script: "pnpm",
-            args: "start",
+            script: "pnpm start",
+            // args: "start",
             exec_mode: "cluster",
-            instances: "max",
+            instances: 1,
         },
     ],
 };

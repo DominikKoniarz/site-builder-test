@@ -1,7 +1,6 @@
 git stash
 git pull
 git stash drop
-pnpm -v
 pnpm install
 pnpm prisma generate
 pnpm run build
