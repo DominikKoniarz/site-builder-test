@@ -24,7 +24,7 @@ jobs:
                       cd /domains/site-builder.dominikkoniarz.pl
                       git pull
                       whereis pnpm
-                      where     node
+                      whereis node
                       whereis pm2
                   #   pnpm -v
                   #   pnpm install
