@@ -27,7 +27,8 @@ jobs:
                       pnpm install
                       pnpm prisma generate
                       pnpm run build
-                      pm2 start ecosystem.config.js
+                      pm2 -v
+                  #   pm2 start ecosystem.config.js
 
 #                       root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# whereis pnpm
 # pnpm: /root/.local/share/pnpm/pnpm
