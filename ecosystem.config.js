@@ -5,7 +5,7 @@ module.exports = {
             script: "pnpm",
             args: "start",
             instances: 1, // Liczba instancji
-            exec_mode: "cluster", // Tryb klastrowy
+            exec_mode: "cluster", // Tryb uruchomienia
             env: {
                 NODE_ENV: "production",
                 PORT: 3000, // Startowy port (będzie automatycznie zwiększany)
