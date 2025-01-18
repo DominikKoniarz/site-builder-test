@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
         {
-            name: "nextjs-app",
+            name: "site-builder-app",
             script: "./node_modules/next/dist/bin/next",
             args: "start",
             exec_mode: "cluster",

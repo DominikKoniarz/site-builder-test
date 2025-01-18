@@ -12,7 +12,7 @@ export default async function Home() {
         const text = getPageVariable(page, "t.text-1");
         console.log(text);
     }
-    console.log(process.env?.INSTANCE_ID);
+
     return (
         <main className="grid h-full w-full flex-1 place-items-center bg-slate-800 text-white">
             <div className="flex flex-col gap-4">
@@ -25,6 +25,7 @@ export default async function Home() {
                     ))}
                 </ul>
             </div>
+            aaa for test
             <div>Instance id: {process.env?.INSTANCE_ID}</div>
         </main>
     );

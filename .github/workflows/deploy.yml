@@ -26,19 +26,3 @@ jobs:
                       export PATH=/root/.local/share/pnpm/pnpm:$PATH
                       chmod +x ./scripts/deploy.sh
                       ./scripts/deploy.sh
-
-#                       root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# whereis pnpm
-# pnpm: /root/.local/share/pnpm/pnpm
-# root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# sudo ln -s /root/.local/share/pnpm/pnpm /usr/local/bin/pnpm
-
-# \node: /root/.local/share/pnpm/node
-# root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# whereis node
-# node: /root/.local/share/pnpm/node
-# root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# sudo ln -s /root/.local/share/pnpm/node /use/local/bin/node
-# ln: failed to create symbolic link '/use/local/bin/node': No such file or directory
-# root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# ls /usr/local/bin
-# pnpm
-# root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# sudo ln -s /root/.local/share/pnpm/node /usr/local/bin/node
-# root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# whereis pm2
-# pm2: /root/.local/share/pnpm/pm2
-# root@vmi2402461:/domains/site-builder.dominikkoniarz.pl# sudo
