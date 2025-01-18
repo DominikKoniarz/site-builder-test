@@ -1,3 +1,8 @@
+git stash
+git pull
+git stash drop
+export PATH=/root/.local/share/pnpm:$PATH
+# export PATH=/root/.local/share/pnpm/pnpm:$PATH
 pnpm -v
 pnpm install
 pnpm prisma generate
