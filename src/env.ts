@@ -12,7 +12,7 @@ export const env = createEnv({
         R2_BUCKET_NAME: z.string().min(1),
         R2_ACCESS_KEY_ID: z.string().min(1),
         R2_SECRET_ACCESS_KEY: z.string().min(1),
-        INSTANCE_ID: z.number().optional(),
+        INSTANCE_ID: z.string().optional(),
     },
     /*
      * Environment variables available on the client (and server).
