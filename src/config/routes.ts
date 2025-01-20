@@ -9,19 +9,19 @@ export const appRoutes: AppPageRoute[] = [
         text: "Home",
     },
     {
-        href: "/templates",
-        text: "Templates",
-    },
-    {
-        href: "/templates/new",
-        text: "New Template",
-    },
-    {
         href: "/pages",
         text: "Pages",
     },
     {
         href: "/pages/new",
         text: "New Page",
+    },
+    {
+        href: "/templates",
+        text: "Templates",
+    },
+    {
+        href: "/templates/new",
+        text: "New Template",
     },
 ];
