@@ -26,7 +26,7 @@ const usePageBannerVariableDropzone = (index: number) => {
                     .filter((image) => image.frontendId !== frontendId),
             ]);
         },
-        [form, index],
+        [index], // eslint-disable-line react-hooks/exhaustive-deps
     );
 
     const uploadImage = useCallback(
@@ -123,7 +123,7 @@ const usePageBannerVariableDropzone = (index: number) => {
                 console.error(error);
             }
         },
-        [executeAsync, form, index, removeImageAfterUploadError],
+        [executeAsync, index, removeImageAfterUploadError], // eslint-disable-line react-hooks/exhaustive-deps
     );
 
     const onDrop = useCallback(
