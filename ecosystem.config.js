@@ -5,7 +5,7 @@ module.exports = {
             script: "./node_modules/next/dist/bin/next", // Could test next command
             args: "start",
             exec_mode: "cluster",
-            instances: 1,
+            instances: 3,
             instance_var: "INSTANCE_ID",
             env: {
                 PORT: 3000,
