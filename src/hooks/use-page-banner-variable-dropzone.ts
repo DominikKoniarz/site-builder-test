@@ -38,7 +38,9 @@ const usePageBannerVariableDropzone = (index: number) => {
             const frontendId = nanoid();
 
             const highestOrder = Math.max(
-                ...images.map((image) => image.order),
+                ...(images.length > 0 // protection against empty array bc Math.max() returns -Infinity if empty
+                    ? images.map((image) => image.order)
+                    : [0]),
             );
 
             const newImage: PageEditBannerImageLoadingSchema = {

@@ -18,8 +18,6 @@ export default function PageEditForm({ page }: Props) {
 
     const variables = form.watch("variables");
 
-    console.log(form.formState.errors);
-
     return (
         <Form {...form}>
             <form
