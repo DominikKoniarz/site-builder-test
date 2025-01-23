@@ -9,6 +9,7 @@ import {
 import { listObjectsByPrefix, removeMultipleTmpImages } from "../r2/files";
 import { generateTmpImageKey, TMP_DIR_PREFIX } from ".";
 import { CronJob } from "cron";
+import { env } from "@/env";
 
 const safetyCronWrapper = async (fn: () => Promise<void>) => {
     try {
@@ -80,8 +81,10 @@ export const handleTmpImagesCron = async () => {
 };
 
 // const everyMinute = "* * * * *";
+const everyHour = "0 * * * *";
 const everyDay = "0 0 * * *";
 
-export const tmpImagesCron = new CronJob(everyDay, () =>
-    safetyCronWrapper(handleTmpImagesCron),
+export const tmpImagesCron = new CronJob(
+    env.NEXT_PUBLIC_IS_PROD ? everyDay : everyHour,
+    () => safetyCronWrapper(handleTmpImagesCron),
 );
