@@ -1,9 +1,13 @@
 import type { DbFetchedVariable } from "@/types/variables";
-import type { BannerVariableDTO, TextVariableDTO } from "./variables.dto";
+import type {
+    BannerVariableDTO,
+    PageVariableDTO,
+    TextVariableDTO,
+} from "./variables.dto";
 
 export const createPageVariableDTO = (
     variable: DbFetchedVariable,
-): TextVariableDTO | BannerVariableDTO => {
+): PageVariableDTO => {
     if (variable.textVariable) {
         return {
             id: variable.id,

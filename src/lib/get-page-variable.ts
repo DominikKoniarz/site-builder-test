@@ -1,7 +1,6 @@
 import { VariableType } from "@prisma/client";
-import { DbFetchedPageWithVariables } from "@/types/pages";
-import { createPageVariableDTO } from "@/dto/variables.mappers";
 import { BannerVariableDTO, TextVariableDTO } from "@/dto/variables.dto";
+import { PageWithVariablesDTO } from "@/dto/pages.dto";
 
 type VarTypeToSign = {
     [VariableType.TEXT]: "t";
@@ -18,35 +17,33 @@ type BannerVariableTagWithType = `${VarTypeToSign["BANNER"]}.${string}`;
 
 // functions overloads start
 export function getPageVariable(
-    variables: DbFetchedPageWithVariables,
+    variables: PageWithVariablesDTO,
     tagWithType: TextVariableTagWithType,
 ): TextVariableDTO | null;
 
 export function getPageVariable(
-    variables: DbFetchedPageWithVariables,
+    variables: PageWithVariablesDTO,
     tagWithType: BannerVariableTagWithType,
 ): BannerVariableDTO | null;
 // functions overloads end
 
 export function getPageVariable(
-    page: DbFetchedPageWithVariables,
+    page: PageWithVariablesDTO,
     tagWithType: TextVariableTagWithType | BannerVariableTagWithType,
 ): TextVariableDTO | BannerVariableDTO | null {
     const variables = page.variables;
 
-    const [type, tag] = tagWithType.split(".");
-    const variableByTag = variables.find(
-        (v) => v.templateVariable && v.templateVariable.tag === tag,
-    );
+    const [typePrefix, tag] = tagWithType.split(".");
+    const variableByTag = variables.find((v) => v.tag === tag);
 
     if (!variableByTag) return null;
 
-    if (type === VAR_TYPE_TO_SIGN.TEXT) {
-        return createPageVariableDTO(variableByTag);
+    if (typePrefix === VAR_TYPE_TO_SIGN.TEXT) {
+        return variableByTag;
     }
 
-    if (type === VAR_TYPE_TO_SIGN.BANNER) {
-        return createPageVariableDTO(variableByTag);
+    if (typePrefix === VAR_TYPE_TO_SIGN.BANNER) {
+        return variableByTag;
     }
 
     return null;

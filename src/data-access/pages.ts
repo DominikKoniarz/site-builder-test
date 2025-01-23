@@ -9,7 +9,6 @@ import { PageAddSchema } from "@/schema/pages/page-add-schema";
 import { TemplateWithVariablesDTO } from "@/dto/templates.dto";
 import { TemplateVariableDTO } from "@/dto/template-variables.dto";
 import { PageEditSchema } from "@/schema/pages/page-edit-schema";
-import { DbFetchedPageWithVariables } from "@/types/pages";
 
 const pageWithVariablesSelect = {
     select: {
@@ -127,7 +126,7 @@ export const getPageBySlug = async (slug: string) => {
 
 export const getPageWithVariablesBySlug = async (
     slug: string,
-): Promise<DbFetchedPageWithVariables | null> => {
+): Promise<PageWithVariablesDTO | null> => {
     const page = await prisma.page.findFirst({
         where: {
             slug,
@@ -135,7 +134,7 @@ export const getPageWithVariablesBySlug = async (
         ...pageWithVariablesSelect,
     });
 
-    return page;
+    return page ? createPageWithVariablesDTO(page) : null;
 };
 
 export const getPageWithVariablesById = async (

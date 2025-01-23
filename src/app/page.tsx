@@ -7,7 +7,7 @@ export default async function Home() {
     // const page = await getPageWithVariablesBySlug("/");
 
     // if (page) {
-    //     const text = getPageVariable(page, "t.text-1");
+    //     const text = getPageVariable(page, "t.text1");
     //     console.log(text);
     // }
 
