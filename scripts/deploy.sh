@@ -9,3 +9,5 @@ pnpm run build
 pm2 delete ecosystem.config.js
 sleep 1
 pm2 start ecosystem.config.js
+sleep 1
+pm2 list
