@@ -8,9 +8,15 @@ type Props = {
     image: PageEditBannerImageExistingSchema;
     varIndex: number;
     imageIndex: number;
+    updatedAt: Date;
 };
 
-export default function ExistingImage({ image, varIndex, imageIndex }: Props) {
+export default function ExistingImage({
+    image,
+    varIndex,
+    imageIndex,
+    updatedAt,
+}: Props) {
     const form = usePageForm();
     const pageId = form.watch("id");
     const variableId = form.watch(`variables.${varIndex}.id`);
@@ -21,6 +27,7 @@ export default function ExistingImage({ image, varIndex, imageIndex }: Props) {
         image.id,
         "original",
         image.imageName,
+        updatedAt,
     );
 
     return (
@@ -29,7 +36,7 @@ export default function ExistingImage({ image, varIndex, imageIndex }: Props) {
                 src={src}
                 width={100} // a little bit bigger than width for more quality
                 height={100} // a little bit bigger than height for more quality
-                alt={`New image ${image.imageName}`}
+                alt={`Existing image ${image.imageName}`}
                 style={{
                     width: "100%",
                     height: "100%",

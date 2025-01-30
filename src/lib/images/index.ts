@@ -20,8 +20,16 @@ export const generateBannerImagePublicURL = (
     imageId: string,
     type: "original" | "crop",
     imageName: string,
+    updatedAt?: Date,
 ): string => {
-    return `https://${env.NEXT_PUBLIC_R2_BUCKET_HOSTNAME}/pages/${pageId}/variables/${pageVariableId}/banner/${imageId}/${type}/${imageName}`;
+    const unversionedUrl = new URL(
+        `https://${env.NEXT_PUBLIC_R2_BUCKET_HOSTNAME}/pages/${pageId}/variables/${pageVariableId}/banner/${imageId}/${type}/${imageName}`,
+    );
+
+    if (updatedAt)
+        unversionedUrl.searchParams.set("t", updatedAt.getTime().toString());
+
+    return unversionedUrl.toString();
 };
 
 export const generateBannerImageKey = (

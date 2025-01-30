@@ -5,7 +5,10 @@ import ExistingImage from "./existing-image";
 import { usePageBannerVarContext } from "@/context/page-banner-var-context";
 
 export default function ImagesGrid() {
-    const { index } = usePageBannerVarContext();
+    const {
+        index,
+        dbVariable: { updatedAt },
+    } = usePageBannerVarContext();
     const form = usePageForm();
 
     const variable = form.watch(`variables.${index}`);
@@ -32,6 +35,7 @@ export default function ImagesGrid() {
                             image={image}
                             imageIndex={imageIndex}
                             varIndex={index}
+                            updatedAt={updatedAt}
                         />
                     ),
                 )}
