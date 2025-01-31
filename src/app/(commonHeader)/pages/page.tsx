@@ -1,6 +1,8 @@
 import { getAllPages } from "@/data-access/pages";
 import PagesList from "./_components/pages-list";
 
+export const dynamic = "force-dynamic";
+
 export default async function Pages() {
     const pages = await getAllPages();
 

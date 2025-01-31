@@ -1,6 +1,8 @@
 import { getAllTemplates } from "@/data-access/templates";
 import AddPageForm from "./_components/add-page-form";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewPage() {
     const templates = await getAllTemplates();
 

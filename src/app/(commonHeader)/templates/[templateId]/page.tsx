@@ -1,5 +1,5 @@
 import {
-    getAllTemplates,
+    // getAllTemplates,
     getTemplateByIdWithVariables,
 } from "@/data-access/templates";
 import { redirect } from "next/navigation";
@@ -11,15 +11,17 @@ type Props = {
     }>;
 };
 
-// revalidated after template has been edited
-export const generateStaticParams = async (): Promise<
-    { templateId: string }[]
-> => {
-    const templates = await getAllTemplates();
-    return templates.map((template) => ({
-        templateId: template.id,
-    }));
-};
+// // revalidated after template has been edited
+// export const generateStaticParams = async (): Promise<
+//     { templateId: string }[]
+// > => {
+//     const templates = await getAllTemplates();
+//     return templates.map((template) => ({
+//         templateId: template.id,
+//     }));
+// };
+
+export const dynamic = "force-dynamic";
 
 export default async function Templates({ params }: Props) {
     const { templateId } = await params;
