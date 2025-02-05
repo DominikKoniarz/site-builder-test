@@ -1,6 +1,6 @@
+import type { BannerVariableDTO, TextVariableDTO } from "@/dto/variables.dto";
+import type { PageWithVariablesDTO } from "@/dto/pages.dto";
 import { VariableType } from "@prisma/client";
-import { BannerVariableDTO, TextVariableDTO } from "@/dto/variables.dto";
-import { PageWithVariablesDTO } from "@/dto/pages.dto";
 
 type VarTypeToSign = {
     [VariableType.TEXT]: "t";
