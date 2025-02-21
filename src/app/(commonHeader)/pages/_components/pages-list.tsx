@@ -7,7 +7,7 @@ type Props = {
 
 export default function PagesList({ pages }: Props) {
     return (
-        <ul className="flex flex-col gap-4">
+        <ul className="flex w-full flex-col gap-4">
             {pages.map((page) => (
                 <PageListItem key={page.id} page={page} />
             ))}

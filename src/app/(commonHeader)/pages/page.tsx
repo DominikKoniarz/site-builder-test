@@ -8,7 +8,7 @@ export default async function Pages() {
 
     return (
         <main className="flex h-full w-full flex-row justify-center p-5">
-            <div className="flex flex-col items-center gap-8">
+            <div className="flex w-full max-w-[400px] flex-col items-center gap-8">
                 <h1 className="text-xl font-bold">Pages</h1>
                 {pages.length > 0 ? (
                     <PagesList pages={pages} />
