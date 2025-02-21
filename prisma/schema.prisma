@@ -89,7 +89,7 @@ model BannerImageCropData {
     width         Int
     height        Int
     bannerImageId String      @unique @db.VarChar(255)
-    image         BannerImage @relation(fields: [bannerImageId], references: [id])
+    image         BannerImage @relation(fields: [bannerImageId], references: [id], onDelete: Cascade)
     createdAt     DateTime    @default(now())
     updatedAt     DateTime    @updatedAt
 }

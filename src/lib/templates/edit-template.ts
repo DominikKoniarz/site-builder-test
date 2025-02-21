@@ -11,6 +11,7 @@ import {
     getAllPagesIdsByTemplateId,
     deletePagesVarsAfterTemplateUpdate,
 } from "@/data-access/pages";
+import { deleteUnusedBannerImages } from "../pages/banner-images";
 
 export const editTemplate = async (data: TemplateEditSchema) => {
     const foundTemplate = await getTemplateByIdWithVariables(data.id);
@@ -55,8 +56,9 @@ export const editTemplate = async (data: TemplateEditSchema) => {
 
     await addVarsToPagesAfterTemplateUpdate(varsToAddOnPages, foundPagesIds);
 
-    // TODO: after that remove pages files if needed (filesToRemove)
-    console.log(filesToRemove); // <- here
+    if (filesToRemove?.length) {
+        await deleteUnusedBannerImages(filesToRemove);
+    }
 
     return { updatedTemplate, updatedPagesIds: foundPagesIds };
 };

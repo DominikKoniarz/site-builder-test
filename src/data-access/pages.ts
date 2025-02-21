@@ -244,7 +244,7 @@ export const addVarsToPagesAfterTemplateUpdate = async (
 export const deletePagesVarsAfterTemplateUpdate = async (
     templateVarsIdsToDeleteOnPages: string[],
     pagesIds: string[],
-) => {
+): Promise<RemovedBannerImage[] | null> => {
     return prisma.$transaction(async (tx) => {
         if (!templateVarsIdsToDeleteOnPages.length) return null;
 
@@ -262,6 +262,7 @@ export const deletePagesVarsAfterTemplateUpdate = async (
             },
             select: {
                 id: true,
+                pageId: true,
                 bannerVariable: {
                     select: {
                         id: true,
@@ -277,6 +278,7 @@ export const deletePagesVarsAfterTemplateUpdate = async (
         });
 
         // all records by relations are deleted with onDelete: CASCADE
+        // TODO: change this behavior to delete with code maybe
 
         // delete variables from pages
         if (templateVarsIdsToDeleteOnPages.length)
@@ -291,16 +293,20 @@ export const deletePagesVarsAfterTemplateUpdate = async (
                 },
             });
 
-        return {
-            bannersToDelete: varsWithBannersToDelete.map((v) => ({
-                varId: v.id,
-                bannerId: v.bannerVariable?.id,
-                images: v.bannerVariable?.images.map((i) => ({
-                    id: i.id,
-                    imageName: i.imageName,
-                })),
-            })),
-        };
+        const data: RemovedBannerImage[] = varsWithBannersToDelete.flatMap(
+            (v) =>
+                v.bannerVariable?.images.map(
+                    (i) =>
+                        ({
+                            id: i.id,
+                            pageId: v.pageId,
+                            pageVariableId: v.id,
+                            imageName: i.imageName,
+                        }) satisfies RemovedBannerImage,
+                ) ?? [],
+        );
+
+        return data;
     });
 };
 

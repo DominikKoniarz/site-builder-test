@@ -163,7 +163,7 @@ const processNewBannerImage = async (props: ProsessNewBannerImageProps) => {
     ]);
 };
 
-const deleteUnusedBannerImages = async (
+export const deleteUnusedBannerImages = async (
     imagesToRemove: RemovedBannerImage[],
 ) => {
     if (imagesToRemove.length === 0) return;
