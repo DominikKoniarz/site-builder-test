@@ -8,12 +8,14 @@ type Props = {
 
 export default function TemplateTextVariable({ index }: Props) {
     return (
-        <div className="flex flex-row gap-4 rounded-xl border bg-slate-800 p-4 pt-3">
-            <div className="flex flex-row gap-4">
+        <div className="flex w-fit flex-col gap-4 rounded-xl border bg-slate-800 p-4 pt-3 lg:flex-row">
+            <div className="flex flex-col gap-4 lg:flex-row">
                 <CommonInputs index={index} />
             </div>
-            <DeleteVariableButton index={index} />
-            <MoveVariableButton />
+            <div className="ml-auto flex w-fit flex-row items-center gap-4 lg:mt-7">
+                <DeleteVariableButton index={index} />
+                <MoveVariableButton />
+            </div>
         </div>
     );
 }

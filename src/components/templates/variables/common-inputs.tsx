@@ -52,7 +52,7 @@ export default function CommonInputs({ index }: { index: number }) {
                 name={`variables.${index}.type`}
                 render={({ field }) => (
                     <FormItem className="w-56 space-y-1">
-                        <FormLabel>Typ</FormLabel>
+                        <FormLabel>Type</FormLabel>
                         <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
@@ -64,10 +64,10 @@ export default function CommonInputs({ index }: { index: number }) {
                             </FormControl>
                             <SelectContent>
                                 <SelectItem value={VariableType.TEXT}>
-                                    Zmienna tekstowa
+                                    Text variable
                                 </SelectItem>
                                 <SelectItem value={VariableType.BANNER}>
-                                    Banner
+                                    Banner variable
                                 </SelectItem>
                             </SelectContent>
                         </Select>

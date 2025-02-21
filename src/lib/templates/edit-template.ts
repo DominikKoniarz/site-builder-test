@@ -56,7 +56,7 @@ export const editTemplate = async (data: TemplateEditSchema) => {
     await addVarsToPagesAfterTemplateUpdate(varsToAddOnPages, foundPagesIds);
 
     // TODO: after that remove pages files if needed (filesToRemove)
-    console.log(filesToRemove);
+    console.log(filesToRemove); // <- here
 
     return { updatedTemplate, updatedPagesIds: foundPagesIds };
 };

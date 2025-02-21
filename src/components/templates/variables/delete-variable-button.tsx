@@ -63,7 +63,7 @@ const DeleteButton = ({ onClick }: DeleteButtonProps) => {
         <Button
             type="button"
             variant="destructive"
-            className="mt-7 w-9 px-2.5"
+            className="w-9 px-2.5"
             onClick={onClick}
         >
             <CircleX />

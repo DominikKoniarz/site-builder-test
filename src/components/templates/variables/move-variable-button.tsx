@@ -9,7 +9,7 @@ export default function MoveVariableButton() {
         <Button
             type="button"
             variant="secondary"
-            className="mt-7 w-9 px-2.5"
+            className="w-9 px-2.5"
             {...attributes}
             {...listeners}
         >

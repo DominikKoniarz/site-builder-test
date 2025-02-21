@@ -74,7 +74,7 @@ export default function SortableVariableWrapper({
                 <div
                     ref={setNodeRef}
                     style={style}
-                    className={cn(isDragging ? "z-20" : "z-10")}
+                    className={cn("w-fit", isDragging ? "z-20" : "z-10")}
                 >
                     {children}
                 </div>
