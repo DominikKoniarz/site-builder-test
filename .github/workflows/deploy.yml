@@ -1,28 +1,28 @@
-name: Deploy to VPS
+# name: Deploy to VPS
 
-on:
-    push:
-        branches:
-            - main
+# on:
+#     push:
+#         branches:
+#             - main
 
-jobs:
-    main:
-        runs-on: ubuntu-latest
+# jobs:
+#     main:
+#         runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
+#         steps:
+#             - name: Checkout code
+#               uses: actions/checkout@v3
 
-            - name: Deploy to VPS
-              uses: appleboy/ssh-action@v1.2.0
-              with:
-                  host: ${{ secrets.VPS_HOST }}
-                  username: ${{ secrets.VPS_USER }}
-                  key: ${{ secrets.VPS_SSH_KEY }}
-                  port: 22
-                  script: |
-                      cd /domains/site-builder.dominikkoniarz.pl
-                      export PATH=/root/.local/share/pnpm:$PATH
-                      export PATH=/root/.local/share/pnpm/pnpm:$PATH
-                      chmod +x ./scripts/deploy.sh
-                      ./scripts/deploy.sh
+#             - name: Deploy to VPS
+#               uses: appleboy/ssh-action@v1.2.0
+#               with:
+#                   host: ${{ secrets.VPS_HOST }}
+#                   username: ${{ secrets.VPS_USER }}
+#                   key: ${{ secrets.VPS_SSH_KEY }}
+#                   port: 22
+#                   script: |
+#                       cd /domains/site-builder.dominikkoniarz.pl
+#                       export PATH=/root/.local/share/pnpm:$PATH
+#                       export PATH=/root/.local/share/pnpm/pnpm:$PATH
+#                       chmod +x ./scripts/deploy.sh
+#                       ./scripts/deploy.sh
